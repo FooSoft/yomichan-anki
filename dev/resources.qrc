@@ -1,0 +1,23 @@
+<RCC>
+  <qresource prefix="images">
+    <file>icons/email.png</file>
+    <file>icons/world_go.png</file>
+    <file>icons/tick.png</file>
+    <file>icons/add.png</file>
+    <file>icons/bullet_add.png</file>
+    <file>icons/page_copy.png</file>
+    <file>icons/add.png</file>
+    <file>icons/cross.png</file>
+    <file>icons/find.png</file>
+    <file>icons/folder_page.png</file>
+    <file>icons/information.png</file>
+    <file>icons/magifier_zoom_out.png</file>
+    <file>icons/magnifier_zoom_in.png</file>
+    <file>icons/magnifier.png</file>
+    <file>icons/wrench.png</file>
+  </qresource>
+  <qresource prefix="logos">
+    <file>logos/logo32x32.png</file>
+    <file>logos/logo64x64.png</file>
+  </qresource>
+</RCC>
