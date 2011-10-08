@@ -19,6 +19,6 @@ constants = {
     'version': '0.03b',
 
     'urlUpdates': 'http://foosoft.net/projects/yomichan/dev/updates.xml',
-    'urlHomepage': 'https://code.google.com/p/yomichan/',
-    'urlFeedback': 'http://foosoft.net/contact/'
+    'urlHomepage': 'https://github.com/FooSoft/yomichan/',
+    'urlFeedback': 'http://foosoft.net/index.php/comments/'
 }
