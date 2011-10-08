@@ -20,7 +20,7 @@ import codecs
 
 
 class Deinflector:
-    class __Rule:
+    class Rule:
         def __init__(self, source, target, types, reason):
             self.source = unicode(source)
             self.target = unicode(target)
@@ -28,7 +28,7 @@ class Deinflector:
             self.reason = int(reason)
 
 
-    class __Result:
+    class Result:
         def __init__(self, stem, types, conjugations):
             self.stem = unicode(stem)
             self.types = int(types)
@@ -43,8 +43,8 @@ class Deinflector:
 
 
     def close(self):
-        self.__conjugations = list()
-        self.__rules = dict()
+        self.conjugations = list()
+        self.rules = dict()
 
 
     def load(self, filename):
@@ -63,13 +63,13 @@ class Deinflector:
             fieldCount = len(fields)
 
             if fieldCount == 1:
-                self.__conjugations.append(fields[0])
+                self.conjugations.append(fields[0])
             elif fieldCount == 4:
-                rule = self.__Rule(*fields)
+                rule = self.Rule(*fields)
                 sourceLength = len(rule.source)
-                if sourceLength not in self.__rules:
-                    self.__rules[sourceLength] = list()
-                self.__rules[sourceLength].append(rule)
+                if sourceLength not in self.rules:
+                    self.rules[sourceLength] = list()
+                self.rules[sourceLength].append(rule)
             else:
                 self.close()
                 return False
@@ -78,11 +78,11 @@ class Deinflector:
 
 
     def deinflect(self, word):
-        results = [self.__Result(word, 0xff, list())]
+        results = [self.Result(word, 0xff, list())]
         have = {word: 0}
 
         for result in results:
-            for length, group in sorted(self.__rules.items(), reverse=True):
+            for length, group in sorted(self.rules.items(), reverse=True):
                 if length > len(result.stem):
                     continue
 
@@ -101,8 +101,8 @@ class Deinflector:
 
                     have[new] = len(results)
 
-                    conjugations = [self.__conjugations[rule.reason]] + result.conjugations
-                    results.append(self.__Result(new, rule.types >> 8, conjugations))
+                    conjugations = [self.conjugations[rule.reason]] + result.conjugations
+                    results.append(self.Result(new, rule.types >> 8, conjugations))
 
         return [
             (result.stem, u', '.join(result.conjugations), result.types) for result in results

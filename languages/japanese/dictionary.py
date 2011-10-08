@@ -28,20 +28,20 @@ class Dictionary:
 
 
     def close(self):
-        self.__connection = None
+        self.connection = None
 
 
     def load(self, filename):
-        self.__connection = sqlite3.connect(filename)
+        self.connection = sqlite3.connect(filename)
 
 
-    def __find(self, exp, args):
-        if self.__connection == None:
+    def find(self, exp, args):
+        if self.connection == None:
             return list()
 
         entries = list()
 
-        for kanji, kana, entry in self.__connection.cursor().execute(exp, args):
+        for kanji, kana, entry in self.connection.cursor().execute(exp, args):
             meanings = entry.split('/')
 
             if not meanings[-1]:
@@ -62,4 +62,4 @@ class Dictionary:
 
 
     def findWord(self, word):
-        return self.__find(u'select * from dict where kanji=? or kana=? limit 100', (word,) * 2)
+        return self.find(u'select * from dict where kanji=? or kana=? limit 100', (word,) * 2)

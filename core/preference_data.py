@@ -67,45 +67,45 @@ class Preferences:
         self.clear()
 
         for general in root.getElementsByTagName('general'):
-            self.generalRecentLoad = self.__readAttrBool(general, 'recentLoad', self.generalRecentLoad)
-            self.generalReadingsStrip = self.__readAttrBool(general, 'readingsStrip', self.generalReadingsStrip)
-            self.generalFindUpdates = self.__readAttrBool(general, 'findUpdates', self.generalFindUpdates)
+            self.generalRecentLoad = self.readAttrBool(general, 'recentLoad', self.generalRecentLoad)
+            self.generalReadingsStrip = self.readAttrBool(general, 'readingsStrip', self.generalReadingsStrip)
+            self.generalFindUpdates = self.readAttrBool(general, 'findUpdates', self.generalFindUpdates)
 
             for recent in general.getElementsByTagName('recent'):
-                path = self.__readAttrStr(recent, 'path')
-                position = self.__readAttrInt(recent, 'position')
+                path = self.readAttrStr(recent, 'path')
+                position = self.readAttrInt(recent, 'position')
                 if path and os.path.isfile(path):
                     self.generalRecentFiles.append((path, position))
 
         for ui in root.getElementsByTagName('ui'):
             for content in ui.getElementsByTagName('content'):
-                self.uiContentFontFamily = self.__readAttrStr(content, 'fontFamily', self.uiContentFontFamily)
-                self.uiContentFontSize = self.__readAttrInt(content, 'fontSize', self.uiContentFontSize)
-                self.uiContentColorFg = self.__readAttrInt(content, 'colorFg', self.uiContentColorFg)
-                self.uiContentColorBg = self.__readAttrInt(content, 'colorBg', self.uiContentColorBg)
-                self.uiContentWordWrap = self.__readAttrBool(content, 'wordWrap', self.uiContentWordWrap)
+                self.uiContentFontFamily = self.readAttrStr(content, 'fontFamily', self.uiContentFontFamily)
+                self.uiContentFontSize = self.readAttrInt(content, 'fontSize', self.uiContentFontSize)
+                self.uiContentColorFg = self.readAttrInt(content, 'colorFg', self.uiContentColorFg)
+                self.uiContentColorBg = self.readAttrInt(content, 'colorBg', self.uiContentColorBg)
+                self.uiContentWordWrap = self.readAttrBool(content, 'wordWrap', self.uiContentWordWrap)
 
             for reader in ui.getElementsByTagName('reader'):
-                self.uiReaderState = self.__readAttrStr(reader, 'state', self.uiReaderState)
-                self.uiReaderPosition = self.__readAttrIntTuple(reader, 'position', self.uiReaderPosition)
-                self.uiReaderSize = self.__readAttrIntTuple(reader, 'size', self.uiReaderSize)
+                self.uiReaderState = self.readAttrStr(reader, 'state', self.uiReaderState)
+                self.uiReaderPosition = self.readAttrIntTuple(reader, 'position', self.uiReaderPosition)
+                self.uiReaderSize = self.readAttrIntTuple(reader, 'size', self.uiReaderSize)
 
         for search in root.getElementsByTagName('search'):
-            self.searchScanMax = self.__readAttrInt(search, 'scanMax', self.searchScanMax)
-            self.searchResultMax = self.__readAttrInt(search, 'resultMax', self.searchResultMax)
-            self.searchGroupByExp = self.__readAttrBool(search, 'groupByExp', self.searchGroupByExp)
+            self.searchScanMax = self.readAttrInt(search, 'scanMax', self.searchScanMax)
+            self.searchResultMax = self.readAttrInt(search, 'resultMax', self.searchResultMax)
+            self.searchGroupByExp = self.readAttrBool(search, 'groupByExp', self.searchGroupByExp)
 
         for anki in root.getElementsByTagName('anki'):
-            self.ankiShowIcon = self.__readAttrBool(anki, 'showIcon', self.ankiShowIcon)
+            self.ankiShowIcon = self.readAttrBool(anki, 'showIcon', self.ankiShowIcon)
 
             for tag in anki.getElementsByTagName('tag'):
-                value = self.__readAttrStr(tag, 'value', unicode())
+                value = self.readAttrStr(tag, 'value', unicode())
                 self.ankiTags.append(value)
 
             for model in anki.getElementsByTagName('model'):
                 for field in model.getElementsByTagName('field'):
-                    name = self.__readAttrStr(field, 'name')
-                    value = self.__readAttrStr(field, 'value')
+                    name = self.readAttrStr(field, 'name')
+                    value = self.readAttrStr(field, 'value')
                     if name and value:
                         self.ankiFields[name] = value
 
@@ -129,46 +129,46 @@ class Preferences:
 
         general = doc.createElement('general')
         root.appendChild(general)
-        self.__writeAttrBool(general, 'recentLoad', self.generalRecentLoad)
-        self.__writeAttrBool(general, 'readingsStrip', self.generalReadingsStrip)
-        self.__writeAttrBool(general, 'findUpdates', self.generalFindUpdates)
+        self.writeAttrBool(general, 'recentLoad', self.generalRecentLoad)
+        self.writeAttrBool(general, 'readingsStrip', self.generalReadingsStrip)
+        self.writeAttrBool(general, 'findUpdates', self.generalFindUpdates)
         for path, position in self.generalRecentFiles:
             recent = doc.createElement('recent')
             general.appendChild(recent)
-            self.__writeAttrStr(recent, 'path', path)
-            self.__writeAttrInt(recent, 'position', position)
+            self.writeAttrStr(recent, 'path', path)
+            self.writeAttrInt(recent, 'position', position)
 
         ui = doc.createElement('ui')
         root.appendChild(ui)
 
         content = doc.createElement('content')
         ui.appendChild(content)
-        self.__writeAttrStr(content, 'fontFamily', self.uiContentFontFamily)
-        self.__writeAttrInt(content, 'fontSize', self.uiContentFontSize)
-        self.__writeAttrInt(content, 'colorFg', self.uiContentColorFg)
-        self.__writeAttrInt(content, 'colorBg', self.uiContentColorBg)
-        self.__writeAttrBool(content, 'wordWrap', self.uiContentWordWrap)
+        self.writeAttrStr(content, 'fontFamily', self.uiContentFontFamily)
+        self.writeAttrInt(content, 'fontSize', self.uiContentFontSize)
+        self.writeAttrInt(content, 'colorFg', self.uiContentColorFg)
+        self.writeAttrInt(content, 'colorBg', self.uiContentColorBg)
+        self.writeAttrBool(content, 'wordWrap', self.uiContentWordWrap)
 
         reader = doc.createElement('reader')
         ui.appendChild(reader)
-        self.__writeAttrStr(reader, 'state', self.uiReaderState)
-        self.__writeAttrIntTuple(reader, 'position', self.uiReaderPosition)
-        self.__writeAttrIntTuple(reader, 'size', self.uiReaderSize)
+        self.writeAttrStr(reader, 'state', self.uiReaderState)
+        self.writeAttrIntTuple(reader, 'position', self.uiReaderPosition)
+        self.writeAttrIntTuple(reader, 'size', self.uiReaderSize)
 
         search = doc.createElement('search')
         root.appendChild(search)
-        self.__writeAttrInt(search, 'scanMax', self.searchScanMax)
-        self.__writeAttrInt(search, 'resultMax', self.searchResultMax)
-        self.__writeAttrBool(search, 'groupByExp', self.searchGroupByExp)
+        self.writeAttrInt(search, 'scanMax', self.searchScanMax)
+        self.writeAttrInt(search, 'resultMax', self.searchResultMax)
+        self.writeAttrBool(search, 'groupByExp', self.searchGroupByExp)
 
         anki = doc.createElement('anki')
         root.appendChild(anki)
-        self.__writeAttrBool(anki, 'showIcon', self.ankiShowIcon)
+        self.writeAttrBool(anki, 'showIcon', self.ankiShowIcon)
 
         for value in self.ankiTags:
             tag = doc.createElement('tag')
             anki.appendChild(tag)
-            self.__writeAttrStr(tag, 'value', value)
+            self.writeAttrStr(tag, 'value', value)
 
         if self.ankiFields:
             model = doc.createElement('model')
@@ -176,8 +176,8 @@ class Preferences:
             for name, value in self.ankiFields.items():
                 field = doc.createElement('field')
                 model.appendChild(field)
-                self.__writeAttrStr(field, 'name', name)
-                self.__writeAttrStr(field, 'value', value)
+                self.writeAttrStr(field, 'name', name)
+                self.writeAttrStr(field, 'value', value)
 
         try:
             with open(filename, 'w') as fp:
@@ -217,40 +217,40 @@ class Preferences:
         self.generalRecentFiles = list()
 
 
-    def __readAttrStr(self, node, name, default=None):
+    def readAttrStr(self, node, name, default=None):
         return node.getAttribute(name) or default
 
 
-    def __readAttrBool(self, node, name, default=False):
-        value = self.__readAttrStr(node, name)
+    def readAttrBool(self, node, name, default=False):
+        value = self.readAttrStr(node, name)
         return value.lower() == 'true' if value else default
 
 
-    def __readAttrInt(self, node, name, default=0):
-        value = self.__readAttrStr(node, name)
+    def readAttrInt(self, node, name, default=0):
+        value = self.readAttrStr(node, name)
         return int(value) if value else default
 
 
-    def __readAttrIntTuple(self, node, name, default=None):
-        value = self.__readAttrStr(node, name)
+    def readAttrIntTuple(self, node, name, default=None):
+        value = self.readAttrStr(node, name)
         return tuple([int(v) for v in value.split(',')]) if value else default
 
 
-    def __writeAttrStr(self, node, name, value):
+    def writeAttrStr(self, node, name, value):
         if value != None:
             node.setAttribute(name, value)
 
 
-    def __writeAttrBool(self, node, name, value):
+    def writeAttrBool(self, node, name, value):
         if value != None:
             node.setAttribute(name, ['false', 'true'][bool(value)])
 
 
-    def __writeAttrInt(self, node, name, value):
+    def writeAttrInt(self, node, name, value):
         if value != None:
             node.setAttribute(name, str(value))
 
 
-    def __writeAttrIntTuple(self, node, name, value):
+    def writeAttrIntTuple(self, node, name, value):
         if value != None:
             node.setAttribute(name, ','.join([str(v) for v in value]))

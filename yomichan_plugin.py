@@ -36,13 +36,13 @@ class YomichanPlugin:
         self.separator.setSeparator(True)
         self.action = QtGui.QAction(QtGui.QIcon(':/logos/logos/logo32x32.png'), '&Yomichan...', self.parent)
         self.action.setIconVisibleInMenu(True)
-        self.parent.connect(self.action, QtCore.SIGNAL('triggered()'), self.__onShowRequest)
+        self.parent.connect(self.action, QtCore.SIGNAL('triggered()'), self.onShowRequest)
 
-        self.anki.addHook('loadDeck', self.__onDeckLoad)
-        self.anki.addHook('deckClosed', self.__onDeckClose)
+        self.anki.addHook('loadDeck', self.onDeckLoad)
+        self.anki.addHook('deckClosed', self.onDeckClose)
 
 
-    def __onShowRequest(self):
+    def onShowRequest(self):
         if self.window:
             self.window.setVisible(True)
             self.window.activateWindow()
@@ -53,49 +53,49 @@ class YomichanPlugin:
                 None,
                 self.preferences,
                 self.anki,
-                self.__onWindowClose,
-                self.__onWindowUpdate
+                self.onWindowClose,
+                self.onWindowUpdate
             )
             self.window.show()
 
 
-    def __onWindowClose(self):
+    def onWindowClose(self):
         self.window = None
 
 
-    def __onWindowUpdate(self):
+    def onWindowUpdate(self):
         if self.preferences.ankiShowIcon:
-            self.__showToolIcon()
+            self.showToolIcon()
         else:
-            self.__hideToolIcon()
+            self.hideToolIcon()
 
 
-    def __onDeckLoad(self):
+    def onDeckLoad(self):
         self.anki.toolsMenu().addAction(self.separator)
         self.anki.toolsMenu().addAction(self.action)
 
         if self.preferences.ankiShowIcon:
-            self.__showToolIcon()
+            self.showToolIcon()
 
 
-    def __onDeckClose(self):
+    def onDeckClose(self):
         self.anki.toolsMenu().removeAction(self.action)
         self.anki.toolsMenu().removeAction(self.separator)
 
-        self.__hideToolIcon()
+        self.hideToolIcon()
 
         if self.window:
             self.window.close()
             self.window = None
 
 
-    def __hideToolIcon(self):
+    def hideToolIcon(self):
         if self.toolIconVisible:
             self.anki.toolBar().removeAction(self.action)
             self.toolIconVisible = False
 
 
-    def __showToolIcon(self):
+    def showToolIcon(self):
         if not self.toolIconVisible:
             self.anki.toolBar().addAction(self.action)
             self.toolIconVisible = True

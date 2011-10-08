@@ -25,69 +25,69 @@ class DialogPreferences(QtGui.QDialog, Ui_DialogPreferences):
         self.setupUi(self)
 
         bindings = [
-            (self, 'accepted()', self.__onAccept),
-            (self.buttonContentColorFg, 'clicked()', self.__onButtonColorFgClicked),
-            (self.buttonContentColorBg, 'clicked()', self.__onButtonColorBgClicked),
-            (self.comboContentFontFamily, 'currentFontChanged(const QFont&)', self.__onFontFamilyChanged),
-            (self.spinContentFontSize, 'valueChanged(int)', self.__onFontSizeChanged)
+            (self, 'accepted()', self.onAccept),
+            (self.buttonContentColorFg, 'clicked()', self.onButtonColorFgClicked),
+            (self.buttonContentColorBg, 'clicked()', self.onButtonColorBgClicked),
+            (self.comboContentFontFamily, 'currentFontChanged(const QFont&)', self.onFontFamilyChanged),
+            (self.spinContentFontSize, 'valueChanged(int)', self.onFontSizeChanged)
         ]
 
         for action, signal, callback in bindings:
             self.connect(action, QtCore.SIGNAL(signal), callback)
 
-        self.__preferences = preferences
-        self.__anki = anki
+        self.preferences = preferences
+        self.anki = anki
 
-        self.__dataToDialog()
+        self.dataToDialog()
 
 
-    def __dataToDialog(self):
-        self.checkGeneralRecentLoad.setChecked(self.__preferences.generalRecentLoad)
-        self.checkGeneralReadingsStrip.setChecked(self.__preferences.generalReadingsStrip)
-        self.checkGeneralFindUpdates.setChecked(self.__preferences.generalFindUpdates)
+    def dataToDialog(self):
+        self.checkGeneralRecentLoad.setChecked(self.preferences.generalRecentLoad)
+        self.checkGeneralReadingsStrip.setChecked(self.preferences.generalReadingsStrip)
+        self.checkGeneralFindUpdates.setChecked(self.preferences.generalFindUpdates)
 
-        self.__updateSampleText()
+        self.updateSampleText()
         font = self.textContentSample.font()
         self.comboContentFontFamily.setCurrentFont(font)
         self.spinContentFontSize.setValue(font.pointSize())
 
-        self.spinSearchScanMax.setValue(self.__preferences.searchScanMax)
-        self.spinSearchResultMax.setValue(self.__preferences.searchResultMax)
-        self.checkSearchGroupByExp.setChecked(self.__preferences.searchGroupByExp)
+        self.spinSearchScanMax.setValue(self.preferences.searchScanMax)
+        self.spinSearchResultMax.setValue(self.preferences.searchResultMax)
+        self.checkSearchGroupByExp.setChecked(self.preferences.searchGroupByExp)
 
-        self.checkAnkiShowIcon.setChecked(self.__preferences.ankiShowIcon)
-        self.tabAnki.setEnabled(bool(self.__anki))
-        if self.__anki:
-            self.__setAnkiFields(self.__anki.fields(), self.__preferences.ankiFields)
-
-
-    def __dialogToData(self):
-        self.__preferences.generalRecentLoad = self.checkGeneralRecentLoad.isChecked()
-        self.__preferences.generalReadingsStrip = self.checkGeneralReadingsStrip.isChecked()
-        self.__preferences.generalFindUpdates = self.checkGeneralFindUpdates.isChecked()
-
-        self.__preferences.searchScanMax = self.spinSearchScanMax.value()
-        self.__preferences.searchResultMax = self.spinSearchResultMax.value()
-        self.__preferences.searchGroupByExp = self.checkSearchGroupByExp.isChecked()
-
-        self.__preferences.ankiShowIcon = self.checkAnkiShowIcon.isChecked()
-        if self.__anki:
-            self.__preferences.ankiFields = self.__ankiFields()
+        self.checkAnkiShowIcon.setChecked(self.preferences.ankiShowIcon)
+        self.tabAnki.setEnabled(bool(self.anki))
+        if self.anki:
+            self.setAnkiFields(self.anki.fields(), self.preferences.ankiFields)
 
 
-    def __updateSampleText(self):
+    def dialogToData(self):
+        self.preferences.generalRecentLoad = self.checkGeneralRecentLoad.isChecked()
+        self.preferences.generalReadingsStrip = self.checkGeneralReadingsStrip.isChecked()
+        self.preferences.generalFindUpdates = self.checkGeneralFindUpdates.isChecked()
+
+        self.preferences.searchScanMax = self.spinSearchScanMax.value()
+        self.preferences.searchResultMax = self.spinSearchResultMax.value()
+        self.preferences.searchGroupByExp = self.checkSearchGroupByExp.isChecked()
+
+        self.preferences.ankiShowIcon = self.checkAnkiShowIcon.isChecked()
+        if self.anki:
+            self.preferences.ankiFields = self.ankiFields()
+
+
+    def updateSampleText(self):
         palette = self.textContentSample.palette()
-        palette.setColor(QtGui.QPalette.Base, QtGui.QColor(self.__preferences.uiContentColorBg))
-        palette.setColor(QtGui.QPalette.Text, QtGui.QColor(self.__preferences.uiContentColorFg))
+        palette.setColor(QtGui.QPalette.Base, QtGui.QColor(self.preferences.uiContentColorBg))
+        palette.setColor(QtGui.QPalette.Text, QtGui.QColor(self.preferences.uiContentColorFg))
         self.textContentSample.setPalette(palette)
 
         font = self.textContentSample.font()
-        font.setFamily(self.__preferences.uiContentFontFamily)
-        font.setPointSize(self.__preferences.uiContentFontSize)
+        font.setFamily(self.preferences.uiContentFontFamily)
+        font.setPointSize(self.preferences.uiContentFontSize)
         self.textContentSample.setFont(font)
 
 
-    def __setAnkiFields(self, fieldsAnki, fieldsPrefs):
+    def setAnkiFields(self, fieldsAnki, fieldsPrefs):
         self.tableAnkiFields.setRowCount(len(fieldsAnki))
 
         for i, (name, required, unique) in enumerate(fieldsAnki):
@@ -114,7 +114,7 @@ class DialogPreferences(QtGui.QDialog, Ui_DialogPreferences):
                 self.tableAnkiFields.setItem(i, j, column)
 
 
-    def __ankiFields(self):
+    def ankiFields(self):
         result = dict()
 
         for i in range(0, self.tableAnkiFields.rowCount()):
@@ -125,29 +125,29 @@ class DialogPreferences(QtGui.QDialog, Ui_DialogPreferences):
         return result
 
 
-    def __onAccept(self):
-        self.__dialogToData()
+    def onAccept(self):
+        self.dialogToData()
 
 
-    def __onButtonColorFgClicked(self):
-        color, ok = QtGui.QColorDialog.getRgba(self.__preferences.uiContentColorFg, self)
+    def onButtonColorFgClicked(self):
+        color, ok = QtGui.QColorDialog.getRgba(self.preferences.uiContentColorFg, self)
         if ok:
-            self.__preferences.uiContentColorFg = color
-            self.__updateSampleText()
+            self.preferences.uiContentColorFg = color
+            self.updateSampleText()
 
 
-    def __onButtonColorBgClicked(self):
-        color, ok = QtGui.QColorDialog.getRgba(self.__preferences.uiContentColorBg, self)
+    def onButtonColorBgClicked(self):
+        color, ok = QtGui.QColorDialog.getRgba(self.preferences.uiContentColorBg, self)
         if ok:
-            self.__preferences.uiContentColorBg = color
-            self.__updateSampleText()
+            self.preferences.uiContentColorBg = color
+            self.updateSampleText()
 
 
-    def __onFontFamilyChanged(self, font):
-        self.__preferences.uiContentFontFamily = font.family()
-        self.__updateSampleText()
+    def onFontFamilyChanged(self, font):
+        self.preferences.uiContentFontFamily = font.family()
+        self.updateSampleText()
 
 
-    def __onFontSizeChanged(self, size):
-        self.__preferences.uiContentFontSize = size
-        self.__updateSampleText()
+    def onFontSizeChanged(self, size):
+        self.preferences.uiContentFontSize = size
+        self.updateSampleText()

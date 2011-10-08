@@ -21,12 +21,12 @@ from deinflect import Deinflector
 from translate import Translator
 
 
-def __buildRelPath(path):
+def buildRelPath(path):
     directory = os.path.split(__file__)[0]
     return os.path.join(directory, path)
 
 
 def initLanguage():
-    deinflector = Deinflector(__buildRelPath('data/deinflect.dat'))
-    dictionary = Dictionary(__buildRelPath('data/dict.sqlite'))
+    deinflector = Deinflector(buildRelPath('data/deinflect.dat'))
+    dictionary = Dictionary(buildRelPath('data/dict.sqlite'))
     return Translator(deinflector, dictionary)

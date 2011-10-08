@@ -22,26 +22,26 @@ from operator import itemgetter
 
 class Translator:
     def __init__(self, deinflector, dictionary):
-        self.__deinflector = deinflector
-        self.__dictionary = dictionary
+        self.deinflector = deinflector
+        self.dictionary = dictionary
 
 
     def wordSearch(self, word, limit, group):
-        source, indices = self.__convertKatakana(word)
+        source, indices = self.convertKatakana(word)
 
         groups = dict()
         length = 0
         count = 0
 
         while source:
-            for i, (stem, conjugations, types) in enumerate(self.__deinflector.deinflect(source)):
-                for expression, reading, glossary in self.__dictionary.findWord(stem):
+            for i, (stem, conjugations, types) in enumerate(self.deinflector.deinflect(source)):
+                for expression, reading, glossary in self.dictionary.findWord(stem):
                     if count >= limit:
                         break
 
                     if i > 0:
                         tags = re.split('[,()]', glossary)
-                        if not self.__deinflector.validate(types, tags):
+                        if not self.deinflector.validate(types, tags):
                             continue
 
                     length = max(length, indices[len(source) - 1] + 1)
@@ -77,7 +77,7 @@ class Translator:
         return results, length
 
 
-    def __convertKatakana(self, word):
+    def convertKatakana(self, word):
         kanaHalf = [
             0x3092, 0x3041, 0x3043, 0x3045, 0x3047, 0x3049, 0x3083, 0x3085,
             0x3087, 0x3063, 0x30fc, 0x3042, 0x3044, 0x3046, 0x3048, 0x304a,
@@ -135,4 +135,3 @@ class Translator:
             ordPrev = ord(char)
 
         return result, indices
-
