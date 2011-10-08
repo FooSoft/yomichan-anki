@@ -143,12 +143,12 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
     if definition.conjugations:
         conjugation = '<span class = "conjugations">&lt;{0}&gt;<br/></span>'.format(definition.conjugations)
 
-    links = '<a href = "copyDefinition:{0}"><img src = "://images/icons/page_copy.png" title = "Copy definition" align = "right"/></a>'.format(factIndex)
+    links = '<a href = "copyDefinition:{0}"><img src = "://images/icons/page_copy.png" align = "right"/></a>'.format(factIndex)
     if factQuery:
         if factQuery(buildFactMarkupExpression(definition.expression, definition.reading, definition.glossary)):
-            links += '<a href = "addFactExpression:{0}"><img src = "://images/icons/add.png" title = "Add fact as expression" align = "right"/></a>'.format(factIndex)
+            links += '<a href = "addFactExpression:{0}"><img src = "://images/icons/add.png" align = "right"/></a>'.format(factIndex)
         if factQuery(buildFactMarkupReading(definition.reading, definition.glossary)):
-            links += '<a href = "addFactReading:{0}"><img src = "://images/icons/bullet_add.png" title = "Add fact as reading" align = "right"/></a>'.format(factIndex)
+            links += '<a href = "addFactReading:{0}"><img src = "://images/icons/bullet_add.png" align = "right"/></a>'.format(factIndex)
 
     html = u"""
         <span class = "links">{0}</span>
