@@ -5,7 +5,7 @@ all: \
 	core/about_ui.py
 
 clean:
-	hg st -nu | xargs rm
+	git clean -f -x
 
 core/resources_rc.py: dev/resources.qrc
 	pyrcc4 $< -o $@
