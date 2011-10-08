@@ -31,7 +31,7 @@ class Anki:
 
         deck = self.deck()
         deck.setUndoStart(action)
-        deck.addFact(fact)
+        deck.addFact(fact, False)
         deck.setUndoEnd(action)
         deck.rebuildCounts()
 
