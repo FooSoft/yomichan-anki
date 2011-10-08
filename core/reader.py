@@ -91,6 +91,8 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
             (self.textDefinitions, 'anchorClicked(const QUrl&)', self.onDefinitionsAnchorClicked),
             (self.textDefinitionSearch, 'returnPressed()', self.onDefinitionSearchReturn),
             (self.listDefinitions, 'itemDoubleClicked(QListWidgetItem *)', self.onDefinitionDoubleClicked),
+            (self.dockDefinitions, 'visibilityChanged(bool)', self.onVisibilityChanged),
+            (self.dockAnki, 'visibilityChanged(bool)', self.onVisibilityChanged),
             (self.updateFinder, 'updateSearchResult', self.onUpdaterSearchResult)
         ]
 
@@ -290,6 +292,11 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
         if self.anki:
             row = self.listDefinitions.row(item)
             self.anki.browseFact(self.addedFacts[row])
+
+
+    def onVisibilityChanged(self, visible):
+        self.actionToggleAnki.setChecked(self.dockAnki.isVisible())
+        self.actionToggleDefinitions.setChecked(self.dockDefinitions.isVisible())
 
 
     def onUpdaterSearchResult(self, result):
