@@ -468,7 +468,7 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
 
 
     def clearRecentFiles(self):
-        self.preferences.clearFiles()
+        self.preferences.clearRecentFiles()
         self.updateRecentFiles()
 
 
