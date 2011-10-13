@@ -322,7 +322,7 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
     def openFile(self, filename):
         filename = unicode(filename)
         try:
-            with open(filename.encode('utf-8'), 'rb') as fp:
+            with open(filename, 'rb') as fp:
                 content = fp.read()
         except IOError:
             self.setStatus(u'Failed to load file {0}'.format(filename))
