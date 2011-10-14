@@ -1,7 +1,6 @@
 .git
 .gitignore
 dev
-icons
 makefile
 nodist
 README
