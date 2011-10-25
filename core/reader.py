@@ -16,6 +16,7 @@
 
 
 import os
+import tarfile
 from PyQt4 import QtGui, QtCore
 from reader_ui import Ui_MainWindowReader
 from preferences import DialogPreferences
@@ -164,7 +165,7 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
         filename = QtGui.QFileDialog.getOpenFileName(
             parent=self,
             caption='Select a file to open',
-            filter='Text files (*.txt);;All files (*.*)'
+            filter='Archive files (*.bz2 *.gz *.tar *.tgz);;Text files (*.txt);;All files (*.*)'
         )
         if not filename.isNull():
             self.openFile(filename)
@@ -322,8 +323,7 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
     def openFile(self, filename):
         filename = unicode(filename)
         try:
-            with open(filename, 'rb') as fp:
-                content = fp.read()
+            content = self.openFileByExtension(filename)
         except IOError:
             self.setStatus(u'Failed to load file {0}'.format(filename))
             QtGui.QMessageBox.critical(self, 'Yomichan', 'Cannot open file for read')
@@ -352,6 +352,25 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
 
         self.setStatus(u'Loaded file {0}'.format(filename))
         self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.split(filename)[1], encoding))
+        
+    def openFileByExtension(self, filename):
+        if tarfile.is_tarfile(filename):
+            # opening an empty tar file raises ReadError
+            with tarfile.open(filename, 'r:*') as tp:
+                files = [f for f in tp.getnames() if tp.getmember(f).isfile()]
+                if len(files) == 0:
+                    content = unicode()
+                elif len(files) == 1:
+                    fp = tp.extractfile(files[0])
+                    content = fp.read()
+                    fp.close()
+                else:
+                    content = unicode()
+                    QtGui.QMessageBox.critical(self, 'Yomichan', 'Archives with more than one (1) file are not supported')
+        else:
+            with open(filename, 'rb') as fp:
+                content = fp.read()
+        return content
 
     def closeFile(self):
         self.setWindowTitle('Yomichan')
