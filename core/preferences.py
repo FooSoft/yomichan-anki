@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 # Copyright (C) 2011  Alex Yatskov
 #
 # This program is free software: you can redistribute it and/or modify
@@ -24,16 +25,11 @@ class DialogPreferences(QtGui.QDialog, Ui_DialogPreferences):
         QtGui.QDialog.__init__(self, parent)
         self.setupUi(self)
 
-        bindings = [
-            (self, 'accepted()', self.onAccept),
-            (self.buttonContentColorFg, 'clicked()', self.onButtonColorFgClicked),
-            (self.buttonContentColorBg, 'clicked()', self.onButtonColorBgClicked),
-            (self.comboContentFontFamily, 'currentFontChanged(const QFont&)', self.onFontFamilyChanged),
-            (self.spinContentFontSize, 'valueChanged(int)', self.onFontSizeChanged)
-        ]
-
-        for action, signal, callback in bindings:
-            self.connect(action, QtCore.SIGNAL(signal), callback)
+        self.accepted.connect(self.onAccept)
+        self.buttonContentColorFg.clicked.connect(self.onButtonColorFgClicked)
+        self.buttonContentColorBg.clicked.connect(self.onButtonColorBgClicked)
+        self.comboContentFontFamily.currentFontChanged.connect(self.onFontFamilyChanged)
+        self.spinContentFontSize.valueChanged.connect(self.onFontSizeChanged)
 
         self.preferences = preferences
         self.anki = anki
