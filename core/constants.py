@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 # Copyright (C) 2011  Alex Yatskov
 #
 # This program is free software: you can redistribute it and/or modify
@@ -16,7 +17,7 @@
 
 
 constants = {
-    'version': '0.05b',
+    'version': '0.06b',
 
     'urlUpdates': 'http://foosoft.net/pub/projects/yomichan/updates.xml',
     'urlHomepage': 'http://foosoft.net/yomichan/',

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 # Copyright (C) 2011  Alex Yatskov
 #
 # This program is free software: you can redistribute it and/or modify

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 # Copyright (C) 2011  Alex Yatskov
 # This module is based on Rikaichan code written by Jonathan Zarate
 #
