@@ -23,6 +23,8 @@ from constants import constants
 
 
 class UpdateFinder(QtCore.QThread):
+    updateResult = QtCore.pyqtSignal(str)
+
     def run(self):
         latest = None
         try:
@@ -35,4 +37,4 @@ class UpdateFinder(QtCore.QThread):
         except:
             pass
         finally:
-            self.emit(QtCore.SIGNAL('updateSearchResult'), latest)
+            self.updateResult.emit(latest)

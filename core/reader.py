@@ -73,31 +73,26 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
         if self.preferences.generalFindUpdates:
             self.updateFinder.start()
 
-        bindings = [
-            (self.actionOpen, 'triggered()', self.onActionOpen),
-            (self.actionPreferences, 'triggered()', self.onActionPreferences),
-            (self.actionAbout, 'triggered()', self.onActionAbout),
-            (self.actionZoomIn, 'triggered()', self.onActionZoomIn),
-            (self.actionZoomOut, 'triggered()', self.onActionZoomOut),
-            (self.actionZoomReset, 'triggered()', self.onActionZoomReset),
-            (self.actionFind, 'triggered()', self.onActionFind),
-            (self.actionFindNext, 'triggered()', self.onActionFindNext),
-            (self.actionToggleWrap, 'toggled(bool)', self.onActionToggleWrap),
-            (self.actionCopyDefinition, 'triggered()', self.onActionCopyDefinition),
-            (self.actionCopyAllDefinitions, 'triggered()', self.onActionCopyAllDefinitions),
-            (self.actionCopySentence, 'triggered()', self.onActionCopySentence),
-            (self.actionHomepage, 'triggered()', self.onActionHomepage),
-            (self.actionFeedback, 'triggered()', self.onActionFeedback),
-            (self.textDefinitions, 'anchorClicked(const QUrl&)', self.onDefinitionsAnchorClicked),
-            (self.textDefinitionSearch, 'returnPressed()', self.onDefinitionSearchReturn),
-            (self.listDefinitions, 'itemDoubleClicked(QListWidgetItem *)', self.onDefinitionDoubleClicked),
-            (self.dockDefinitions, 'visibilityChanged(bool)', self.onVisibilityChanged),
-            (self.dockAnki, 'visibilityChanged(bool)', self.onVisibilityChanged),
-            (self.updateFinder, 'updateSearchResult', self.onUpdaterSearchResult)
-        ]
-
-        for action, signal, callback in bindings:
-            self.connect(action, QtCore.SIGNAL(signal), callback)
+        self.actionOpen.triggered.connect(self.onActionOpen)
+        self.actionPreferences.triggered.connect(self.onActionPreferences)
+        self.actionAbout.triggered.connect(self.onActionAbout)
+        self.actionZoomIn.triggered.connect(self.onActionZoomIn)
+        self.actionZoomOut.triggered.connect(self.onActionZoomOut)
+        self.actionZoomReset.triggered.connect(self.onActionZoomReset)
+        self.actionFind.triggered.connect(self.onActionFind)
+        self.actionFindNext.triggered.connect(self.onActionFindNext)
+        self.actionToggleWrap.toggled.connect(self.onActionToggleWrap)
+        self.actionCopyDefinition.triggered.connect(self.onActionCopyDefinition)
+        self.actionCopyAllDefinitions.triggered.connect(self.onActionCopyAllDefinitions)
+        self.actionCopySentence.triggered.connect(self.onActionCopySentence)
+        self.actionHomepage.triggered.connect(self.onActionHomepage)
+        self.actionFeedback.triggered.connect(self.onActionFeedback)
+        self.textDefinitions.anchorClicked.connect(self.onDefinitionsAnchorClicked)
+        self.textDefinitionSearch.returnPressed.connect(self.onDefinitionSearchReturn)
+        self.listDefinitions.itemDoubleClicked.connect(self.onDefinitionDoubleClicked)
+        self.dockDefinitions.visibilityChanged.connect(self.onVisibilityChanged)
+        self.dockAnki.visibilityChanged.connect(self.onVisibilityChanged)
+        self.updateFinder.updateResult.connect(self.onUpdaterSearchResult)
 
 
     def applyPreferences(self):
