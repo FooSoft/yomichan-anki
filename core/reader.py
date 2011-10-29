@@ -365,12 +365,33 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
                     content = fp.read()
                     fp.close()
                 else:
-                    content = unicode()
-                    QtGui.QMessageBox.critical(self, 'Yomichan', 'Archives with more than one (1) file are not supported')
+                    # Using index because of encoding difficulties
+                    (index, ok) = self.selectItem([f.decode('utf-8') for f in files])
+                    if ok:
+                        fp = tp.extractfile(files[index - 1])
+                        content = fp.read()
+                        fp.close()
+                    else:
+                        content = unicode()
         else:
             with open(filename, 'rb') as fp:
                 content = fp.read()
         return content
+    
+    def selectItem(self, list):
+        items = [self.formatQString(i, x) for i, x in enumerate(list)]
+        (item, ok) = QtGui.QInputDialog.getItem(
+                         self, 
+                         'Yomichan', 
+                         'Select file to open:', 
+                         items,
+                         current = 0,
+                         editable=False)
+        (index, success) = item.split('.').first().toInt()
+        return (index, ok and success)
+    
+    def formatQString(self, index, item):
+        return QtCore.QString(str(index + 1) + '. ').append(QtCore.QString(item))
 
     def closeFile(self):
         self.setWindowTitle('Yomichan')
