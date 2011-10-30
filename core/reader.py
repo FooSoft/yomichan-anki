@@ -165,7 +165,8 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
         filename = QtGui.QFileDialog.getOpenFileName(
             parent=self,
             caption='Select a file to open',
-            filter='Archive files (*.bz2 *.gz *.tar *.tgz);;Text files (*.txt);;All files (*.*)'
+            filter='Archive files (*.bz2 *.gz *.tar *.tgz);;Text files (*.txt);;All files (*.*)',
+            selectedFilter='Text files (*.txt)'
         )
         if not filename.isNull():
             self.openFile(filename)
