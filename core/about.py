@@ -16,15 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4 import QtGui
-from about_ui import Ui_DialogAbout
+from PyQt4 import QtGui, uic
 from constants import constants
+from util import buildResPath
 
 
-class DialogAbout(QtGui.QDialog, Ui_DialogAbout):
+class DialogAbout(QtGui.QDialog):
     def __init__(self, parent):
         QtGui.QDialog.__init__(self, parent)
-        self.setupUi(self)
+        uic.loadUi(buildResPath('ui/about.ui'), self)
 
         text = unicode(self.labelVersion.text())
         text = text.format(constants['version'])

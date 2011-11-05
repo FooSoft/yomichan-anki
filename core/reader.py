@@ -18,17 +18,17 @@
 
 import os
 import tarfile
-from PyQt4 import QtGui, QtCore
-from reader_ui import Ui_MainWindowReader
+from PyQt4 import QtGui, QtCore, uic
 from preferences import DialogPreferences
 from preference_data import Preferences
 from update import UpdateFinder
 from about import DialogAbout
 from constants import constants
+from util import buildResPath
 import reader_util
 
 
-class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
+class MainWindowReader(QtGui.QMainWindow):
     class State:
         def __init__(self):
             self.filename = unicode()
@@ -40,7 +40,7 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
 
     def __init__(self, parent=None, languages=None, filename=None, preferences=None, anki=None, closed=None, updated=None):
         QtGui.QMainWindow.__init__(self, parent)
-        self.setupUi(self)
+        uic.loadUi(buildResPath('ui/reader.ui'), self)
 
         self.textContent.mouseMoveEvent = self.onContentMouseMove
         self.textContent.mousePressEvent = self.onContentMousePress
@@ -349,7 +349,7 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
 
         self.setStatus(u'Loaded file {0}'.format(filename))
         self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.split(filename)[1], encoding))
-        
+
     def openFileByExtension(self, filename):
         if tarfile.is_tarfile(filename):
             # opening an empty tar file raises ReadError
@@ -374,19 +374,19 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
             with open(filename, 'rb') as fp:
                 content = fp.read()
         return content
-    
+
     def selectItem(self, list):
         items = [self.formatQString(i, x) for i, x in enumerate(list)]
         (item, ok) = QtGui.QInputDialog.getItem(
-                         self, 
-                         'Yomichan', 
-                         'Select file to open:', 
+                         self,
+                         'Yomichan',
+                         'Select file to open:',
                          items,
                          current = 0,
                          editable=False)
         (index, success) = item.split('.').first().toInt()
         return (index, ok and success)
-    
+
     def formatQString(self, index, item):
         return QtCore.QString(str(index + 1) + '. ').append(QtCore.QString(item))
 
