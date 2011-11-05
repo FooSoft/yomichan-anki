@@ -1,7 +1,5 @@
 .git
 .gitignore
-dev
-makefile
 nodist
 README
 *.pyc

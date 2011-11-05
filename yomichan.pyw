@@ -18,7 +18,7 @@
 
 import sys
 from PyQt4 import QtGui
-from languages import japanese
+from lang import japanese
 from core.reader import MainWindowReader
 
 

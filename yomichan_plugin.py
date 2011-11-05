@@ -17,7 +17,7 @@
 
 
 from PyQt4 import QtGui, QtCore
-from languages import japanese
+from lang import japanese
 from core import anki_host
 from core.preference_data import Preferences
 from core.reader import MainWindowReader

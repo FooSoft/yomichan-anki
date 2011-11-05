@@ -17,8 +17,8 @@
    <string>Yomichan</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/logos/logos/logo32x32.png</normaloff>:/logos/logos/logo32x32.png</iconset>
+   <iconset>
+    <normaloff>../img/logo32x32.png</normaloff>../img/logo32x32.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -40,7 +40,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -206,8 +206,8 @@
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/folder_page.png</normaloff>:/images/icons/folder_page.png</iconset>
+    <iconset>
+     <normaloff>../img/folder_page.png</normaloff>../img/folder_page.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open...</string>
@@ -224,8 +224,8 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/cross.png</normaloff>:/images/icons/cross.png</iconset>
+    <iconset>
+     <normaloff>../img/cross.png</normaloff>../img/cross.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -242,8 +242,8 @@
   </action>
   <action name="actionPreferences">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/wrench.png</normaloff>:/images/icons/wrench.png</iconset>
+    <iconset>
+     <normaloff>../img/wrench.png</normaloff>../img/wrench.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Preferences...</string>
@@ -257,8 +257,8 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/information.png</normaloff>:/images/icons/information.png</iconset>
+    <iconset>
+     <normaloff>../img/information.png</normaloff>../img/information.png</iconset>
    </property>
    <property name="text">
     <string>&amp;About...</string>
@@ -275,8 +275,8 @@
   </action>
   <action name="actionZoomIn">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/magnifier_zoom_in.png</normaloff>:/images/icons/magnifier_zoom_in.png</iconset>
+    <iconset>
+     <normaloff>../img/magnifier_zoom_in.png</normaloff>../img/magnifier_zoom_in.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;in</string>
@@ -290,8 +290,8 @@
   </action>
   <action name="actionZoomOut">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/magifier_zoom_out.png</normaloff>:/images/icons/magifier_zoom_out.png</iconset>
+    <iconset>
+     <normaloff>../img/magifier_zoom_out.png</normaloff>../img/magifier_zoom_out.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;out</string>
@@ -305,8 +305,8 @@
   </action>
   <action name="actionZoomReset">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/magnifier.png</normaloff>:/images/icons/magnifier.png</iconset>
+    <iconset>
+     <normaloff>../img/magnifier.png</normaloff>../img/magnifier.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Reset</string>
@@ -323,8 +323,8 @@
   </action>
   <action name="actionFind">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/find.png</normaloff>:/images/icons/find.png</iconset>
+    <iconset>
+     <normaloff>../img/find.png</normaloff>../img/find.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Find...</string>
@@ -377,8 +377,8 @@
   </action>
   <action name="actionCopyDefinition">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/page_copy.png</normaloff>:/images/icons/page_copy.png</iconset>
+    <iconset>
+     <normaloff>../img/page_copy.png</normaloff>../img/page_copy.png</iconset>
    </property>
    <property name="text">
     <string>Copy &amp;definition</string>
@@ -397,8 +397,8 @@
   </action>
   <action name="actionHomepage">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/world_go.png</normaloff>:/images/icons/world_go.png</iconset>
+    <iconset>
+     <normaloff>../img/world_go.png</normaloff>../img/world_go.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Homepage...</string>
@@ -428,17 +428,15 @@
   </action>
   <action name="actionFeedback">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/images/icons/email.png</normaloff>:/images/icons/email.png</iconset>
+    <iconset>
+     <normaloff>../img/email.png</normaloff>../img/email.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Feedback...</string>
    </property>
   </action>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionToggleDefinitions</sender>

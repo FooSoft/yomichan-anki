@@ -22,7 +22,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="resources.qrc">:/logos/logos/logo64x64.png</pixmap>
+        <pixmap>../img/logo64x64.png</pixmap>
        </property>
       </widget>
      </item>
@@ -814,9 +814,7 @@ Public License instead of this License.  But first, please read
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
