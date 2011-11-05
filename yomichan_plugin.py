@@ -17,10 +17,10 @@
 
 
 from PyQt4 import QtGui, QtCore
-from lang import japanese
-from core import anki_host
-from core.preference_data import Preferences
-from core.reader import MainWindowReader
+from yomichan.lang import japanese
+from yomichan.core import anki_host
+from yomichan.core.preference_data import Preferences
+from yomichan.core.reader import MainWindowReader
 
 
 class YomichanPlugin:

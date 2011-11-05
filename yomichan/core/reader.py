@@ -40,7 +40,7 @@ class MainWindowReader(QtGui.QMainWindow):
 
     def __init__(self, parent=None, languages=None, filename=None, preferences=None, anki=None, closed=None, updated=None):
         QtGui.QMainWindow.__init__(self, parent)
-        uic.loadUi(buildResPath('ui/reader.ui'), self)
+        uic.loadUi(buildResPath('yomichan/ui/reader.ui'), self)
 
         self.textContent.mouseMoveEvent = self.onContentMouseMove
         self.textContent.mousePressEvent = self.onContentMousePress

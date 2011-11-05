@@ -18,8 +18,8 @@
 
 import sys
 from PyQt4 import QtGui
-from lang import japanese
-from core.reader import MainWindowReader
+from yomichan.lang import japanese
+from yomichan.core.reader import MainWindowReader
 
 
 filename = sys.argv[1] if len(sys.argv) >= 2 else None

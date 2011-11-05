@@ -24,7 +24,7 @@ from util import buildResPath
 class DialogAbout(QtGui.QDialog):
     def __init__(self, parent):
         QtGui.QDialog.__init__(self, parent)
-        uic.loadUi(buildResPath('ui/about.ui'), self)
+        uic.loadUi(buildResPath('yomichan/ui/about.ui'), self)
 
         text = unicode(self.labelVersion.text())
         text = text.format(constants['version'])
