@@ -36,6 +36,7 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
             self.searchPosition = 0
             self.searchText = unicode()
             self.scanPosition = 0
+            self.archiveIndex = None
 
 
     def __init__(self, parent=None, languages=None, filename=None, preferences=None, anki=None, closed=None, updated=None):
@@ -355,6 +356,10 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
             # opening an empty tar file raises ReadError
             with tarfile.open(filename, 'r:*') as tp:
                 files = [f for f in tp.getnames() if tp.getmember(f).isfile()]
+                names = [f.decode('utf-8') for f in files]
+                
+                self.updateArchiveFiles(filename, names)
+                
                 if len(files) == 0:
                     content = unicode()
                 elif len(files) == 1:
@@ -363,32 +368,47 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
                     fp.close()
                 else:
                     # Using index because of encoding difficulties
-                    (index, ok) = self.selectItem([f.decode('utf-8') for f in files])
+                    (index, ok) = self.selectFileName(names)
                     if ok:
-                        fp = tp.extractfile(files[index - 1])
+                        fp = tp.extractfile(files[index])
                         content = fp.read()
                         fp.close()
+                        self.state.archiveIndex = index
                     else:
                         content = unicode()
         else:
+            self.state.archiveIndex = None
             with open(filename, 'rb') as fp:
                 content = fp.read()
         return content
     
-    def selectItem(self, list):
-        items = [self.formatQString(i, x) for i, x in enumerate(list)]
+    
+    def selectFileName(self, names):
+        if self.state.archiveIndex is not None:
+            return (self.state.archiveIndex, True)
+        
         (item, ok) = QtGui.QInputDialog.getItem(
                          self, 
                          'Yomichan', 
                          'Select file to open:', 
-                         items,
+                         self.formatQStringList(names),
                          current = 0,
                          editable=False)
-        (index, success) = item.split('.').first().toInt()
-        return (index, ok and success)
+        (index, success) = self.getItemIndex(item)
+        return (index - 1, ok and success)
+    
+    
+    def getItemIndex(self, item):
+        return item.split('.').first().toInt()
+
+
+    def formatQStringList(self, list):
+        return [self.formatQString(i, x) for i, x in enumerate(list)]
+    
     
     def formatQString(self, index, item):
         return QtCore.QString(str(index + 1) + '. ').append(QtCore.QString(item))
+
 
     def closeFile(self):
         self.setWindowTitle('Yomichan')
@@ -502,6 +522,30 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
         cursor.setPosition(samplePosStart, QtGui.QTextCursor.MoveAnchor)
         cursor.setPosition(samplePosStart + lengthSelect, QtGui.QTextCursor.KeepAnchor)
         self.textContent.setTextCursor(cursor)
+        
+        
+    def clearArchiveFiles(self):
+        self.menuOpenArchive.clear()
+        self.menuOpenArchive.setEnabled(False)
+        
+    
+    def updateArchiveFiles(self, filename, names):
+        self.clearArchiveFiles()
+        
+        self.menuOpenArchive.setEnabled(True)
+        for name in self.formatQStringList(names):
+            (index, ok) = self.getItemIndex(name)
+            if ok:
+                index = index - 1
+                self.menuOpenArchive.addAction(name, (lambda fn=filename, idx=index: self.openFileInArchive(fn, idx)))
+            else:
+                self.menuOpenArchive.addAction(name, (lambda fn=filename: self.openFile(fn)))
+            
+            
+    def openFileInArchive(self, filename, index):
+        self.state.scanPosition = 0
+        self.state.archiveIndex = index
+        self.openFile(filename)
 
 
     def clearRecentFiles(self):
