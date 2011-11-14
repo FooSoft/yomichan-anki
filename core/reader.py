@@ -352,6 +352,7 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
         self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.split(filename)[1], encoding))
         
     def openFileByExtension(self, filename):
+        self.clearArchiveFiles()
         if tarfile.is_tarfile(filename):
             # opening an empty tar file raises ReadError
             with tarfile.open(filename, 'r:*') as tp:
@@ -530,8 +531,6 @@ class MainWindowReader(QtGui.QMainWindow, Ui_MainWindowReader):
         
     
     def updateArchiveFiles(self, filename, names):
-        self.clearArchiveFiles()
-        
         self.menuOpenArchive.setEnabled(True)
         for name in self.formatQStringList(names):
             (index, ok) = self.getItemIndex(name)
