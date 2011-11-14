@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dev/reader.ui'
 #
-# Created: Fri Oct  7 08:55:15 2011
+# Created: Mon Nov 14 19:35:11 2011
 #      by: PyQt4 UI code generator 4.8.5
 #
 # WARNING! All changes made in this file will be lost!
@@ -39,6 +39,10 @@ class Ui_MainWindowReader(object):
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindowReader", "&File", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
+        self.menuOpenArchive = QtGui.QMenu(self.menuFile)
+        self.menuOpenArchive.setEnabled(False)
+        self.menuOpenArchive.setTitle(QtGui.QApplication.translate("MainWindowReader", "Open from &archive", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuOpenArchive.setObjectName(_fromUtf8("menuOpenArchive"))
         self.menuOpenRecent = QtGui.QMenu(self.menuFile)
         self.menuOpenRecent.setTitle(QtGui.QApplication.translate("MainWindowReader", "Open &recent", None, QtGui.QApplication.UnicodeUTF8))
         self.menuOpenRecent.setObjectName(_fromUtf8("menuOpenRecent"))
@@ -234,6 +238,7 @@ class Ui_MainWindowReader(object):
         self.actionFeedback.setText(QtGui.QApplication.translate("MainWindowReader", "&Feedback...", None, QtGui.QApplication.UnicodeUTF8))
         self.actionFeedback.setObjectName(_fromUtf8("actionFeedback"))
         self.menuFile.addAction(self.actionOpen)
+        self.menuFile.addAction(self.menuOpenArchive.menuAction())
         self.menuFile.addAction(self.menuOpenRecent.menuAction())
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionQuit)
