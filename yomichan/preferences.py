@@ -23,7 +23,7 @@ from util import buildResPath
 class DialogPreferences(QtGui.QDialog):
     def __init__(self, parent, preferences, anki):
         QtGui.QDialog.__init__(self, parent)
-        uic.loadUi(buildResPath('yomichan/ui/preferences.ui'), self)
+        uic.loadUi(buildResPath('ui/preferences.ui'), self)
 
         self.accepted.connect(self.onAccept)
         self.buttonContentColorFg.clicked.connect(self.onButtonColorFgClicked)
