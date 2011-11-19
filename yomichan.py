@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 # Copyright (C) 2011  Alex Yatskov
@@ -16,26 +17,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import sys
 from PyQt4 import QtGui, QtCore
-from yomichan import anki_host
 from yomichan.lang import japanese
+from yomichan.util import buildResPath
 from yomichan.preference_data import Preferences
 from yomichan.reader import MainWindowReader
 
 
-class YomichanPlugin:
+class Yomichan:
     def __init__(self):
         self.languages = {'Japanese': japanese.initLanguage()}
         self.preferences = Preferences()
         self.preferences.load()
+
+
+class YomichanPlugin(Yomichan):
+    def __init__(self):
+        Yomichan.__init__(self)
+
         self.toolIconVisible = False
         self.window = None
-
         self.anki = anki_host.Anki()
         self.parent = self.anki.window()
         self.separator = QtGui.QAction(self.parent)
         self.separator.setSeparator(True)
-        self.action = QtGui.QAction(QtGui.QIcon(':/logos/logos/logo32x32.png'), '&Yomichan...', self.parent)
+        self.action = QtGui.QAction(QtGui.QIcon(buildResPath('img/logo32x32.png')), '&Yomichan...', self.parent)
         self.action.setIconVisibleInMenu(True)
         self.parent.connect(self.action, QtCore.SIGNAL('triggered()'), self.onShowRequest)
 
@@ -50,9 +57,9 @@ class YomichanPlugin:
         else:
             self.window = MainWindowReader(
                 self.parent,
+                self.preferences,
                 self.languages,
                 None,
-                self.preferences,
                 self.anki,
                 self.onWindowClose,
                 self.onWindowUpdate
@@ -102,4 +109,23 @@ class YomichanPlugin:
             self.toolIconVisible = True
 
 
-plugin = YomichanPlugin()
+class YomichanStandalone(Yomichan):
+    def __init__(self):
+        Yomichan.__init__(self)
+
+        self.application = QtGui.QApplication(sys.argv)
+        self.window = MainWindowReader(
+            None,
+            self.preferences,
+            self.languages,
+            filename=sys.argv[1] if len(sys.argv) >= 2 else None
+        )
+        self.window.show()
+        self.application.exec_()
+
+
+if __name__ == '__main__':
+    instance = YomichanStandalone()
+else:
+    from yomichan import anki_host
+    instance = YomichanPlugin()

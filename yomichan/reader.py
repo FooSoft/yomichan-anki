@@ -39,7 +39,7 @@ class MainWindowReader(QtGui.QMainWindow):
             self.archiveIndex = None
 
 
-    def __init__(self, parent=None, languages=None, filename=None, preferences=None, anki=None, closed=None, updated=None):
+    def __init__(self, parent, preferences, languages, filename=None, anki=None, closed=None, updated=None):
         QtGui.QMainWindow.__init__(self, parent)
         uic.loadUi(buildResPath('ui/reader.ui'), self)
 
@@ -47,12 +47,7 @@ class MainWindowReader(QtGui.QMainWindow):
         self.textContent.mousePressEvent = self.onContentMousePress
         self.dockAnki.setEnabled(bool(anki))
 
-        if preferences:
-            self.preferences = preferences
-        else:
-            self.preferences = Preferences()
-            self.preferences.load()
-
+        self.preferences = preferences
         self.updateFinder = UpdateFinder()
         self.state = self.State()
         self.languages = languages
@@ -162,8 +157,7 @@ class MainWindowReader(QtGui.QMainWindow):
         filename = QtGui.QFileDialog.getOpenFileName(
             parent=self,
             caption='Select a file to open',
-            filter='Archive files (*.bz2 *.gz *.tar *.tgz);;Text files (*.txt);;All files (*.*)',
-            selectedFilter='Text files (*.txt)'
+            filter='Text files (*.txt);;Archive files (*.bz2 *.gz *.tar *.tgz);;All files (*.*)'
         )
         if not filename.isNull():
             self.openFile(filename)
@@ -350,17 +344,18 @@ class MainWindowReader(QtGui.QMainWindow):
 
         self.setStatus(u'Loaded file {0}'.format(filename))
         self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.split(filename)[1], encoding))
-        
+
     def openFileByExtension(self, filename):
         self.clearArchiveFiles()
+
         if tarfile.is_tarfile(filename):
             # opening an empty tar file raises ReadError
             with tarfile.open(filename, 'r:*') as tp:
                 files = [f for f in tp.getnames() if tp.getmember(f).isfile()]
                 names = [f.decode('utf-8') for f in files]
-                
+
                 self.updateArchiveFiles(filename, names)
-                
+
                 if len(files) == 0:
                     content = unicode()
                 elif len(files) == 1:
@@ -381,32 +376,33 @@ class MainWindowReader(QtGui.QMainWindow):
             self.state.archiveIndex = None
             with open(filename, 'rb') as fp:
                 content = fp.read()
+
         return content
-    
-    
+
+
     def selectFileName(self, names):
         if self.state.archiveIndex is not None:
             return (self.state.archiveIndex, True)
-        
+
         (item, ok) = QtGui.QInputDialog.getItem(
-                         self, 
-                         'Yomichan', 
-                         'Select file to open:', 
+                         self,
+                         'Yomichan',
+                         'Select file to open:',
                          self.formatQStringList(names),
                          current = 0,
                          editable=False)
         (index, success) = self.getItemIndex(item)
         return (index - 1, ok and success)
-    
-    
+
+
     def getItemIndex(self, item):
         return item.split('.').first().toInt()
 
 
     def formatQStringList(self, list):
         return [self.formatQString(i, x) for i, x in enumerate(list)]
-    
-    
+
+
     def formatQString(self, index, item):
         return QtCore.QString(str(index + 1) + '. ').append(QtCore.QString(item))
 
@@ -523,13 +519,13 @@ class MainWindowReader(QtGui.QMainWindow):
         cursor.setPosition(samplePosStart, QtGui.QTextCursor.MoveAnchor)
         cursor.setPosition(samplePosStart + lengthSelect, QtGui.QTextCursor.KeepAnchor)
         self.textContent.setTextCursor(cursor)
-        
-        
+
+
     def clearArchiveFiles(self):
         self.menuOpenArchive.clear()
         self.menuOpenArchive.setEnabled(False)
-        
-    
+
+
     def updateArchiveFiles(self, filename, names):
         self.menuOpenArchive.setEnabled(True)
         for name in self.formatQStringList(names):
@@ -539,8 +535,8 @@ class MainWindowReader(QtGui.QMainWindow):
                 self.menuOpenArchive.addAction(name, (lambda fn=filename, idx=index: self.openFileInArchive(fn, idx)))
             else:
                 self.menuOpenArchive.addAction(name, (lambda fn=filename: self.openFile(fn)))
-            
-            
+
+
     def openFileInArchive(self, filename, index):
         self.state.scanPosition = 0
         self.state.archiveIndex = index
@@ -560,7 +556,7 @@ class MainWindowReader(QtGui.QMainWindow):
             return
 
         for filename in filenames:
-            self.menuOpenRecent.addAction(filename, (lambda fn=filename: self.openFile(fn)))
+            self.menuOpenRecent.addAction(filename, lambda fn=filename: self.openFile(fn))
 
         self.menuOpenRecent.addSeparator()
         self.menuOpenRecent.addAction('Clear file history', self.clearRecentFiles)
