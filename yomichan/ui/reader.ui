@@ -47,12 +47,21 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <widget class="QMenu" name="menuOpenArchive">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Open from &amp;archive</string>
+     </property>
+    </widget>
     <widget class="QMenu" name="menuOpenRecent">
      <property name="title">
       <string>Open &amp;recent</string>
      </property>
     </widget>
     <addaction name="actionOpen"/>
+    <addaction name="menuOpenArchive"/>
     <addaction name="menuOpenRecent"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
