@@ -18,6 +18,7 @@
 
 import re
 from PyQt4 import QtGui
+from util import buildResPath
 
 
 class Definition:
@@ -144,12 +145,12 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
     if definition.conjugations:
         conjugation = '<span class = "conjugations">&lt;{0}&gt;<br/></span>'.format(definition.conjugations)
 
-    links = '<a href = "copyDefinition:{0}"><img src = "://images/icons/page_copy.png" align = "right"/></a>'.format(factIndex)
+    links = '<a href = "copyDefinition:{0}"><img src = "{1}" align = "right"/></a>'.format(factIndex, buildResPath('img/page_copy.png'))
     if factQuery:
         if factQuery(buildFactMarkupExpression(definition.expression, definition.reading, definition.glossary)):
-            links += '<a href = "addFactExpression:{0}"><img src = "://images/icons/add.png" align = "right"/></a>'.format(factIndex)
+            links += '<a href = "addFactExpression:{0}"><img src = "{1}" align = "right"/></a>'.format(factIndex, buildResPath('img/add.png'))
         if factQuery(buildFactMarkupReading(definition.reading, definition.glossary)):
-            links += '<a href = "addFactReading:{0}"><img src = "://images/icons/bullet_add.png" align = "right"/></a>'.format(factIndex)
+            links += '<a href = "addFactReading:{0}"><img src = "{1}" align = "right"/></a>'.format(factIndex, buildResPath('img/bullet_add.png'))
 
     html = u"""
         <span class = "links">{0}</span>

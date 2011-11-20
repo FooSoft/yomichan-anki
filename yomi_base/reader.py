@@ -20,7 +20,6 @@ import os
 import tarfile
 from PyQt4 import QtGui, QtCore, uic
 from preferences import DialogPreferences
-from preference_data import Preferences
 from update import UpdateFinder
 from about import DialogAbout
 from constants import constants

@@ -19,10 +19,10 @@
 
 import sys
 from PyQt4 import QtGui, QtCore
-from yomichan.lang import japanese
-from yomichan.util import buildResPath
-from yomichan.preference_data import Preferences
-from yomichan.reader import MainWindowReader
+from yomi_base.lang import japanese
+from yomi_base.util import buildResPath
+from yomi_base.preference_data import Preferences
+from yomi_base.reader import MainWindowReader
 
 
 class Yomichan:
@@ -44,7 +44,7 @@ class YomichanPlugin(Yomichan):
         self.separator.setSeparator(True)
         self.action = QtGui.QAction(QtGui.QIcon(buildResPath('img/logo32x32.png')), '&Yomichan...', self.parent)
         self.action.setIconVisibleInMenu(True)
-        self.parent.connect(self.action, QtCore.SIGNAL('triggered()'), self.onShowRequest)
+        self.action.triggered.connect(self.onShowRequest)
 
         self.anki.addHook('loadDeck', self.onDeckLoad)
         self.anki.addHook('deckClosed', self.onDeckClose)
@@ -120,6 +120,7 @@ class YomichanStandalone(Yomichan):
             self.languages,
             filename=sys.argv[1] if len(sys.argv) >= 2 else None
         )
+
         self.window.show()
         self.application.exec_()
 
@@ -127,5 +128,5 @@ class YomichanStandalone(Yomichan):
 if __name__ == '__main__':
     instance = YomichanStandalone()
 else:
-    from yomichan import anki_host
+    from yomi_base import anki_host
     instance = YomichanPlugin()
