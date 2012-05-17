@@ -38,4 +38,4 @@ class UpdateFinder(QtCore.QThread):
         except:
             pass
         finally:
-            self.updateResult.emit(latest)
+            self.updateResult.emit(latest or constants['version'])
