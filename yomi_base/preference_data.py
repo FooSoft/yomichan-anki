@@ -97,8 +97,6 @@ class Preferences:
             self.searchGroupByExp = self.readAttrBool(search, 'groupByExp', self.searchGroupByExp)
 
         for anki in root.getElementsByTagName('anki'):
-            self.ankiShowIcon = self.readAttrBool(anki, 'showIcon', self.ankiShowIcon)
-
             for tag in anki.getElementsByTagName('tag'):
                 value = self.readAttrStr(tag, 'value', unicode())
                 self.ankiTags.append(value)
@@ -164,7 +162,6 @@ class Preferences:
 
         anki = doc.createElement('anki')
         root.appendChild(anki)
-        self.writeAttrBool(anki, 'showIcon', self.ankiShowIcon)
 
         for value in self.ankiTags:
             tag = doc.createElement('tag')

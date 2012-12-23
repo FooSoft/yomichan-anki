@@ -23,50 +23,50 @@ import re
 
 
 class Anki:
-    def addFact(self, fields, tags=unicode()):
-        fact = self.createFact(fields, tags)
-        if not fact:
+    def addNote(self, fields, tags=unicode()):
+        note = self.createNote(fields, tags)
+        if not note:
             return None
 
         action = lang._('Add')
 
-        deck = self.deck()
-        deck.setUndoStart(action)
-        deck.addFact(fact, False)
-        deck.setUndoEnd(action)
-        deck.rebuildCounts()
+        collection = self.collection()
+        collection.setUndoStart(action)
+        collection.addNote(note, False)
+        collection.setUndoEnd(action)
+        collection.rebuildCounts()
 
         ankiqt.mw.updateTitleBar()
         ankiqt.mw.statusView.redraw()
 
-        return fact.id
+        return note.id
 
 
-    def canAddFact(self, fields):
-        return bool(self.createFact(fields))
+    def canAddNote(self, fields):
+        return bool(self.createNote(fields))
 
 
-    def createFact(self, fields, tags=unicode()):
-        deck = self.deck()
-        fact = deck.newFact()
-        fact.tags = self.cleanupTags(tags)
+    def createNote(self, fields, tags=unicode()):
+        collection = self.collection()
+        note = collection.newnote()
+        note.tags = self.cleanupTags(tags)
 
         try:
-            for field in fact.fields:
+            for field in note.fields:
                 field.value = fields.get(field.getName()) or unicode()
-                if not fact.fieldValid(field) or not fact.fieldUnique(field, deck.s):
+                if not note.fieldValid(field) or not note.fieldUnique(field, collection.s):
                     return None
         except KeyError:
             return None
 
-        return fact
+        return note
 
 
-    def browseFact(self, factId):
+    def browseNote(self, noteId):
         browser = ui.dialogs.get('CardList', self.window())
-        browser.dialog.filterEdit.setText('fid:' + str(factId))
+        browser.dialog.filterEdit.setText('fid:' + str(noteId))
         browser.updateSearch()
-        browser.onFact()
+        browser.onnote()
 
 
     def cleanupTags(self, tags):
@@ -74,30 +74,28 @@ class Anki:
 
 
     def fields(self):
-        return [
-            (field.name, field.required, field.unique) for field in self.model().fieldModels
-        ]
-
-
-    def deck(self):
-        return self.window().deck
-
-
-    def model(self):
-        return self.deck().currentModel
+        return [field['name'] for field in self.currentModel()['flds']]
 
 
     def window(self):
         return aqt.mw
 
 
+    def form(self):
+        return self.window().form
+
+
     def toolsMenu(self):
-        return self.window().form.menuTools
+        return self.form().menuTools
 
 
-    def addHook(self, name, callback):
-        hooks.addHook(name, callback)
+    def collection(self):
+        return self.window().col
 
 
-    def removeHook(self, name, callback):
-        hooks.removeHook(name, callback)
+    def models(self):
+        return self.collection().models
+
+
+    def currentModel(self):
+        return self.models().current()

@@ -51,8 +51,7 @@ class DialogPreferences(QtGui.QDialog):
         self.spinSearchResultMax.setValue(self.preferences.searchResultMax)
         self.checkSearchGroupByExp.setChecked(self.preferences.searchGroupByExp)
 
-        self.checkAnkiShowIcon.setChecked(self.preferences.ankiShowIcon)
-        self.tabAnki.setEnabled(bool(self.anki))
+        self.tabAnki.setEnabled(self.anki is not None)
         if self.anki:
             self.setAnkiFields(self.anki.fields(), self.preferences.ankiFields)
 
@@ -66,7 +65,6 @@ class DialogPreferences(QtGui.QDialog):
         self.preferences.searchResultMax = self.spinSearchResultMax.value()
         self.preferences.searchGroupByExp = self.checkSearchGroupByExp.isChecked()
 
-        self.preferences.ankiShowIcon = self.checkAnkiShowIcon.isChecked()
         if self.anki:
             self.preferences.ankiFields = self.ankiFields()
 
@@ -86,7 +84,7 @@ class DialogPreferences(QtGui.QDialog):
     def setAnkiFields(self, fieldsAnki, fieldsPrefs):
         self.tableAnkiFields.setRowCount(len(fieldsAnki))
 
-        for i, (name, required, unique) in enumerate(fieldsAnki):
+        for i, name in enumerate(fieldsAnki):
             columns = list()
 
             itemName = QtGui.QTableWidgetItem(name)
@@ -95,16 +93,6 @@ class DialogPreferences(QtGui.QDialog):
 
             itemValue = QtGui.QTableWidgetItem(fieldsPrefs.get(name, unicode()))
             columns.append(itemValue)
-
-            itemRequired = QtGui.QTableWidgetItem()
-            itemRequired.setFlags(QtCore.Qt.ItemIsUserCheckable)
-            itemRequired.setCheckState(QtCore.Qt.Checked if required else QtCore.Qt.Unchecked)
-            columns.append(itemRequired)
-
-            itemUnique = QtGui.QTableWidgetItem()
-            itemUnique.setFlags(QtCore.Qt.ItemIsUserCheckable)
-            itemUnique.setCheckState(QtCore.Qt.Checked if unique else QtCore.Qt.Unchecked)
-            columns.append(itemUnique)
 
             for j, column in enumerate(columns):
                 self.tableAnkiFields.setItem(i, j, column)

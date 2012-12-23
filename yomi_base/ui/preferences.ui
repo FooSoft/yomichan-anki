@@ -193,16 +193,6 @@
              <string>Value</string>
             </property>
            </column>
-           <column>
-            <property name="text">
-             <string>Required</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>Unique</string>
-            </property>
-           </column>
           </widget>
          </item>
          <item>
@@ -319,13 +309,6 @@
           </layout>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkAnkiShowIcon">
-         <property name="text">
-          <string>Show icon in toolbar</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
