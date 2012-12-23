@@ -16,9 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import ankiqt
-from anki import hooks, lang
-from ankiqt import ui
+import aqt
+#from anki import hooks, lang
+#from ankiqt import ui
 import re
 
 
@@ -88,15 +88,11 @@ class Anki:
 
 
     def window(self):
-        return ankiqt.mw
+        return aqt.mw
 
 
     def toolsMenu(self):
-        return self.window().mainWin.menuTools
-
-
-    def toolBar(self):
-        return self.window().mainWin.toolBar
+        return self.window().form.menuTools
 
 
     def addHook(self, name, callback):

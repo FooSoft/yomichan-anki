@@ -46,9 +46,8 @@ class YomichanPlugin(Yomichan):
         self.action.setIconVisibleInMenu(True)
         self.action.triggered.connect(self.onShowRequest)
 
-        self.anki.addHook('loadDeck', self.onDeckLoad)
-        self.anki.addHook('deckClosed', self.onDeckClose)
-
+        self.anki.toolsMenu().addAction(self.separator)
+        self.anki.toolsMenu().addAction(self.action)
 
     def onShowRequest(self):
         if self.window:
@@ -61,52 +60,13 @@ class YomichanPlugin(Yomichan):
                 self.languages,
                 None,
                 self.anki,
-                self.onWindowClose,
-                self.onWindowUpdate
+                self.onWindowClose
             )
             self.window.show()
 
 
     def onWindowClose(self):
         self.window = None
-
-
-    def onWindowUpdate(self):
-        if self.preferences.ankiShowIcon:
-            self.showToolIcon()
-        else:
-            self.hideToolIcon()
-
-
-    def onDeckLoad(self):
-        self.anki.toolsMenu().addAction(self.separator)
-        self.anki.toolsMenu().addAction(self.action)
-
-        if self.preferences.ankiShowIcon:
-            self.showToolIcon()
-
-
-    def onDeckClose(self):
-        self.anki.toolsMenu().removeAction(self.action)
-        self.anki.toolsMenu().removeAction(self.separator)
-
-        self.hideToolIcon()
-
-        if self.window:
-            self.window.close()
-            self.window = None
-
-
-    def hideToolIcon(self):
-        if self.toolIconVisible:
-            self.anki.toolBar().removeAction(self.action)
-            self.toolIconVisible = False
-
-
-    def showToolIcon(self):
-        if not self.toolIconVisible:
-            self.anki.toolBar().addAction(self.action)
-            self.toolIconVisible = True
 
 
 class YomichanStandalone(Yomichan):
