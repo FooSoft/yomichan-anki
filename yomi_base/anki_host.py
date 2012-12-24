@@ -21,14 +21,6 @@ import re
 
 
 class Anki:
-    def __init__(self, modelName=None):
-        self.setModelName(modelName)
-
-
-    def setModelName(self, modelName):
-        self.modelName = modelName
-
-
     def addNote(self, fields, tags=unicode()):
         note = self.createNote(fields, tags)
         if not note:
@@ -103,13 +95,11 @@ class Anki:
         return self.models().allNames()
 
 
-    def currentModel(self):
+    def modelFieldNames(self, model):
+        return [field['name'] for field in model['flds']]
+
+
+    def findModel(self, name):
         for model in self.models().models.values():
-            if model['name'] == self.modelName:
+            if model['name'] == name:
                 return model
-
-
-    def currentModelFieldNames(self):
-        model = self.currentModel()
-        if model is not None:
-            return [field['name'] for field in model['flds']]
