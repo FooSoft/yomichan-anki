@@ -100,9 +100,7 @@ class MainWindowReader(QtGui.QMainWindow):
         if self.preferences.uiReaderSize != None:
             self.resize(QtCore.QSize(*self.preferences.uiReaderSize))
 
-        for tags in self.preferences.ankiTags:
-            self.comboTags.addItem(tags)
-
+        self.comboTags.addItems(self.preferences.ankiTags)
         self.applyPreferencesContent()
 
 
@@ -440,15 +438,17 @@ class MainWindowReader(QtGui.QMainWindow):
 
         fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
 
-        tags = self.anki.cleanupTags(unicode(self.comboTags.currentText()))
-        tagIndex = self.comboTags.findText(tags)
+        tagsSplit = reader_util.splitTags(unicode(self.comboTags.currentText()))
+        tagsJoined = ' '.join(tagsSplit)
+
+        tagIndex = self.comboTags.findText(tagsJoined)
         if tagIndex > 0:
             self.comboTags.removeItem(tagIndex)
         if tagIndex != 0:
-            self.comboTags.insertItem(0, tags)
-        self.preferences.updateFactTags(tags)
+            self.comboTags.insertItem(0, tagsJoined)
+        self.preferences.updateFactTags(tagsJoined)
 
-        factId = self.anki.addNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields, tags)
+        factId = self.anki.addNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields, tagsSplit)
         if not factId:
             return False
 
@@ -471,7 +471,7 @@ class MainWindowReader(QtGui.QMainWindow):
             return False
 
         fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
-        return self.anki.canAddNote(self.preferences.ankiModel, fields)
+        return self.anki.canAddNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields)
 
 
     def updateSampleMouseEvent(self, event):

@@ -118,6 +118,10 @@ def buildFactMarkupReading(reading, glossary, sentence=None):
     }
 
 
+def splitTags(tags):
+    return re.split('[;,\s]', tags)
+
+
 def convertDefinitions(definitions, sentence=None):
     return [
         Definition(*(definition + (sentence,))) for definition in definitions

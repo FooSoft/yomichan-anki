@@ -18,43 +18,44 @@
 
 import aqt
 import anki.hooks
-import re
 
 
 class Anki:
-    def addNote(self, deckName, modelName, fields, tags=unicode()):
+    def addNote(self, deckName, modelName, fields, tags=list()):
         note = self.createNote(fields, deckName, modelName, tags)
-        if not note:
-            return None
-
-        note.model()['did'] = self.currentDeck()['id']
-
-        self.collection().addNote(note)
-        self.window().requireReset()
-
-        return note.id
+        if note is not None:
+            self.collection().addNote(note)
+            self.decks().save(self.currentDeck())
+            self.window().requireReset()
 
 
-    def canAddNote(self, modelName, fields):
-        return bool(self.createNote(modelName, fields))
+    def canAddNote(self, deckName, modelName, fields):
+        return bool(self.createNote(deckName, modelName, fields))
 
 
-    def createNote(self, modelName, fields, tags=unicode()):
+    def createNote(self, deckName, modelName, fields, tags=list()):
         model = self.findModel(modelName)
         if model is None:
             return None
 
-        conf = self.collection().conf
-        deck = self.currentDeck()
+        deck = self.findDeck(deckName)
+        if deck is None:
+            return None
 
-        if conf['curModel'] != model['id'] or deck['mid'] != model['id']:
-            conf['curModel'] = deck['mid'] = model['id']
-            self.collection().decks.save(deck)
-            anki.hooks.runHook('currentModelChanged')
-            self.window().reset()
+        #~ conf = self.collection().conf
+        #~ deck = self.currentDeck()
+        #~ if conf['curModel'] != model['id'] or deck['mid'] != model['id']:
+            #~ conf['curModel'] = deck['mid'] = model['id']
+            #~ self.collection().decks.save(deck)
+            #~ anki.hooks.runHook('currentModelChanged')
+            #~ self.window().reset()
 
-        note = self.collection().newNote()
-        note.tags = re.split('[;,\s]', tags)
+        #~ self.collection().conf['curModel'] = model['id']
+        #~ deck['mid'] = model['id']
+
+        note = anki.notes.Note(self.collection(), model)
+        note.model()['did'] = deck['id']
+        note.tags = tags
 
         for name, value in fields.items():
             note[name] = value
@@ -62,12 +63,11 @@ class Anki:
         return None if note.dupeOrEmpty() else note
 
 
-    def browseNote(self, noteId):
-        pass
-        #browser = ui.dialogs.get('CardList', self.window())
-        #browser.dialog.filterEdit.setText('fid:' + str(noteId))
-        #browser.updateSearch()
-        #browser.onnote()
+    #~ def browseNote(self, noteId):
+        #~ browser = ui.dialogs.get('CardList', self.window())
+        #~ browser.dialog.filterEdit.setText('fid:' + str(noteId))
+        #~ browser.updateSearch()
+        #~ browser.onnote()
 
 
     def window(self):
