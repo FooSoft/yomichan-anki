@@ -26,16 +26,8 @@ class Anki:
         if not note:
             return None
 
-        action = lang._('Add')
-
-        collection = self.collection()
-        collection.setUndoStart(action)
-        collection.addNote(note, False)
-        collection.setUndoEnd(action)
-        collection.rebuildCounts()
-
-        ankiqt.mw.updateTitleBar()
-        ankiqt.mw.statusView.redraw()
+        self.collection().addNote(note)
+        self.window().requireReset()
 
         return note.id
 
@@ -45,19 +37,13 @@ class Anki:
 
 
     def createNote(self, fields, tags=unicode()):
-        collection = self.collection()
-        note = collection.newnote()
-        note.tags = self.cleanupTags(tags)
+        note = self.collection().newNote()
 
-        try:
-            for field in note.fields:
-                field.value = fields.get(field.getName()) or unicode()
-                if not note.fieldValid(field) or not note.fieldUnique(field, collection.s):
-                    return None
-        except KeyError:
-            return None
+        note.tags = re.split('[;,\s]', tags)
+        for name, value in fields.items():
+            note[name] = value
 
-        return note
+        return None if note.dumpOrEmpty() else note
 
 
     def browseNote(self, noteId):
@@ -65,10 +51,6 @@ class Anki:
         browser.dialog.filterEdit.setText('fid:' + str(noteId))
         browser.updateSearch()
         browser.onnote()
-
-
-    def cleanupTags(self, tags):
-        return re.sub('[;,]', unicode(), tags).strip()
 
 
     def window(self):
