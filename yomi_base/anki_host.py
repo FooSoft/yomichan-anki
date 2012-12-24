@@ -21,8 +21,8 @@ import re
 
 
 class Anki:
-    def addNote(self, fields, tags=unicode()):
-        note = self.createNote(fields, tags)
+    def addNote(self, deckName, modelName, fields, tags=unicode()):
+        note = self.createNote(fields, deckName, modelName, tags)
         if not note:
             return None
 
@@ -36,21 +36,45 @@ class Anki:
         return bool(self.createNote(fields))
 
 
-    def createNote(self, fields, tags=unicode()):
-        note = self.collection().newNote()
+    def createNote(self, deckName, modelName, fields, tags=unicode()):
+        deck = self.findDeck(deckName)
+        if deck is None:
+            return None
 
+        model = self.findModel(modelName)
+        if model is None:
+            return None
+
+        note = self.collection().newNote()
         note.tags = re.split('[;,\s]', tags)
+        note.model()['did'] = deck['id']
+
         for name, value in fields.items():
             note[name] = value
 
         return None if note.dumpOrEmpty() else note
 
 
-    def browseNote(self, noteId):
-        browser = ui.dialogs.get('CardList', self.window())
-        browser.dialog.filterEdit.setText('fid:' + str(noteId))
-        browser.updateSearch()
-        browser.onnote()
+    def setCurrentModel(self, modelName):
+        #m = self.deck.models.byName(ret.name)
+        #self.deck.conf['curModel'] = m['id']
+        #cdeck = self.deck.decks.current()
+        #cdeck['mid'] = m['id']
+        #self.deck.decks.save(cdeck)
+        #runHook("currentModelChanged")
+        #self.mw.reset()
+        pass
+
+
+    def setCurrentDeck(self, deckName):
+        pass
+
+
+    #def browseNote(self, noteId):
+        #browser = ui.dialogs.get('CardList', self.window())
+        #browser.dialog.filterEdit.setText('fid:' + str(noteId))
+        #browser.updateSearch()
+        #browser.onnote()
 
 
     def window(self):
@@ -82,9 +106,11 @@ class Anki:
 
 
     def findModel(self, name):
-        for model in self.models().models.values():
-            if model['name'] == name:
-                return model
+        return self.models().byName(name)
+
+
+    def currentModel(self):
+        return self.models().current()
 
 
     def decks(self):
@@ -96,7 +122,9 @@ class Anki:
 
 
     def findDeck(self, name):
-        for deck in self.decks().decks.values():
-            if deck['name'] == name:
-                return deck
+        return self.decks().byName(name)
+
+
+    def currentDeck(self):
+        return self.decks().current()
 
