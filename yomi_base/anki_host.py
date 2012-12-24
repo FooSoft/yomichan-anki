@@ -17,12 +17,18 @@
 
 
 import aqt
-#from anki import hooks, lang
-#from ankiqt import ui
 import re
 
 
 class Anki:
+    def __init__(self, modelName=None):
+        self.setModelName(modelName)
+
+
+    def setModelName(self, modelName):
+        self.modelName = modelName
+
+
     def addNote(self, fields, tags=unicode()):
         note = self.createNote(fields, tags)
         if not note:
@@ -73,10 +79,6 @@ class Anki:
         return re.sub('[;,]', unicode(), tags).strip()
 
 
-    def fields(self):
-        return [field['name'] for field in self.currentModel()['flds']]
-
-
     def window(self):
         return aqt.mw
 
@@ -97,5 +99,17 @@ class Anki:
         return self.collection().models
 
 
+    def modelNames(self):
+        return self.models().allNames()
+
+
     def currentModel(self):
-        return self.models().current()
+        for model in self.models().models.values():
+            if model['name'] == self.modelName:
+                return model
+
+
+    def currentModelFieldNames(self):
+        model = self.currentModel()
+        if model is not None:
+            return [field['name'] for field in model['flds']]

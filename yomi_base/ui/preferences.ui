@@ -173,9 +173,29 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="label_12">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Model to use</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBoxAnkiModel"/>
+         </item>
+        </layout>
+       </item>
+       <item>
         <widget class="QLabel" name="label_11">
          <property name="text">
-          <string>Specify how your deck's model fields are populated when adding facts</string>
+          <string>Specify how your model fields are populated when adding facts</string>
          </property>
         </widget>
        </item>

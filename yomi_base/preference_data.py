@@ -49,7 +49,7 @@ class Preferences:
 
         self.ankiFields = dict()
         self.ankiTags = list()
-        self.ankiShowIcon = True
+        self.ankiModel = unicode()
 
 
     def load(self, filename=None):
@@ -97,6 +97,8 @@ class Preferences:
             self.searchGroupByExp = self.readAttrBool(search, 'groupByExp', self.searchGroupByExp)
 
         for anki in root.getElementsByTagName('anki'):
+            self.ankiModel = self.readAttrStr(anki, 'model', unicode())
+
             for tag in anki.getElementsByTagName('tag'):
                 value = self.readAttrStr(tag, 'value', unicode())
                 self.ankiTags.append(value)
@@ -162,6 +164,7 @@ class Preferences:
 
         anki = doc.createElement('anki')
         root.appendChild(anki)
+        self.writeAttrStr(anki, 'model', self.ankiModel)
 
         for value in self.ankiTags:
             tag = doc.createElement('tag')

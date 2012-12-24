@@ -30,6 +30,7 @@ class DialogPreferences(QtGui.QDialog):
         self.buttonContentColorBg.clicked.connect(self.onButtonColorBgClicked)
         self.comboContentFontFamily.currentFontChanged.connect(self.onFontFamilyChanged)
         self.spinContentFontSize.valueChanged.connect(self.onFontSizeChanged)
+        self.comboBoxAnkiModel.currentIndexChanged.connect(self.onAnkiModelChanged)
 
         self.preferences = preferences
         self.anki = anki
@@ -53,7 +54,10 @@ class DialogPreferences(QtGui.QDialog):
 
         self.tabAnki.setEnabled(self.anki is not None)
         if self.anki:
-            self.setAnkiFields(self.anki.fields(), self.preferences.ankiFields)
+            self.comboBoxAnkiModel.blockSignals(True)
+            self.comboBoxAnkiModel.addItems(self.anki.modelNames())
+            self.comboBoxAnkiModel.blockSignals(False)
+            self.comboBoxAnkiModel.setCurrentIndex(self.comboBoxAnkiModel.findText(self.preferences.ankiModel))
 
 
     def dialogToData(self):
@@ -66,6 +70,7 @@ class DialogPreferences(QtGui.QDialog):
         self.preferences.searchGroupByExp = self.checkSearchGroupByExp.isChecked()
 
         if self.anki:
+            self.preferences.ankiModel = unicode(self.comboBoxAnkiModel.currentText())
             self.preferences.ankiFields = self.ankiFields()
 
 
@@ -82,6 +87,9 @@ class DialogPreferences(QtGui.QDialog):
 
 
     def setAnkiFields(self, fieldsAnki, fieldsPrefs):
+        if fieldsAnki is None:
+            fieldsAnki = list()
+
         self.tableAnkiFields.setRowCount(len(fieldsAnki))
 
         for i, name in enumerate(fieldsAnki):
@@ -135,3 +143,9 @@ class DialogPreferences(QtGui.QDialog):
     def onFontSizeChanged(self, size):
         self.preferences.uiContentFontSize = size
         self.updateSampleText()
+
+
+    def onAnkiModelChanged(self, index):
+        self.preferences.ankiModel = self.comboBoxAnkiModel.currentText()
+        self.anki.setModelName(self.preferences.ankiModel)
+        self.setAnkiFields(self.anki.currentModelFieldNames(), self.preferences.ankiFields)
