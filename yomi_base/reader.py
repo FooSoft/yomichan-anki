@@ -38,7 +38,7 @@ class MainWindowReader(QtGui.QMainWindow):
             self.archiveIndex = None
 
 
-    def __init__(self, parent, preferences, languages, filename=None, anki=None, closed=None, updated=None):
+    def __init__(self, parent, preferences, language, filename=None, anki=None, closed=None, updated=None):
         QtGui.QMainWindow.__init__(self, parent)
         uic.loadUi(buildResPath('ui/reader.ui'), self)
 
@@ -49,7 +49,7 @@ class MainWindowReader(QtGui.QMainWindow):
         self.preferences = preferences
         self.updateFinder = UpdateFinder()
         self.state = self.State()
-        self.languages = languages
+        self.language = language
         self.addedFacts = list()
         self.anki = anki
         self.closed = closed
@@ -271,7 +271,7 @@ class MainWindowReader(QtGui.QMainWindow):
 
     def onDefinitionSearchReturn(self):
         text = unicode(self.textDefinitionSearch.text())
-        definitions, length = self.language().wordSearch(
+        definitions, length = self.language.wordSearch(
             text,
             self.preferences.searchResultMax,
             self.preferences.searchGroupByExp
@@ -496,7 +496,7 @@ class MainWindowReader(QtGui.QMainWindow):
             return
 
         contentSampleFlat = contentSample.replace('\n', unicode())
-        definitionsMatched, lengthMatched = self.language().wordSearch(
+        definitionsMatched, lengthMatched = self.language.wordSearch(
             contentSampleFlat,
             self.preferences.searchResultMax,
             self.preferences.searchGroupByExp
@@ -574,7 +574,3 @@ class MainWindowReader(QtGui.QMainWindow):
 
     def setStatus(self, status):
         self.statusBar.showMessage(status)
-
-
-    def language(self):
-        return self.languages['Japanese']

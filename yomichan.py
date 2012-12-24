@@ -27,7 +27,7 @@ from yomi_base.reader import MainWindowReader
 
 class Yomichan:
     def __init__(self):
-        self.languages = {'Japanese': japanese.initLanguage()}
+        self.language = japanese.initLanguage()
         self.preferences = Preferences()
         self.preferences.load()
 
@@ -57,7 +57,7 @@ class YomichanPlugin(Yomichan):
             self.window = MainWindowReader(
                 self.parent,
                 self.preferences,
-                self.languages,
+                self.language,
                 None,
                 self.anki,
                 self.onWindowClose
