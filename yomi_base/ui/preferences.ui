@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>300</height>
+    <height>350</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -173,21 +173,25 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QLabel" name="label_12">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_13">
            <property name="text">
-            <string>Model to use</string>
+            <string>Deck</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="comboBoxAnkiDeck"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Model</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
           <widget class="QComboBox" name="comboBoxAnkiModel"/>
          </item>
         </layout>

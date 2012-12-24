@@ -103,3 +103,18 @@ class Anki:
         for model in self.models().models.values():
             if model['name'] == name:
                 return model
+
+
+    def decks(self):
+        return self.collection().decks
+
+
+    def deckNames(self):
+        return self.decks().allNames()
+
+
+    def findDeck(self, name):
+        for deck in self.decks().decks.values():
+            if deck['name'] == name:
+                return deck
+

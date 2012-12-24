@@ -49,6 +49,7 @@ class Preferences:
 
         self.ankiFields = dict()
         self.ankiTags = list()
+        self.ankiDeck = unicode()
         self.ankiModel = unicode()
 
 
@@ -97,6 +98,7 @@ class Preferences:
             self.searchGroupByExp = self.readAttrBool(search, 'groupByExp', self.searchGroupByExp)
 
         for anki in root.getElementsByTagName('anki'):
+            self.ankiDeck = self.readAttrStr(anki, 'deck', unicode())
             self.ankiModel = self.readAttrStr(anki, 'model', unicode())
 
             for tag in anki.getElementsByTagName('tag'):
@@ -164,6 +166,7 @@ class Preferences:
 
         anki = doc.createElement('anki')
         root.appendChild(anki)
+        self.writeAttrStr(anki, 'deck', self.ankiDeck)
         self.writeAttrStr(anki, 'model', self.ankiModel)
 
         for value in self.ankiTags:

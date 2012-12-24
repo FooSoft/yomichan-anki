@@ -54,6 +54,8 @@ class DialogPreferences(QtGui.QDialog):
 
         self.tabAnki.setEnabled(self.anki is not None)
         if self.anki:
+            self.comboBoxAnkiDeck.addItems(self.anki.deckNames())
+            self.comboBoxAnkiDeck.setCurrentIndex(self.comboBoxAnkiDeck.findText(self.preferences.ankiDeck))
             self.comboBoxAnkiModel.blockSignals(True)
             self.comboBoxAnkiModel.addItems(self.anki.modelNames())
             self.comboBoxAnkiModel.blockSignals(False)
@@ -70,6 +72,7 @@ class DialogPreferences(QtGui.QDialog):
         self.preferences.searchGroupByExp = self.checkSearchGroupByExp.isChecked()
 
         if self.anki:
+            self.preferences.ankiDeck = unicode(self.comboBoxAnkiDeck.currentText())
             self.preferences.ankiModel = unicode(self.comboBoxAnkiModel.currentText())
             self.preferences.ankiFields = self.ankiFields()
 
