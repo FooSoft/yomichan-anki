@@ -17,6 +17,7 @@
 
 
 import aqt
+import anki.hooks
 import re
 
 
@@ -26,51 +27,43 @@ class Anki:
         if not note:
             return None
 
+        note.model()['did'] = self.currentDeck()['id']
+
         self.collection().addNote(note)
         self.window().requireReset()
 
         return note.id
 
 
-    def canAddNote(self, fields):
-        return bool(self.createNote(fields))
+    def canAddNote(self, modelName, fields):
+        return bool(self.createNote(modelName, fields))
 
 
-    def createNote(self, deckName, modelName, fields, tags=unicode()):
-        deck = self.findDeck(deckName)
-        if deck is None:
-            return None
-
+    def createNote(self, modelName, fields, tags=unicode()):
         model = self.findModel(modelName)
         if model is None:
             return None
 
+        conf = self.collection().conf
+        deck = self.currentDeck()
+
+        if conf['curModel'] != model['id'] or deck['mid'] != model['id']:
+            conf['curModel'] = deck['mid'] = model['id']
+            self.collection().decks.save(deck)
+            anki.hooks.runHook('currentModelChanged')
+            self.window().reset()
+
         note = self.collection().newNote()
         note.tags = re.split('[;,\s]', tags)
-        note.model()['did'] = deck['id']
 
         for name, value in fields.items():
             note[name] = value
 
-        return None if note.dumpOrEmpty() else note
+        return None if note.dupeOrEmpty() else note
 
 
-    def setCurrentModel(self, modelName):
-        #m = self.deck.models.byName(ret.name)
-        #self.deck.conf['curModel'] = m['id']
-        #cdeck = self.deck.decks.current()
-        #cdeck['mid'] = m['id']
-        #self.deck.decks.save(cdeck)
-        #runHook("currentModelChanged")
-        #self.mw.reset()
+    def browseNote(self, noteId):
         pass
-
-
-    def setCurrentDeck(self, deckName):
-        pass
-
-
-    #def browseNote(self, noteId):
         #browser = ui.dialogs.get('CardList', self.window())
         #browser.dialog.filterEdit.setText('fid:' + str(noteId))
         #browser.updateSearch()

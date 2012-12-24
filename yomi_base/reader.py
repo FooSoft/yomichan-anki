@@ -448,7 +448,7 @@ class MainWindowReader(QtGui.QMainWindow):
             self.comboTags.insertItem(0, tags)
         self.preferences.updateFactTags(tags)
 
-        factId = self.anki.addFact(fields, tags)
+        factId = self.anki.addNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields, tags)
         if not factId:
             return False
 
@@ -471,7 +471,7 @@ class MainWindowReader(QtGui.QMainWindow):
             return False
 
         fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
-        return self.anki.canAddFact(fields)
+        return self.anki.canAddNote(self.preferences.ankiModel, fields)
 
 
     def updateSampleMouseEvent(self, event):
