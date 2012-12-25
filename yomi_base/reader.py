@@ -259,7 +259,6 @@ class MainWindowReader(QtGui.QMainWindow):
                 definition.sentence
             )
             self.ankiAddFact(markup)
-            self.updateDefinitions()
         if command == 'addFactReading':
             markup = reader_util.buildFactMarkupReading(
                 definition.reading,
@@ -267,7 +266,6 @@ class MainWindowReader(QtGui.QMainWindow):
                 definition.sentence
             )
             self.ankiAddFact(markup)
-            self.updateDefinitions()
         elif command == 'copyDefinition':
             reader_util.copyDefinitions([definition])
 
@@ -295,7 +293,7 @@ class MainWindowReader(QtGui.QMainWindow):
 
 
     def onUpdaterSearchResult(self, result):
-        if result and result > constants['version']:
+        if result is not None and result > constants['version']:
             QtGui.QMessageBox.information(
                 self,
                 'Yomichan',
@@ -358,21 +356,18 @@ class MainWindowReader(QtGui.QMainWindow):
 
                 self.updateArchiveFiles(filename, names)
 
-                if len(files) == 0:
-                    content = unicode()
-                elif len(files) == 1:
+                content = unicode()
+                if len(files) == 1:
                     fp = tp.extractfile(files[0])
                     content = fp.read()
                     fp.close()
-                else:
+                elif len(files) > 1:
                     index, ok = self.selectFileName(names)
                     if ok:
                         fp = tp.extractfile(files[index])
                         content = fp.read()
                         fp.close()
                         self.state.archiveIndex = index
-                    else:
-                        content = unicode()
         else:
             self.state.archiveIndex = None
             with open(filename, 'rb') as fp:
@@ -383,7 +378,7 @@ class MainWindowReader(QtGui.QMainWindow):
 
     def selectFileName(self, names):
         if self.state.archiveIndex is not None:
-            return (self.state.archiveIndex, True)
+            return self.state.archiveIndex, True
 
         item, ok = QtGui.QInputDialog.getItem(
             self,

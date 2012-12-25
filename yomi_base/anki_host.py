@@ -17,7 +17,7 @@
 
 
 import aqt
-import anki.hooks
+import anki
 
 
 class Anki:
@@ -28,6 +28,7 @@ class Anki:
             collection.addNote(note)
             collection.autosave()
             self.startEditing()
+            return note.id
 
 
     def canAddNote(self, deckName, modelName, fields):
@@ -50,14 +51,14 @@ class Anki:
         for name, value in fields.items():
             note[name] = value
 
-        return None if note.dupeOrEmpty() else note
+        if not note.dupeOrEmpty():
+            return note
 
 
     def browseNote(self, noteId):
-        browser = ui.dialogs.get('CardList', self.window())
-        browser.dialog.filterEdit.setText('fid:' + str(noteId))
-        browser.updateSearch()
-        browser.onnote()
+        browser = aqt.dialogs.open('Browser', self.window())
+        browser.form.searchEdit.lineEdit().setText('nid:{0}'.format(noteId))
+        browser.onSearch()
 
 
     def startEditing(self):
@@ -90,7 +91,8 @@ class Anki:
 
     def modelFieldNames(self, modelName):
         model = self.models().byName(modelName)
-        return None if model is None else [field['name'] for field in model['flds']]
+        if model is not None:
+            return [field['name'] for field in model['flds']]
 
 
     def decks(self):
