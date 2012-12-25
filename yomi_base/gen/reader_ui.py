@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Tue Dec 25 13:09:53 2012
+# Created: Tue Dec 25 13:23:04 2012
 #      by: PyQt4 UI code generator 4.9.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -174,7 +174,7 @@ class Ui_MainWindowReader(object):
         self.actionToggleDefinitions.setObjectName(_fromUtf8("actionToggleDefinitions"))
         self.actionCopyDefinition = QtGui.QAction(MainWindowReader)
         icon9 = QtGui.QIcon()
-        icon9.addPixmap(QtGui.QPixmap(_fromUtf8(":/img/img/icon_action_copy_definition.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon9.addPixmap(QtGui.QPixmap(_fromUtf8(":/img/img/icon_copy_definition.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionCopyDefinition.setIcon(icon9)
         self.actionCopyDefinition.setIconVisibleInMenu(True)
         self.actionCopyDefinition.setObjectName(_fromUtf8("actionCopyDefinition"))

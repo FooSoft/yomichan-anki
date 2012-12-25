@@ -23,11 +23,11 @@ from preferences import DialogPreferences
 from update import UpdateFinder
 from about import DialogAbout
 from constants import constants
-from gen import reader
+from gen import reader_ui
 import reader_util
 
 
-class MainWindowReader(QtGui.QMainWindow, reader.Ui_MainWindowReader):
+class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
     class State:
         def __init__(self):
             self.filename = unicode()

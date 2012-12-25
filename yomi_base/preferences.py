@@ -17,10 +17,10 @@
 
 
 from PyQt4 import QtGui, QtCore
-from gen import preferences
+from gen import preferences_ui
 
 
-class DialogPreferences(QtGui.QDialog, preferences.Ui_DialogPreferences):
+class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
     def __init__(self, parent, preferences, anki):
         QtGui.QDialog.__init__(self, parent)
         self.setupUi(self)

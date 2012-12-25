@@ -20,7 +20,6 @@
 import sys
 from PyQt4 import QtGui, QtCore
 from yomi_base.lang import japanese
-from yomi_base.util import buildResPath
 from yomi_base.preference_data import Preferences
 from yomi_base.reader import MainWindowReader
 
@@ -45,7 +44,7 @@ class YomichanPlugin(Yomichan):
         separator.setSeparator(True)
         self.anki.addUiAction(separator)
 
-        action = QtGui.QAction(QtGui.QIcon(buildResPath('img/icon_logo_32.png')), '&Yomichan...', self.parent)
+        action = QtGui.QAction(QtGui.QIcon(':/img/img/icon_logo_32.png'), '&Yomichan...', self.parent)
         action.setIconVisibleInMenu(True)
         action.triggered.connect(self.onShowRequest)
         self.anki.addUiAction(action)

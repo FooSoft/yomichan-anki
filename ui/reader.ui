@@ -387,7 +387,7 @@
   <action name="actionCopyDefinition">
    <property name="icon">
     <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
-     <normaloff>:/img/img/icon_action_copy_definition.png</normaloff>:/img/img/icon_action_copy_definition.png</iconset>
+     <normaloff>:/img/img/icon_copy_definition.png</normaloff>:/img/img/icon_copy_definition.png</iconset>
    </property>
    <property name="text">
     <string>Copy &amp;definition</string>
