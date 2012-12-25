@@ -74,8 +74,8 @@ class Anki:
         return aqt.mw
 
 
-    def toolsMenu(self):
-        return self.window().form.menuTools
+    def addUiAction(self, action):
+        self.window().form.menuTools.addAction(action)
 
 
     def collection(self):

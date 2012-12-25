@@ -40,14 +40,16 @@ class YomichanPlugin(Yomichan):
         self.window = None
         self.anki = anki_host.Anki()
         self.parent = self.anki.window()
-        self.separator = QtGui.QAction(self.parent)
-        self.separator.setSeparator(True)
-        self.action = QtGui.QAction(QtGui.QIcon(buildResPath('img/logo32x32.png')), '&Yomichan...', self.parent)
-        self.action.setIconVisibleInMenu(True)
-        self.action.triggered.connect(self.onShowRequest)
 
-        self.anki.toolsMenu().addAction(self.separator)
-        self.anki.toolsMenu().addAction(self.action)
+        separator = QtGui.QAction(self.parent)
+        separator.setSeparator(True)
+        self.anki.addUiAction(separator)
+
+        action = QtGui.QAction(QtGui.QIcon(buildResPath('img/icon_logo_32.png')), '&Yomichan...', self.parent)
+        action.setIconVisibleInMenu(True)
+        action.triggered.connect(self.onShowRequest)
+        self.anki.addUiAction(action)
+
 
     def onShowRequest(self):
         if self.window:
