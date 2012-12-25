@@ -152,9 +152,9 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
     links = '<a href = "copyDefinition:{0}"><img src = "{1}" align = "right"/></a>'.format(factIndex, buildResPath('img/page_copy.png'))
     if factQuery:
         if factQuery(buildFactMarkupExpression(definition.expression, definition.reading, definition.glossary)):
-            links += '<a href = "addFactExpression:{0}"><img src = "{1}" align = "right"/></a>'.format(factIndex, buildResPath('img/add.png'))
+            links += '<a href = "addExpression:{0}"><img src = "{1}" align = "right"/></a>'.format(factIndex, buildResPath('img/icon_add_expression.png'))
         if factQuery(buildFactMarkupReading(definition.reading, definition.glossary)):
-            links += '<a href = "addFactReading:{0}"><img src = "{1}" align = "right"/></a>'.format(factIndex, buildResPath('img/bullet_add.png'))
+            links += '<a href = "addReading:{0}"><img src = "{1}" align = "right"/></a>'.format(factIndex, buildResPath('img/icon_add_reading.png'))
 
     html = u"""
         <span class = "links">{0}</span>

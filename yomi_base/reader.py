@@ -251,7 +251,7 @@ class MainWindowReader(QtGui.QMainWindow):
         command, index = unicode(url.toString()).split(':')
         definition = self.state.definitions[int(index)]
 
-        if command == 'addFactExpression':
+        if command == 'addExpression':
             markup = reader_util.buildFactMarkupExpression(
                 definition.expression,
                 definition.reading,
@@ -259,7 +259,7 @@ class MainWindowReader(QtGui.QMainWindow):
                 definition.sentence
             )
             self.ankiAddFact(markup)
-        if command == 'addFactReading':
+        if command == 'addReading':
             markup = reader_util.buildFactMarkupReading(
                 definition.reading,
                 definition.glossary,

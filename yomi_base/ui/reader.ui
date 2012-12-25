@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../img/logo32x32.png</normaloff>../img/logo32x32.png</iconset>
+    <normaloff>../img/icon_logo_32.png</normaloff>../img/icon_logo_32.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -40,7 +40,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -216,7 +216,7 @@
   <action name="actionOpen">
    <property name="icon">
     <iconset>
-     <normaloff>../img/folder_page.png</normaloff>../img/folder_page.png</iconset>
+     <normaloff>../img/icon_action_open.png</normaloff>../img/icon_action_open.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open...</string>
@@ -234,7 +234,7 @@
   <action name="actionQuit">
    <property name="icon">
     <iconset>
-     <normaloff>../img/cross.png</normaloff>../img/cross.png</iconset>
+     <normaloff>../img/icon_action_quit.png</normaloff>../img/icon_action_quit.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -252,7 +252,7 @@
   <action name="actionPreferences">
    <property name="icon">
     <iconset>
-     <normaloff>../img/wrench.png</normaloff>../img/wrench.png</iconset>
+     <normaloff>../img/icon_action_preferences.png</normaloff>../img/icon_action_preferences.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Preferences...</string>
@@ -267,7 +267,7 @@
   <action name="actionAbout">
    <property name="icon">
     <iconset>
-     <normaloff>../img/information.png</normaloff>../img/information.png</iconset>
+     <normaloff>../img/icon_action_about.png</normaloff>../img/icon_action_about.png</iconset>
    </property>
    <property name="text">
     <string>&amp;About...</string>
@@ -285,7 +285,7 @@
   <action name="actionZoomIn">
    <property name="icon">
     <iconset>
-     <normaloff>../img/magnifier_zoom_in.png</normaloff>../img/magnifier_zoom_in.png</iconset>
+     <normaloff>../img/icon_action_zoom_in.png</normaloff>../img/icon_action_zoom_in.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;in</string>
@@ -300,7 +300,7 @@
   <action name="actionZoomOut">
    <property name="icon">
     <iconset>
-     <normaloff>../img/magifier_zoom_out.png</normaloff>../img/magifier_zoom_out.png</iconset>
+     <normaloff>../img/icon_action_zoom_out.png</normaloff>../img/icon_action_zoom_out.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;out</string>
@@ -315,7 +315,7 @@
   <action name="actionZoomReset">
    <property name="icon">
     <iconset>
-     <normaloff>../img/magnifier.png</normaloff>../img/magnifier.png</iconset>
+     <normaloff>../img/icon_action_zoom_reset.png</normaloff>../img/icon_action_zoom_reset.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Reset</string>
@@ -333,7 +333,7 @@
   <action name="actionFind">
    <property name="icon">
     <iconset>
-     <normaloff>../img/find.png</normaloff>../img/find.png</iconset>
+     <normaloff>../img/icon_action_find.png</normaloff>../img/icon_action_find.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Find...</string>
@@ -387,7 +387,7 @@
   <action name="actionCopyDefinition">
    <property name="icon">
     <iconset>
-     <normaloff>../img/page_copy.png</normaloff>../img/page_copy.png</iconset>
+     <normaloff>../img/icon_action_copy_definition.png</normaloff>../img/icon_action_copy_definition.png</iconset>
    </property>
    <property name="text">
     <string>Copy &amp;definition</string>
@@ -407,7 +407,7 @@
   <action name="actionHomepage">
    <property name="icon">
     <iconset>
-     <normaloff>../img/world_go.png</normaloff>../img/world_go.png</iconset>
+     <normaloff>../img/icon_action_homepage.png</normaloff>../img/icon_action_homepage.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Homepage...</string>
@@ -438,7 +438,7 @@
   <action name="actionFeedback">
    <property name="icon">
     <iconset>
-     <normaloff>../img/email.png</normaloff>../img/email.png</iconset>
+     <normaloff>../img/icon_action_feedback.png</normaloff>../img/icon_action_feedback.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Feedback...</string>
