@@ -77,7 +77,7 @@ class YomichanStandalone(Yomichan):
         self.window = MainWindowReader(
             None,
             self.preferences,
-            self.languages,
+            self.language,
             filename=sys.argv[1] if len(sys.argv) >= 2 else None
         )
 

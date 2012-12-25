@@ -66,7 +66,8 @@ class Anki:
 
 
     def stopEditing(self):
-        self.window().maybeReset()
+        if self.collection():
+            self.window().maybeReset()
 
 
     def window(self):

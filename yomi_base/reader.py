@@ -293,7 +293,7 @@ class MainWindowReader(QtGui.QMainWindow):
 
 
     def onUpdaterSearchResult(self, result):
-        if result is not None and result > constants['version']:
+        if result and unicode(result) > constants['version']:
             QtGui.QMessageBox.information(
                 self,
                 'Yomichan',
