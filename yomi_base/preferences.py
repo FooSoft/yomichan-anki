@@ -17,8 +17,7 @@
 
 
 from PyQt4 import QtGui, QtCore
-from util import buildResPath
-from ui_gen import preferences
+from gen import preferences
 
 
 class DialogPreferences(QtGui.QDialog, preferences.Ui_DialogPreferences):

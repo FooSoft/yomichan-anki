@@ -18,8 +18,7 @@
 
 from PyQt4 import QtGui
 from constants import constants
-from util import buildResPath
-from ui_gen import about
+from gen import about
 
 
 class DialogAbout(QtGui.QDialog, about.Ui_DialogAbout):

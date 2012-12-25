@@ -23,8 +23,7 @@ from preferences import DialogPreferences
 from update import UpdateFinder
 from about import DialogAbout
 from constants import constants
-from util import buildResPath
-from ui_gen import reader
+from gen import reader
 import reader_util
 
 
