@@ -1,0 +1,20 @@
+<RCC>
+  <qresource prefix="img">
+    <file>img/icon_action_about.png</file>
+    <file>img/icon_action_copy_definition.png</file>
+    <file>img/icon_action_feedback.png</file>
+    <file>img/icon_action_find.png</file>
+    <file>img/icon_action_homepage.png</file>
+    <file>img/icon_action_open.png</file>
+    <file>img/icon_action_preferences.png</file>
+    <file>img/icon_action_quit.png</file>
+    <file>img/icon_action_zoom_in.png</file>
+    <file>img/icon_action_zoom_out.png</file>
+    <file>img/icon_action_zoom_reset.png</file>
+    <file>img/icon_add_expression.png</file>
+    <file>img/icon_add_reading.png</file>
+    <file>img/icon_logo_9.png</file>
+    <file>img/icon_logo_32.png</file>
+    <file>img/icon_logo_64.png</file>
+  </qresource>
+</RCC>

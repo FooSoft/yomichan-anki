@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/about.ui'
 #
-# Created: Tue Dec 25 12:57:05 2012
+# Created: Tue Dec 25 13:09:53 2012
 #      by: PyQt4 UI code generator 4.9.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -33,7 +33,7 @@ class Ui_DialogAbout(object):
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         self.label = QtGui.QLabel(DialogAbout)
         self.label.setText(_fromUtf8(""))
-        self.label.setPixmap(QtGui.QPixmap(_fromUtf8("../img/icon_logo_64.png")))
+        self.label.setPixmap(QtGui.QPixmap(_fromUtf8(":/img/img/icon_logo_64.png")))
         self.label.setObjectName(_fromUtf8("label"))
         self.verticalLayout_2.addWidget(self.label)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
@@ -772,3 +772,4 @@ class Ui_DialogAbout(object):
 "<http://www.gnu.org/philosophy/why-not-lgpl.html>.\n"
 "", None))
 
+import resources_rc

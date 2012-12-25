@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Tue Dec 25 12:57:05 2012
+# Created: Tue Dec 25 13:09:53 2012
 #      by: PyQt4 UI code generator 4.9.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -241,3 +241,4 @@ class Ui_DialogPreferences(object):
         self.label.setText(_translate("DialogPreferences", "Expression", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAnki), _translate("DialogPreferences", "Anki", None))
 
+import resources_rc

@@ -17,8 +17,8 @@
    <string>Yomichan</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>../img/icon_logo_32.png</normaloff>../img/icon_logo_32.png</iconset>
+   <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+    <normaloff>:/img/img/icon_logo_32.png</normaloff>:/img/img/icon_logo_32.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -215,8 +215,8 @@
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_open.png</normaloff>../img/icon_action_open.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_open.png</normaloff>:/img/img/icon_action_open.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open...</string>
@@ -233,8 +233,8 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_quit.png</normaloff>../img/icon_action_quit.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_quit.png</normaloff>:/img/img/icon_action_quit.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -251,8 +251,8 @@
   </action>
   <action name="actionPreferences">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_preferences.png</normaloff>../img/icon_action_preferences.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_preferences.png</normaloff>:/img/img/icon_action_preferences.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Preferences...</string>
@@ -266,8 +266,8 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_about.png</normaloff>../img/icon_action_about.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_about.png</normaloff>:/img/img/icon_action_about.png</iconset>
    </property>
    <property name="text">
     <string>&amp;About...</string>
@@ -284,8 +284,8 @@
   </action>
   <action name="actionZoomIn">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_zoom_in.png</normaloff>../img/icon_action_zoom_in.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_zoom_in.png</normaloff>:/img/img/icon_action_zoom_in.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;in</string>
@@ -299,8 +299,8 @@
   </action>
   <action name="actionZoomOut">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_zoom_out.png</normaloff>../img/icon_action_zoom_out.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_zoom_out.png</normaloff>:/img/img/icon_action_zoom_out.png</iconset>
    </property>
    <property name="text">
     <string>Zoom &amp;out</string>
@@ -314,8 +314,8 @@
   </action>
   <action name="actionZoomReset">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_zoom_reset.png</normaloff>../img/icon_action_zoom_reset.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_zoom_reset.png</normaloff>:/img/img/icon_action_zoom_reset.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Reset</string>
@@ -332,8 +332,8 @@
   </action>
   <action name="actionFind">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_find.png</normaloff>../img/icon_action_find.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_find.png</normaloff>:/img/img/icon_action_find.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Find...</string>
@@ -386,8 +386,8 @@
   </action>
   <action name="actionCopyDefinition">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_copy_definition.png</normaloff>../img/icon_action_copy_definition.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_copy_definition.png</normaloff>:/img/img/icon_action_copy_definition.png</iconset>
    </property>
    <property name="text">
     <string>Copy &amp;definition</string>
@@ -406,8 +406,8 @@
   </action>
   <action name="actionHomepage">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_homepage.png</normaloff>../img/icon_action_homepage.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_homepage.png</normaloff>:/img/img/icon_action_homepage.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Homepage...</string>
@@ -437,15 +437,17 @@
   </action>
   <action name="actionFeedback">
    <property name="icon">
-    <iconset>
-     <normaloff>../img/icon_action_feedback.png</normaloff>../img/icon_action_feedback.png</iconset>
+    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
+     <normaloff>:/img/img/icon_action_feedback.png</normaloff>:/img/img/icon_action_feedback.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Feedback...</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionToggleDefinitions</sender>
