@@ -284,9 +284,9 @@ class MainWindowReader(QtGui.QMainWindow):
 
 
     def onDefinitionDoubleClicked(self, item):
-        if self.anki:
+        if self.anki is not None:
             row = self.listDefinitions.row(item)
-            self.anki.browseFact(self.addedFacts[row])
+            self.anki.browseNote(self.addedFacts[row])
 
 
     def onVisibilityChanged(self, visible):

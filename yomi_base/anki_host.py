@@ -53,11 +53,11 @@ class Anki:
         return None if note.dupeOrEmpty() else note
 
 
-    #~ def browseNote(self, noteId):
-        #~ browser = ui.dialogs.get('CardList', self.window())
-        #~ browser.dialog.filterEdit.setText('fid:' + str(noteId))
-        #~ browser.updateSearch()
-        #~ browser.onnote()
+    def browseNote(self, noteId):
+        browser = ui.dialogs.get('CardList', self.window())
+        browser.dialog.filterEdit.setText('fid:' + str(noteId))
+        browser.updateSearch()
+        browser.onnote()
 
 
     def startEditing(self):
