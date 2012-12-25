@@ -93,11 +93,11 @@ class MainWindowReader(QtGui.QMainWindow):
 
 
     def applyPreferences(self):
-        if self.preferences.uiReaderState != None:
+        if self.preferences.uiReaderState is not None:
             self.restoreState(QtCore.QByteArray.fromBase64(self.preferences.uiReaderState))
-        if self.preferences.uiReaderPosition != None:
+        if self.preferences.uiReaderPosition is not None:
             self.move(QtCore.QPoint(*self.preferences.uiReaderPosition))
-        if self.preferences.uiReaderSize != None:
+        if self.preferences.uiReaderSize is not None:
             self.resize(QtCore.QSize(*self.preferences.uiReaderSize))
 
         self.comboTags.addItems(self.preferences.ankiTags)
@@ -123,7 +123,10 @@ class MainWindowReader(QtGui.QMainWindow):
         self.preferences.uiReaderState = self.saveState().toBase64()
         self.preferences.save()
 
-        if self.closed:
+        if self.anki is not None:
+            self.anki.stopEditing()
+
+        if self.closed is not None:
             self.closed()
 
 
@@ -164,7 +167,7 @@ class MainWindowReader(QtGui.QMainWindow):
         dialog = DialogPreferences(self, self.preferences, self.anki)
         if dialog.exec_() == QtGui.QDialog.Accepted:
             self.applyPreferencesContent()
-            if self.updated:
+            if self.updated is not None:
                 self.updated()
 
 
@@ -256,6 +259,7 @@ class MainWindowReader(QtGui.QMainWindow):
                 definition.sentence
             )
             self.ankiAddFact(markup)
+            self.updateDefinitions()
         if command == 'addFactReading':
             markup = reader_util.buildFactMarkupReading(
                 definition.reading,
@@ -263,6 +267,7 @@ class MainWindowReader(QtGui.QMainWindow):
                 definition.sentence
             )
             self.ankiAddFact(markup)
+            self.updateDefinitions()
         elif command == 'copyDefinition':
             reader_util.copyDefinitions([definition])
 
@@ -342,11 +347,11 @@ class MainWindowReader(QtGui.QMainWindow):
         self.setStatus(u'Loaded file {0}'.format(filename))
         self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.split(filename)[1], encoding))
 
+
     def openFileByExtension(self, filename):
         self.clearArchiveFiles()
 
         if tarfile.is_tarfile(filename):
-            # opening an empty tar file raises ReadError
             with tarfile.open(filename, 'r:*') as tp:
                 files = [f for f in tp.getnames() if tp.getmember(f).isfile()]
                 names = [f.decode('utf-8') for f in files]
@@ -360,8 +365,7 @@ class MainWindowReader(QtGui.QMainWindow):
                     content = fp.read()
                     fp.close()
                 else:
-                    # Using index because of encoding difficulties
-                    (index, ok) = self.selectFileName(names)
+                    index, ok = self.selectFileName(names)
                     if ok:
                         fp = tp.extractfile(files[index])
                         content = fp.read()
@@ -381,15 +385,17 @@ class MainWindowReader(QtGui.QMainWindow):
         if self.state.archiveIndex is not None:
             return (self.state.archiveIndex, True)
 
-        (item, ok) = QtGui.QInputDialog.getItem(
-                         self,
-                         'Yomichan',
-                         'Select file to open:',
-                         self.formatQStringList(names),
-                         current = 0,
-                         editable=False)
-        (index, success) = self.getItemIndex(item)
-        return (index - 1, ok and success)
+        item, ok = QtGui.QInputDialog.getItem(
+            self,
+            'Yomichan',
+            'Select file to open:',
+            self.formatQStringList(names),
+            current = 0,
+            editable=False
+        )
+
+        index, success = self.getItemIndex(item)
+        return index - 1, ok and success
 
 
     def getItemIndex(self, item):
@@ -433,11 +439,10 @@ class MainWindowReader(QtGui.QMainWindow):
 
 
     def ankiAddFact(self, markup):
-        if not self.anki:
+        if self.anki is None:
             return False
 
         fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
-
         tagsSplit = reader_util.splitTags(unicode(self.comboTags.currentText()))
         tagsJoined = ' '.join(tagsSplit)
 
@@ -449,7 +454,7 @@ class MainWindowReader(QtGui.QMainWindow):
         self.preferences.updateFactTags(tagsJoined)
 
         factId = self.anki.addNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields, tagsSplit)
-        if not factId:
+        if factId is None:
             return False
 
         expression, reading = markup['%e'], markup['%r']
@@ -467,7 +472,7 @@ class MainWindowReader(QtGui.QMainWindow):
 
 
     def ankiIsFactValid(self, markup):
-        if not self.anki:
+        if self.anki is None:
             return False
 
         fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
@@ -528,12 +533,12 @@ class MainWindowReader(QtGui.QMainWindow):
     def updateArchiveFiles(self, filename, names):
         self.menuOpenArchive.setEnabled(True)
         for name in self.formatQStringList(names):
-            (index, ok) = self.getItemIndex(name)
+            index, ok = self.getItemIndex(name)
             if ok:
                 index = index - 1
-                self.menuOpenArchive.addAction(name, (lambda fn=filename, idx=index: self.openFileInArchive(fn, idx)))
+                self.menuOpenArchive.addAction(name, lambda fn=filename, idx=index: self.openFileInArchive(fn, idx))
             else:
-                self.menuOpenArchive.addAction(name, (lambda fn=filename: self.openFile(fn)))
+                self.menuOpenArchive.addAction(name, lambda fn=filename: self.openFile(fn))
 
 
     def openFileInArchive(self, filename, index):

@@ -149,6 +149,6 @@ class DialogPreferences(QtGui.QDialog):
 
 
     def onAnkiModelChanged(self, index):
-        model = self.anki.findModel(self.comboBoxAnkiModel.currentText())
-        fieldNames = list() if model is None else self.anki.modelFieldNames(model)
+        modelName = self.comboBoxAnkiModel.currentText()
+        fieldNames = self.anki.modelFieldNames(modelName) or list()
         self.setAnkiFields(fieldNames, self.preferences.ankiFields)

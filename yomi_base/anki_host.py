@@ -22,11 +22,12 @@ import anki.hooks
 
 class Anki:
     def addNote(self, deckName, modelName, fields, tags=list()):
-        note = self.createNote(fields, deckName, modelName, tags)
+        note = self.createNote(deckName, modelName, fields, tags)
         if note is not None:
-            self.collection().addNote(note)
-            self.decks().save(self.currentDeck())
-            self.window().requireReset()
+            collection = self.collection()
+            collection.addNote(note)
+            collection.autosave()
+            self.startEditing()
 
 
     def canAddNote(self, deckName, modelName, fields):
@@ -34,24 +35,13 @@ class Anki:
 
 
     def createNote(self, deckName, modelName, fields, tags=list()):
-        model = self.findModel(modelName)
+        model = self.models().byName(modelName)
         if model is None:
             return None
 
-        deck = self.findDeck(deckName)
+        deck = self.decks().byName(deckName)
         if deck is None:
             return None
-
-        #~ conf = self.collection().conf
-        #~ deck = self.currentDeck()
-        #~ if conf['curModel'] != model['id'] or deck['mid'] != model['id']:
-            #~ conf['curModel'] = deck['mid'] = model['id']
-            #~ self.collection().decks.save(deck)
-            #~ anki.hooks.runHook('currentModelChanged')
-            #~ self.window().reset()
-
-        #~ self.collection().conf['curModel'] = model['id']
-        #~ deck['mid'] = model['id']
 
         note = anki.notes.Note(self.collection(), model)
         note.model()['did'] = deck['id']
@@ -70,16 +60,20 @@ class Anki:
         #~ browser.onnote()
 
 
+    def startEditing(self):
+        self.window().requireReset()
+
+
+    def stopEditing(self):
+        self.window().maybeReset()
+
+
     def window(self):
         return aqt.mw
 
 
-    def form(self):
-        return self.window().form
-
-
     def toolsMenu(self):
-        return self.form().menuTools
+        return self.window().form.menuTools
 
 
     def collection(self):
@@ -94,16 +88,9 @@ class Anki:
         return self.models().allNames()
 
 
-    def modelFieldNames(self, model):
-        return [field['name'] for field in model['flds']]
-
-
-    def findModel(self, name):
-        return self.models().byName(name)
-
-
-    def currentModel(self):
-        return self.models().current()
+    def modelFieldNames(self, modelName):
+        model = self.models().byName(modelName)
+        return None if model is None else [field['name'] for field in model['flds']]
 
 
     def decks(self):
@@ -112,12 +99,3 @@ class Anki:
 
     def deckNames(self):
         return self.decks().allNames()
-
-
-    def findDeck(self, name):
-        return self.decks().byName(name)
-
-
-    def currentDeck(self):
-        return self.decks().current()
-
