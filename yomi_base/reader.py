@@ -18,16 +18,17 @@
 
 import os
 import tarfile
-from PyQt4 import QtGui, QtCore, uic
+from PyQt4 import QtGui, QtCore
 from preferences import DialogPreferences
 from update import UpdateFinder
 from about import DialogAbout
 from constants import constants
 from util import buildResPath
+from ui_gen import reader
 import reader_util
 
 
-class MainWindowReader(QtGui.QMainWindow):
+class MainWindowReader(QtGui.QMainWindow, reader.Ui_MainWindowReader):
     class State:
         def __init__(self):
             self.filename = unicode()
@@ -38,9 +39,9 @@ class MainWindowReader(QtGui.QMainWindow):
             self.archiveIndex = None
 
 
-    def __init__(self, parent, preferences, language, filename=None, anki=None, closed=None, updated=None):
+    def __init__(self, parent, preferences, language, filename=None, anki=None, closed=None):
         QtGui.QMainWindow.__init__(self, parent)
-        uic.loadUi(buildResPath('ui/reader.ui'), self)
+        self.setupUi(self)
 
         self.textContent.mouseMoveEvent = self.onContentMouseMove
         self.textContent.mousePressEvent = self.onContentMousePress
@@ -53,7 +54,6 @@ class MainWindowReader(QtGui.QMainWindow):
         self.addedFacts = list()
         self.anki = anki
         self.closed = closed
-        self.updated = updated
         self.zoom = 0
 
         self.applyPreferences()
@@ -167,8 +167,6 @@ class MainWindowReader(QtGui.QMainWindow):
         dialog = DialogPreferences(self, self.preferences, self.anki)
         if dialog.exec_() == QtGui.QDialog.Accepted:
             self.applyPreferencesContent()
-            if self.updated is not None:
-                self.updated()
 
 
     def onActionAbout(self):

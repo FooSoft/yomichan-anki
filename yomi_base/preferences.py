@@ -16,14 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4 import QtGui, QtCore, uic
+from PyQt4 import QtGui, QtCore
 from util import buildResPath
+from ui_gen import preferences
 
 
-class DialogPreferences(QtGui.QDialog):
+class DialogPreferences(QtGui.QDialog, preferences.Ui_DialogPreferences):
     def __init__(self, parent, preferences, anki):
         QtGui.QDialog.__init__(self, parent)
-        uic.loadUi(buildResPath('ui/preferences.ui'), self)
+        self.setupUi(self)
 
         self.accepted.connect(self.onAccept)
         self.buttonContentColorFg.clicked.connect(self.onButtonColorFgClicked)
