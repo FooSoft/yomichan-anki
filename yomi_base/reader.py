@@ -158,7 +158,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
             caption='Select a file to open',
             filter='Text files (*.txt);;Archive files (*.bz2 *.gz *.tar *.tgz);;All files (*.*)'
         )
-        if not filename.isNull():
+        if filename:
             self.openFile(filename)
 
 
