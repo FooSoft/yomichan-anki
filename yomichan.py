@@ -46,6 +46,7 @@ class YomichanPlugin(Yomichan):
 
         action = QtGui.QAction(QtGui.QIcon(':/img/img/icon_logo_32.png'), '&Yomichan...', self.parent)
         action.setIconVisibleInMenu(True)
+        action.setShortcut('Ctrl+Y')
         action.triggered.connect(self.onShowRequest)
         self.anki.addUiAction(action)
 

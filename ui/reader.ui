@@ -243,7 +243,7 @@
     <string>Quit Yomichan</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string>Esc</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
