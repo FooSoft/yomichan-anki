@@ -118,7 +118,7 @@ def buildFactMarkupReading(reading, glossary, sentence=None):
 
 
 def splitTags(tags):
-    return re.split('[;,\s]', tags)
+    return filter(lambda tag: tag.strip(), re.split('[;,\s]', tags))
 
 
 def convertDefinitions(definitions, sentence=None):

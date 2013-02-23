@@ -17,7 +17,7 @@
 
 
 constants = {
-    'version': '0.06b',
+    'version': '0.07b',
 
     'urlUpdates': 'http://foosoft.net/pub/projects/yomichan/updates.xml',
     'urlHomepage': 'http://foosoft.net/yomichan/',
