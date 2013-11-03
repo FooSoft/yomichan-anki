@@ -19,7 +19,7 @@
 
 import sys
 from PyQt4 import QtGui, QtCore
-from yomi_base.lang import japanese
+from yomi_base import japanese
 from yomi_base.preference_data import Preferences
 from yomi_base.reader import MainWindowReader
 
