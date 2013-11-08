@@ -33,7 +33,12 @@ class Dictionary:
 
         cursor = self.db.cursor()
         cursor.execute('SELECT * FROM Terms WHERE expression {0} ? OR reading=?'.format('LIKE' if partial else '='), (word, word))
-        return cursor.fetchall()
+
+        results = list()
+        for expression, reading, definitions, tags in cursor.fetchall():
+            results.append((expression, reading, definitions, tags.split()))
+
+        return results
 
 
     def findCharacter(self, character):
