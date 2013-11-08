@@ -158,7 +158,7 @@ def parseEdict(path):
             tags.extend(group.split(','))
 
         tags = set(tags).intersection(GRAMMAR_TAGS)
-        tags = ', '.join(sorted(tags))
+        tags = ' '.join(sorted(tags))
 
         results.append((term, reading, definitions, tags))
 
