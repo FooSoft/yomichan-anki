@@ -26,14 +26,14 @@ class Dictionary:
         self.indices = set()
 
 
-    def findTerm(self, word):
+    def findTerm(self, word, partial=False):
         cursor = self.db.cursor()
 
         if not self.hasIndex('TermIndex'):
             cursor.execute('CREATE INDEX TermIndex ON Terms(expression, reading)')
             self.db.commit()
 
-        cursor.execute('SELECT * FROM Terms WHERE expression=? OR reading=?', (word, word))
+        cursor.execute('SELECT * FROM Terms WHERE expression {0} ? OR reading=?'.format('LIKE' if partial else '='), (word, word))
         return cursor.fetchall()
 
 
