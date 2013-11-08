@@ -126,7 +126,7 @@ def parseKradFile(path):
     for line in loadDefinitions(path):
         segments = line.split(' ')
         character = segments[0]
-        radicals = ', '.join(segments[2:])
+        radicals = ' '.join(segments[2:])
         results.append((character, radicals))
 
     return results
