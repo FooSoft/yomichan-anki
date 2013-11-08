@@ -26,9 +26,10 @@ import json
 #
 
 class Deinflection:
-    def __init__(self, term, tags=list(), rule=str()):
+    def __init__(self, term, parent=None, tags=list(), rule=str()):
         self.children = list()
         self.term = term
+        self.parent = parent
         self.tags = tags
         self.rule = rule
 
@@ -41,26 +42,30 @@ class Deinflection:
                 kanaIn = variant['kanaIn']
                 kanaOut = variant['kanaOut']
 
+                allowed = not self.tags
+                for tag in self.tags:
+                    if tag in tagsIn:
+                        allowed = True
+
+                if not allowed:
+                    continue
+
                 for i in xrange(len(kanaIn), len(self.term) + 1):
                     term = self.term[:i]
+                    if not term.endswith(kanaIn):
+                        continue
 
-                    allowed = not self.tags
-                    for tag in self.tags:
-                        if tag in tagsIn:
-                            allowed = True
-
-                    if allowed and term.endswith(kanaIn):
-                        rebase = term[:-len(kanaIn)] + kanaOut
-                        if validator(rebase, self.tags):
-                            child = Deinflection(rebase, tagsOut, rule)
-                            self.children.append(child)
-                            child.deinflect(validator, rules)
+                    rebase = term[:-len(kanaIn)] + kanaOut
+                    if validator(rebase, self.tags):
+                        child = Deinflection(rebase, term, tagsOut, rule)
+                        self.children.append(child)
+                        child.deinflect(validator, rules)
 
 
     def dump(self, depth=0):
         result = u'%s%s' % (u'\t' * depth, self.term)
         if self.rule:
-            result += u' (%s)' % self.rule
+            result += u' (%s %s)' % (self.parent, self.rule)
         result += u'\n'
 
         for child in self.children:
