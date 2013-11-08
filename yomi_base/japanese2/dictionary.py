@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import operator
 import re
 import sqlite3
 
@@ -39,13 +40,44 @@ class Dictionary:
 
     def findCharacter(self, character):
         cursor = self.db.cursor()
-
-        if not self.hasIndex('KanjiIndex'):
-            cursor.execute('CREATE INDEX KanjiIndex ON Kanji(character)')
-            self.db.commit()
-
         cursor.execute('SELECT * FROM Kanji WHERE character=?', character)
-        return cursor.fetchall()
+        return cursor.fetchone()
+
+
+    def findCharacterVisually(self, characters):
+        radicals = dict()
+        for character in characters:
+            for radical in self.findRadicalsByCharacter(character):
+                radicals[radical] = radicals.get(radical, 0) + 1
+
+        results = dict()
+        for radical, count in radicals.items():
+            for character in self.findCharactersByRadical(radical):
+                results[character] = results.get(character, 0) + count
+
+        return sorted(results.items(), key=operator.itemgetter(1), reverse=True)
+
+
+    def findRadicalsByCharacter(self, character):
+        cursor = self.db.cursor()
+        cursor.execute('SELECT radicals FROM Radicals WHERE character=?', character)
+
+        columns = cursor.fetchone()
+        if columns is None:
+            return None
+
+        return columns[0].split()
+
+
+    def findCharactersByRadical(self, radical):
+        cursor = self.db.cursor()
+        cursor.execute('SELECT character FROM Radicals WHERE radicals LIKE ?', (u'%{0}%'.format(radical),))
+
+        columns = cursor.fetchall()
+        if columns is None:
+            return None
+
+        return map(operator.itemgetter(0), columns)
 
 
     def hasIndex(self, name):
@@ -53,7 +85,7 @@ class Dictionary:
             return True
 
         cursor = self.db.cursor()
-        cursor.execute('SELECT * FROM sqlite_master WHERE name=?', (name, ))
+        cursor.execute('SELECT * FROM sqlite_master WHERE name=?', (name,))
         if len(cursor.fetchall()) == 0:
             return False
 
