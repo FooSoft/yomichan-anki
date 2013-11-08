@@ -1,26 +1,27 @@
 #!/usr/bin/env python
 
+import codecs
+import optparse
 import os
 import re
-import sys
-import codecs
 import sqlite3
+import sys
 
 
 GRAMMAR_TAGS = {
+    'adj',      # former adjective classification (being removed)
+    'adj-f',    # noun or verb acting prenominally (other than the above)
     'adj-i',    # adjective (keiyoushi)
     'adj-na',   # adjectival nouns or quasi-adjectives (keiyodoshi)
     'adj-no',   # nouns which may take the genitive case particle `no'
     'adj-pn',   # pre-noun adjectival (rentaishi)
     'adj-t',    # `taru' adjective
-    'adj-f',    # noun or verb acting prenominally (other than the above)
-    'adj',      # former adjective classification (being removed)
     'adv',      # adverb (fukushi)
     'adv-n',    # adverbial noun
     'adv-to',   # adverb taking the `to' particle
     'aux',      # auxiliary
-    'aux-v',    # auxiliary verb
     'aux-adj',  # auxiliary adjective
+    'aux-v',    # auxiliary verb
     'conj',     # conjunction
     'ctr',      # counter
     'exp',      # Expressions (phrases, clauses, etc.)
@@ -56,7 +57,6 @@ GRAMMAR_TAGS = {
     'v5u-s',    # Godan verb with `u' ending (special class)
     'v5uru',    # Godan verb - uru old class verb (old form of Eru)
     'v5z',      # Godan verb with `zu' ending
-    'vz',       # Ichidan verb - zuru verb - (alternative form of -jiru verbs)
     'vi',       # intransitive verb
     'vk',       # kuru verb - special class
     'vn',       # irregular nu verb
@@ -65,7 +65,9 @@ GRAMMAR_TAGS = {
     'vs-i',     # suru verb - irregular
     'vs-s',     # suru verb - special class
     'vt',       # transitive verb
+    'vz',       # Ichidan verb - zuru verb - (alternative form of -jiru verbs)
 }
+
 
 def isHiragana(c):
     return 0x3040 <= ord(c) < 0x30a0
@@ -86,43 +88,37 @@ def parseKanjiDic(path):
 
     for line in loadDefinitions('kanjidic'):
         segments = line.split()
-        results.append({
-            'character': segments[0],
-            'onyomi': filter(lambda x: filter(isKatakana, x), segments[1:]),
-            'kunyomi': filter(lambda x: filter(isHiragana, x), segments[1:]),
-            'meanings': re.findall('\{([^\}]+)\}', line)
-        })
+        character = segments[0]
+        kunYomi = ','.join(filter(lambda x: filter(isHiragana, x), segments[1:])),
+        onYomi = ','.join(filter(lambda x: filter(isKatakana, x), segments[1:])),
+        meanings = ','.join(re.findall('\{([^\}]+)\}', line))
+        results.append((character, onYomi, kunYomi, meanings))
 
     return results
 
 
 def writeKanjiDic(cursor, values):
-    pass
+    cursor.execute('DROP TABLE IF EXISTS Kanji')
+    cursor.execute('CREATE TABLE Radicals(character TEXT, kunYomi TEXT, onYomi TEXT, meanings TEXT)')
+    cursor.executemany('INSERT INTO Radicals VALUES(?, ?, ?, ?)', values)
 
 
 def parseKradFile(path):
-    radsByChar = dict()
-    charsByRad = dict()
+    results = list()
 
     for line in loadDefinitions(path):
         segments = line.split(' ')
         character = segments[0]
-        radicals = segments[2:]
-
-        radsByChar[character] = radicals
-        for radical in radicals:
-            charsByRad[radical] = charsByRad.get(radical, list()) + [character]
-
-    results = {
-        'radsByChar': radsByChar,
-        'charsByRad': charsByRad
-    }
+        radicals = ','.join(segments[2:])
+        results.append((character, radicals))
 
     return results
 
 
 def writeKradFile(cursor, values):
-    pass
+    cursor.execute('DROP TABLE IF EXISTS Radicals')
+    cursor.execute('CREATE TABLE Radicals(character TEXT, radicals TEXT)')
+    cursor.executemany('INSERT INTO Radicals VALUES(?, ?)', values)
 
 
 def parseEdict(path):
@@ -153,12 +149,12 @@ def parseEdict(path):
 
 
 def writeEdict(cursor, values):
-    cursor.execute('drop table if exists Edict')
-    cursor.execute('create table Edict(term text, reading text, definitions text, tags text)')
-    cursor.executemany('insert into Edict values(?, ?, ?, ?)', values)
+    cursor.execute('DROP TABLE IF EXISTS Terms')
+    cursor.execute('CREATE TABLE Terms(expression TEXT, reading TEXT, definitions TEXT, tags TEXT)')
+    cursor.executemany('INSERT INTO Terms VALUES(?, ?, ?, ?)', values)
 
 
-def main(path, kanjidic=None, kradfile=None, edict=None):
+def build(path, kanjidic, kradfile, edict):
     with sqlite3.connect(path) as db:
         cursor = db.cursor()
 
@@ -172,5 +168,19 @@ def main(path, kanjidic=None, kradfile=None, edict=None):
             writeEdict(cursor, parseEdict(edict))
 
 
+def main():
+    parser = optparse.OptionParser()
+    parser.add_option('--kanjidic', dest='kanjidic')
+    parser.add_option('--kradfile', dest='kradfile')
+    parser.add_option('--edict', dest='edict')
+
+    options, args = parser.parse_args()
+
+    if len(args) == 0:
+        parser.print_help()
+    else:
+        build(args[0], options.kanjidic, options.kradfile, options.edict)
+
+
 if __name__ == '__main__':
-    main('dictionary.db', edict='data/edict')
+    main()
