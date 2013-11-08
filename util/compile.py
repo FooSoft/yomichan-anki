@@ -86,12 +86,12 @@ def loadDefinitions(path):
 def parseKanjiDic(path):
     results = list()
 
-    for line in loadDefinitions('kanjidic'):
+    for line in loadDefinitions(path):
         segments = line.split()
         character = segments[0]
-        kunYomi = ','.join(filter(lambda x: filter(isHiragana, x), segments[1:])),
-        onYomi = ','.join(filter(lambda x: filter(isKatakana, x), segments[1:])),
-        meanings = ','.join(re.findall('\{([^\}]+)\}', line))
+        kunYomi = ', '.join(filter(lambda x: filter(isHiragana, x), segments[1:]))
+        onYomi = ', '.join(filter(lambda x: filter(isKatakana, x), segments[1:]))
+        meanings = '; '.join(re.findall('\{([^\}]+)\}', line))
         results.append((character, onYomi, kunYomi, meanings))
 
     return results
@@ -99,8 +99,8 @@ def parseKanjiDic(path):
 
 def writeKanjiDic(cursor, values):
     cursor.execute('DROP TABLE IF EXISTS Kanji')
-    cursor.execute('CREATE TABLE Radicals(character TEXT, kunYomi TEXT, onYomi TEXT, meanings TEXT)')
-    cursor.executemany('INSERT INTO Radicals VALUES(?, ?, ?, ?)', values)
+    cursor.execute('CREATE TABLE Kanji(character TEXT, kunYomi TEXT, onYomi TEXT, meanings TEXT)')
+    cursor.executemany('INSERT INTO Kanji VALUES(?, ?, ?, ?)', values)
 
 
 def parseKradFile(path):
@@ -109,7 +109,7 @@ def parseKradFile(path):
     for line in loadDefinitions(path):
         segments = line.split(' ')
         character = segments[0]
-        radicals = ','.join(segments[2:])
+        radicals = ', '.join(segments[2:])
         results.append((character, radicals))
 
     return results
@@ -141,7 +141,7 @@ def parseEdict(path):
             tags.extend(group.split(','))
 
         tags = set(tags).intersection(GRAMMAR_TAGS)
-        tags = ','.join(sorted(tags))
+        tags = ', '.join(sorted(tags))
 
         results.append((term, reading, definitions, tags))
 
