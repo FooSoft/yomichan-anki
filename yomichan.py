@@ -37,7 +37,7 @@ class YomichanPlugin(Yomichan):
 
         self.toolIconVisible = False
         self.window = None
-        self.anki = anki_host.Anki()
+        self.anki = anki_bridge.Anki()
         self.parent = self.anki.window()
 
         separator = QtGui.QAction(self.parent)
@@ -90,5 +90,5 @@ class YomichanStandalone(Yomichan):
 if __name__ == '__main__':
     instance = YomichanStandalone()
 else:
-    from yomi_base import anki_host
+    from yomi_base import anki_bridge
     instance = YomichanPlugin()
