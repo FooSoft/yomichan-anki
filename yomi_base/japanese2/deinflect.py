@@ -62,6 +62,9 @@ class Deinflection:
             return True
 
         for tags in validator(self.term):
+            if len(self.tags) == 0:
+                return True
+
             for tag in self.tags:
                 if self.searchTags(tag, tags):
                     return True
@@ -105,8 +108,8 @@ class Deinflector:
             self.rules = json.load(fp)
 
 
-    def deinflect(self, term, validator=lambda term, tags: True):
+    def deinflect(self, term, validator):
         candidates = set()
         node = Deinflection(term)
-        node.deinflect(validator, self.rules, candidates)
-        return node.gather(), candidates
+        if node.deinflect(validator, self.rules, candidates):
+            return node.gather(), candidates
