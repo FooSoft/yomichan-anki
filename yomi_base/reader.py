@@ -250,17 +250,17 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
         if command == 'addExpression':
             markup = reader_util.buildFactMarkupExpression(
-                definition.expression,
-                definition.reading,
-                definition.glossary,
-                definition.sentence
+                definition['expression'],
+                definition['reading'],
+                definition['definitions'],
+                definition['sentence']
             )
             self.ankiAddFact(markup)
         if command == 'addReading':
             markup = reader_util.buildFactMarkupReading(
-                definition.reading,
-                definition.glossary,
-                definition.sentence
+                definition['reading'],
+                definition['definitions'],
+                definition['sentence']
             )
             self.ankiAddFact(markup)
         elif command == 'copyDefinition':

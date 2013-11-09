@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011  Alex Yatskov
+# Copyright (C) 2013  Alex Yatskov
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,18 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import re
 from PyQt4 import QtGui
-
-
-class Definition:
-    def __init__(self, expression, reading, glossary, conjugations, source, sentence):
-        self.expression = expression
-        self.reading = reading
-        self.glossary = glossary
-        self.conjugations = conjugations
-        self.source = source
-        self.sentence = sentence
+import re
 
 
 def decodeContent(content):
@@ -105,15 +95,21 @@ def replaceMarkupInFields(fields, markup):
     return result
 
 
-def buildFactMarkupExpression(expression, reading, glossary, sentence=None):
+def buildFactMarkupExpression(expression, reading, definitions, sentence=None):
     return {
-        '%e': expression, '%r': reading, '%g': glossary, '%s': sentence
+        '%e': expression,
+        '%r': reading,
+        '%g': definitions,
+        '%s': sentence
     }
 
 
-def buildFactMarkupReading(reading, glossary, sentence=None):
+def buildFactMarkupReading(reading, definitions, sentence=None):
     return {
-        '%e': reading, '%r': None, '%g': glossary, '%s': sentence
+        '%e': reading,
+        '%r': None,
+        '%g': definitions,
+        '%s': sentence
     }
 
 
@@ -122,38 +118,40 @@ def splitTags(tags):
 
 
 def convertDefinitions(definitions, sentence=None):
-    return [
-        Definition(*(definition + (sentence,))) for definition in definitions
-    ]
+    if sentence is not None:
+        for definition in definitions:
+            definition['sentence'] = sentence
 
+    return definitions
+        
 
 def copyDefinitions(definitions):
     text = unicode()
 
     for definition in definitions:
-        if definition.reading:
-            text += u'{0}\t{1}\t{2}\n'.format(definition.expression, definition.reading, definition.glossary)
+        if definition['reading']:
+            text += u'{expression}\t{reading}\t{definitions}\n'.format(**definition)
         else:
-            text += u'{0}\t{1}\n'.format(definition.expression, definition.glossary)
+            text += u'{expression}\t{meanings}\n'.format(**definition)
 
     QtGui.QApplication.clipboard().setText(text)
 
 
 def buildDefinitionHtml(definition, factIndex, factQuery):
     reading = unicode()
-    if definition.reading:
-        reading = u'[{0}]'.format(definition.reading)
+    if definition['reading']:
+        reading = u'[{0}]'.format(definition['reading'])
 
     conjugations = unicode()
-    if len(definition.conjugations) > 0:
-        conjugations = u' :: '.join(definition.conjugations)
+    if len(definition['rules']) > 0:
+        conjugations = u' :: '.join(definition['rules'])
         conjugations = '<span class = "conjugations">&lt;{0}&gt;<br/></span>'.format(conjugations)
 
     links = '<a href = "copyDefinition:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(factIndex)
     if factQuery:
-        if factQuery(buildFactMarkupExpression(definition.expression, definition.reading, definition.glossary)):
+        if factQuery(buildFactMarkupExpression(definition['expression'], definition['reading'], definition['definitions'])):
             links += '<a href = "addExpression:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(factIndex)
-        if factQuery(buildFactMarkupReading(definition.reading, definition.glossary)):
+        if factQuery(buildFactMarkupReading(definition['reading'], definition['definitions'])):
             links += '<a href = "addReading:{0}"><img src = "://img/img/icon_add_reading.png" align = "right"/></a>'.format(factIndex)
 
     html = u"""
@@ -161,7 +159,7 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
         <span class = "expression">{1}&nbsp;{2}<br/></span>
         <span class = "glossary">{3}<br/></span>
         <span class = "conjugations">{4}</span>
-        <br clear = "all"/>""".format(links, definition.expression, reading, definition.glossary, conjugations)
+        <br clear = "all"/>""".format(links, definition['expression'], reading, definition['definitions'], conjugations)
 
     return html
 
@@ -177,7 +175,7 @@ def buildDefinitionsHtml(definitions, factQuery):
         span.expression {{ font-size: 15pt; }}
         </style></head><body>""".format(toolTipBg, toolTipFg)
 
-    if definitions:
+    if len(definitions) > 0:
         for i, definition in enumerate(definitions):
             html += buildDefinitionHtml(definition, i, factQuery)
     else:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011  Alex Yatskov
+# Copyright (C) 2013  Alex Yatskov
 # This module is based on Rikaichan code written by Jonathan Zarate
 #
 # This program is free software: you can redistribute it and/or modify
@@ -41,11 +41,11 @@ class Translator:
 
         results = map(self.formatResult, groups.items())
         results = filter(operator.truth, results)
-        results = sorted(results, key=lambda x: len(x[0]), reverse=True)
+        results = sorted(results, key=lambda x: len(x['source']), reverse=True)
 
         length = 0
-        for expression, reading, definition, rules, source in results:
-            length = max(length, len(source))
+        for result in results:
+            length = max(length, len(result['source']))
         
         return results, length
 
@@ -54,20 +54,21 @@ class Translator:
         root = root or source
 
         for entry in self.dictionary.findTerm(root, partial):
-            expression, reading, definition, tags = entry
-            key = expression, reading, definition 
+            key = entry['expression'], entry['reading'], entry['definitions']
             if key not in groups:
                 groups[key] = entry, source, rules
 
 
     def formatResult(self, group):
         (expression, reading, definition), (entry, source, rules) = group
-        return expression, reading, definition, rules, source
+        return {
+            'expression': expression,
+            'reading': reading,
+            'definitions': definition,
+            'rules': rules,
+            'source': source
+        }
 
 
     def validator(self, term):
-        results = list()
-        for expression, reading, definitions, tags in self.dictionary.findTerm(term):
-            results.append(tags)
-
-        return results
+        return [d['tags'] for d in self.dictionary.findTerm(term)]
