@@ -80,7 +80,7 @@ class Deinflection:
         if len(self.children) == 0:
             endpoint = {
                 'root': self.term, 
-                'term': self.term, 
+                'source': self.term, 
                 'rules': [self.rule] if self.rule else list()
             }
 
@@ -92,7 +92,7 @@ class Deinflection:
                 if self.rule:
                     path['rules'].append(self.rule)
                 else:
-                    path['term'] = self.term
+                    path['source'] = self.term
                 paths.append(path)
 
         return paths
