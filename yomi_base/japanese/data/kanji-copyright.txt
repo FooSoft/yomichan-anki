@@ -1,3 +1,0 @@
-KANJIDIC2
-Copyright (C) 2007 The Electronic Dictionary Research and Development Group
-http://www.csse.monash.edu.au/~jwb/kanjidic2/
