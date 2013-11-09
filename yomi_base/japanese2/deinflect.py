@@ -32,9 +32,24 @@ class Deinflection:
         self.term = term
         self.tags = tags
         self.rule = rule
+        self.success = False
+
+
+    def validateTerm(self, validator):
+        for tags in validator(self.term):
+            if len(self.tags) == 0:
+                return True
+
+            for tag in self.tags:
+                if self.searchTags(tag, tags):
+                    return True
 
 
     def deinflect(self, validator, rules, candidates):
+        if self.validateTerm(validator):
+            child = Deinflection(self.term)
+            self.children.append(child)
+
         for rule, variants in rules.items():
             for variant in variants:
                 tagsIn = variant['tagsIn']
@@ -61,14 +76,6 @@ class Deinflection:
         if len(self.children) > 0:
             return True
 
-        for tags in validator(self.term):
-            if len(self.tags) == 0:
-                return True
-
-            for tag in self.tags:
-                if self.searchTags(tag, tags):
-                    return True
-
 
     def searchTags(self, tag, tags):
         for t in tags:
@@ -79,8 +86,8 @@ class Deinflection:
     def gather(self):
         if len(self.children) == 0:
             endpoint = {
-                'root': self.term, 
-                'source': self.term, 
+                'root': self.term,
+                'source': self.term,
                 'rules': [self.rule] if self.rule else list()
             }
 
