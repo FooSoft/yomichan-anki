@@ -35,7 +35,7 @@ class Deinflection:
         self.success = False
 
 
-    def validateTerm(self, validator):
+    def validate(self, validator):
         for tags in validator(self.term):
             if len(self.tags) == 0:
                 return True
@@ -45,8 +45,8 @@ class Deinflection:
                     return True
 
 
-    def deinflect(self, validator, rules, candidates):
-        if self.validateTerm(validator):
+    def deinflect(self, validator, rules):
+        if self.validate(validator):
             child = Deinflection(self.term)
             self.children.append(child)
 
@@ -67,10 +67,9 @@ class Deinflection:
                     continue
 
                 term = self.term[:-len(kanaIn)] + kanaOut
-                candidates.update([term])
 
                 child = Deinflection(term, tagsOut, rule)
-                if child.deinflect(validator, rules, candidates):
+                if child.deinflect(validator, rules):
                     self.children.append(child)
 
         if len(self.children) > 0:
@@ -85,21 +84,14 @@ class Deinflection:
 
     def gather(self):
         if len(self.children) == 0:
-            endpoint = {
-                'root': self.term,
-                'source': self.term,
-                'rules': [self.rule] if self.rule else list()
-            }
-
-            return [endpoint]
+            return [{'root': self.term, 'rules': list()}]
 
         paths = list()
         for child in self.children:
             for path in child.gather():
                 if self.rule:
                     path['rules'].append(self.rule)
-                else:
-                    path['source'] = self.term
+                path['source'] = self.term
                 paths.append(path)
 
         return paths
@@ -116,7 +108,6 @@ class Deinflector:
 
 
     def deinflect(self, term, validator):
-        candidates = set()
         node = Deinflection(term)
-        if node.deinflect(validator, self.rules, candidates):
-            return node.gather(), candidates
+        if node.deinflect(validator, self.rules):
+            return node.gather()
