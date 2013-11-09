@@ -144,9 +144,10 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
     if definition.reading:
         reading = u'[{0}]'.format(definition.reading)
 
-    conjugation = unicode()
-    if definition.conjugations:
-        conjugation = '<span class = "conjugations">&lt;{0}&gt;<br/></span>'.format(definition.conjugations)
+    conjugations = unicode()
+    if len(definition.conjugations) > 0:
+        conjugations = u' :: '.join(definition.conjugations)
+        conjugations = '<span class = "conjugations">&lt;{0}&gt;<br/></span>'.format(conjugations)
 
     links = '<a href = "copyDefinition:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(factIndex)
     if factQuery:
@@ -159,8 +160,8 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
         <span class = "links">{0}</span>
         <span class = "expression">{1}&nbsp;{2}<br/></span>
         <span class = "glossary">{3}<br/></span>
-        <span class = "conjugation">{4}</span>
-        <br clear = "all"/>""".format(links, definition.expression, reading, definition.glossary, conjugation)
+        <span class = "conjugations">{4}</span>
+        <br clear = "all"/>""".format(links, definition.expression, reading, definition.glossary, conjugations)
 
     return html
 
