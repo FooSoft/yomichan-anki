@@ -89,7 +89,7 @@
             "kanaIn": "ちゃう", 
             "kanaOut": "る", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v1", 
@@ -100,7 +100,7 @@
             "kanaIn": "いじゃう", 
             "kanaOut": "ぐ", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
@@ -110,7 +110,7 @@
             "kanaIn": "いちゃう", 
             "kanaOut": "く", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
@@ -120,7 +120,7 @@
             "kanaIn": "きちゃう", 
             "kanaOut": "くる", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "vk"
@@ -130,7 +130,7 @@
             "kanaIn": "しちゃう", 
             "kanaOut": "す", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
@@ -140,7 +140,7 @@
             "kanaIn": "しちゃう", 
             "kanaOut": "する", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "vs-"
@@ -150,7 +150,7 @@
             "kanaIn": "っちゃう", 
             "kanaOut": "う", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
@@ -160,7 +160,7 @@
             "kanaIn": "っちゃう", 
             "kanaOut": "く", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
@@ -170,7 +170,7 @@
             "kanaIn": "っちゃう", 
             "kanaOut": "つ", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
@@ -180,7 +180,7 @@
             "kanaIn": "っちゃう", 
             "kanaOut": "る", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
@@ -190,7 +190,7 @@
             "kanaIn": "んじゃう", 
             "kanaOut": "ぬ", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
@@ -200,7 +200,7 @@
             "kanaIn": "んじゃう", 
             "kanaOut": "ぶ", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
@@ -210,7 +210,7 @@
             "kanaIn": "んじゃう", 
             "kanaOut": "む", 
             "tagsIn": [
-                "v5"
+                "v5.*"
             ], 
             "tagsOut": [
                 "v5"
