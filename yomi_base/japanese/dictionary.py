@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011  Alex Yatskov
+# Copyright (C) 2013  Alex Yatskov
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,7 +35,12 @@ class Dictionary:
 
         results = list()
         for expression, reading, definitions, tags in cursor.fetchall():
-            results.append((expression, reading, definitions, tags.split()))
+            results.append({
+                'expression': expression,
+                'reading': reading,
+                'definitions': definitions,
+                'tags': tags.split()
+            })
 
         return results
 
@@ -43,7 +48,16 @@ class Dictionary:
     def findCharacter(self, character):
         cursor = self.db.cursor()
         cursor.execute('SELECT * FROM Kanji WHERE character=? LIMIT 1', character)
-        return cursor.fetchone()
+
+        query = cursor.fetchone()
+        if query is not None:
+            character, kunyomi, onyomi, meanings = result
+            return {
+                'character': character,
+                'kunyomi': kunyomi,
+                'onyomi': onyomi,
+                'meanings': meanings
+            }
 
 
     def findCharacterVisually(self, characters):
