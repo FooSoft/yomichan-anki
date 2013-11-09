@@ -19,6 +19,7 @@
 
 import codecs
 import json
+import re
 
 
 #
@@ -26,15 +27,14 @@ import json
 #
 
 class Deinflection:
-    def __init__(self, term, parent=None, tags=list(), rule=str()):
+    def __init__(self, term, tags=list(), rule=str()):
         self.children = list()
         self.term = term
-        self.parent = parent
         self.tags = tags
         self.rule = rule
 
 
-    def deinflect(self, validator, rules):
+    def deinflect(self, validator, rules, candidates):
         for rule, variants in rules.items():
             for variant in variants:
                 tagsIn = variant['tagsIn']
@@ -42,40 +42,57 @@ class Deinflection:
                 kanaIn = variant['kanaIn']
                 kanaOut = variant['kanaOut']
 
-                allowed = not self.tags
+                allowed = len(self.tags) == 0
                 for tag in self.tags:
-                    if tag in tagsIn:
+                    if self.searchTags(tag, tagsIn):
                         allowed = True
+                        break
 
-                if not allowed:
+                if not allowed or not self.term.endswith(kanaIn):
                     continue
 
-                for i in xrange(len(kanaIn), len(self.term) + 1):
-                    term = self.term[:i]
-                    if not term.endswith(kanaIn):
-                        continue
+                term = self.term[:-len(kanaIn)] + kanaOut
+                candidates.update([term])
 
-                    rebase = term[:-len(kanaIn)] + kanaOut
-                    if validator(rebase, self.tags):
-                        child = Deinflection(rebase, term, tagsOut, rule)
-                        self.children.append(child)
-                        child.deinflect(validator, rules)
+                child = Deinflection(term, tagsOut, rule)
+                if child.deinflect(validator, rules, candidates):
+                    self.children.append(child)
+
+        if len(self.children) > 0:
+            return True
+
+        for tags in validator(self.term):
+            for tag in self.tags:
+                if self.searchTags(tag, tags):
+                    return True
 
 
-    def dump(self, depth=0):
-        result = u'%s%s' % (u'\t' * depth, self.term)
-        if self.rule:
-            result += u' (%s %s)' % (self.parent, self.rule)
-        result += u'\n'
+    def searchTags(self, tag, tags):
+        for t in tags:
+            if re.search(tag, t):
+                return True
 
+
+    def gather(self):
+        if len(self.children) == 0:
+            endpoint = {
+                'root': self.term, 
+                'term': self.term, 
+                'rules': [self.rule] if self.rule else list()
+            }
+
+            return [endpoint]
+
+        paths = list()
         for child in self.children:
-            result += child.dump(depth + 1)
+            for path in child.gather():
+                if self.rule:
+                    path['rules'].append(self.rule)
+                else:
+                    path['term'] = self.term
+                paths.append(path)
 
-        return result
-
-
-    def __str__(self):
-        return self.dump()
+        return paths
 
 
 #
@@ -89,6 +106,7 @@ class Deinflector:
 
 
     def deinflect(self, term, validator=lambda term, tags: True):
+        candidates = set()
         node = Deinflection(term)
-        node.deinflect(validator, self.rules)
-        return node
+        node.deinflect(validator, self.rules, candidates)
+        return node.gather(), candidates
