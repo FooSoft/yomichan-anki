@@ -27,7 +27,7 @@ class Translator:
         self.dictionary = dictionary
 
 
-    def wordSearch(self, selection):
+    def findTerm(self, selection, partial=False):
         groups = dict()
 
         for i in xrange(len(selection), 0, -1):
@@ -35,7 +35,7 @@ class Translator:
 
             deinflections = self.deinflector.deinflect(term, self.validator)
             if deinflections is None:
-                self.processTerm(groups, term)
+                self.processTerm(groups, term, partial=partial)
             else:
                 for deinflection in deinflections:
                     self.processTerm(groups, **deinflection)
@@ -51,10 +51,10 @@ class Translator:
         return results, length
 
 
-    def processTerm(self, groups, source, rules=list(), root=str()):
+    def processTerm(self, groups, source, rules=list(), root=str(), partial=False):
         root = root or source
 
-        for entry in self.dictionary.findTerm(root):
+        for entry in self.dictionary.findTerm(root, partial):
             expression, reading, definition, tags = entry
             key = expression, reading, definition 
             if key not in groups:
