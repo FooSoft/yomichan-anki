@@ -18,7 +18,6 @@
 
 
 import operator
-import re
 
 
 class Translator:

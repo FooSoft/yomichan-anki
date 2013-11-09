@@ -17,7 +17,6 @@
 
 
 import operator
-import re
 import sqlite3
 
 
