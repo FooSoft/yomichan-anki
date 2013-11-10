@@ -444,26 +444,24 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         if factId is None:
             return False
 
-        expression, reading = markup['%e'], markup['%r']
-        summary = expression
-        if reading:
-            summary = u'{0} [{1}]'.format(expression, reading)
+        if markup['reading']:
+            summary = u'{expression} [{reading}]'.format(**markup)
+        else:
+            summary = expression
 
         self.addedFacts.append(factId)
         self.listDefinitions.addItem(summary)
         self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
-        self.setStatus(u'Added expression {0}; {1} new fact(s) total'.format(expression, len(self.addedFacts)))
+        self.setStatus(u'Added expression {0}; {1} new fact(s) total'.format(markup['expression'], len(self.addedFacts)))
 
         self.updateDefinitions()
         return True
 
 
     def ankiIsFactValid(self, markup):
-        if self.anki is None:
-            return False
-
-        fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
-        return self.anki.canAddNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields)
+        if self.anki is not None:
+            fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
+            return self.anki.canAddNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields)
 
 
     def updateSampleMouseEvent(self, event):
