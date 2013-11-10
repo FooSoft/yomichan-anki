@@ -22,13 +22,9 @@ import os.path
 import translate
 
 
-def buildRelPath(path):
-    directory = os.path.split(__file__)[0]
-    return os.path.join(directory, path)
-
-
 def initLanguage():
+    directory = os.path.split(__file__)[0]
     return translate.Translator(
-        deinflect.Deinflector(buildRelPath('data/deinflect.json')),
-        dictionary.Dictionary(buildRelPath('data/dictionary.db'))
+        deinflect.Deinflector(os.path.join(directory, 'deinflect.json')),
+        dictionary.Dictionary(os.path.join(directory, 'dictionary.db'))
     )
