@@ -34,11 +34,11 @@ class Dictionary:
         cursor.execute('SELECT * FROM Terms WHERE expression {0} ? OR reading=?'.format('LIKE' if partial else '='), (word, word))
 
         results = list()
-        for expression, reading, definitions, tags in cursor.fetchall():
+        for expression, reading, glossary, tags in cursor.fetchall():
             results.append({
                 'expression': expression,
                 'reading': reading,
-                'definitions': definitions,
+                'glossary': glossary,
                 'tags': tags.split()
             })
 
@@ -51,12 +51,12 @@ class Dictionary:
 
         query = cursor.fetchone()
         if query is not None:
-            character, kunyomi, onyomi, meanings = result
+            character, kunyomi, onyomi, glossary = query
             return {
                 'character': character,
                 'kunyomi': kunyomi,
                 'onyomi': onyomi,
-                'meanings': meanings
+                'glossary': glossary
             }
 
 

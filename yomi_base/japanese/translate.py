@@ -54,17 +54,17 @@ class Translator:
         root = root or source
 
         for entry in self.dictionary.findTerm(root, partial):
-            key = entry['expression'], entry['reading'], entry['definitions']
+            key = entry['expression'], entry['reading'], entry['glossary']
             if key not in groups:
                 groups[key] = entry, source, rules
 
 
     def formatResult(self, group):
-        (expression, reading, definition), (entry, source, rules) = group
+        (expression, reading, glossary), (entry, source, rules) = group
         return {
             'expression': expression,
             'reading': reading,
-            'definitions': definition,
+            'glossary': glossary,
             'rules': rules,
             'source': source
         }

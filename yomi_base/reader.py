@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011  Alex Yatskov
+# Copyright (C) 2013  Alex Yatskov
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -252,14 +252,14 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
             markup = reader_util.buildFactMarkupExpression(
                 definition['expression'],
                 definition['reading'],
-                definition['definitions'],
+                definition['glossary'],
                 definition['sentence']
             )
             self.ankiAddFact(markup)
         if command == 'addReading':
             markup = reader_util.buildFactMarkupReading(
                 definition['reading'],
-                definition['definitions'],
+                definition['glossary'],
                 definition['sentence']
             )
             self.ankiAddFact(markup)
