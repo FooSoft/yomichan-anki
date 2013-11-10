@@ -25,7 +25,8 @@ import sqlite3
 import sys
 
 
-GRAMMAR_TAGS = {
+PARSED_TAGS = {
+    'P',        # common word
     'adj',      # former adjective classification (being removed)
     'adj-f',    # noun or verb acting prenominally (other than the above)
     'adj-i',    # adjective (keiyoushi)
@@ -106,17 +107,17 @@ def parseKanjiDic(path):
     for line in loadDefinitions(path):
         segments = line.split()
         character = segments[0]
-        kunYomi = ', '.join(filter(lambda x: filter(isHiragana, x), segments[1:]))
-        onYomi = ', '.join(filter(lambda x: filter(isKatakana, x), segments[1:]))
-        meanings = '; '.join(re.findall('\{([^\}]+)\}', line))
-        results.append((character, onYomi, kunYomi, meanings))
+        kunyomi = ', '.join(filter(lambda x: filter(isHiragana, x), segments[1:]))
+        onyomi = ', '.join(filter(lambda x: filter(isKatakana, x), segments[1:]))
+        glossary = '; '.join(re.findall('\{([^\}]+)\}', line))
+        results.append((character, onyomi, kunyomi, glossary))
 
     return results
 
 
 def writeKanjiDic(cursor, values):
     cursor.execute('DROP TABLE IF EXISTS Kanji')
-    cursor.execute('CREATE TABLE Kanji(character TEXT, kunYomi TEXT, onYomi TEXT, meanings TEXT)')
+    cursor.execute('CREATE TABLE Kanji(character TEXT, kunyomi TEXT, onyomi TEXT, glossary TEXT)')
     cursor.executemany('INSERT INTO Kanji VALUES(?, ?, ?, ?)', values)
 
 
@@ -149,25 +150,25 @@ def parseEdict(path):
         match = re.search('\[([^\]]+)\]', expression[1])
         reading = None if match is None else match.group(1)
 
-        definitions = filter(lambda x: len(x) > 0, segments[1:])
-        definitions = '; '.join(definitions)
-        definitions = re.sub('\(\d+\)\s*', str(), definitions)
+        glossary = filter(lambda x: len(x) > 0, segments[1:])
+        glossary = '; '.join(glossary)
+        glossary = re.sub('\(\d+\)\s*', str(), glossary)
 
         tags = list()
-        for group in re.findall('\(([^\)\]]+)\)', definitions):
+        for group in re.findall('\(([^\)\]]+)\)', glossary):
             tags.extend(group.split(','))
 
-        tags = set(tags).intersection(GRAMMAR_TAGS)
+        tags = set(tags).intersection(PARSED_TAGS)
         tags = ' '.join(sorted(tags))
 
-        results.append((term, reading, definitions, tags))
+        results.append((term, reading, glossary, tags))
 
     return results
 
 
 def writeEdict(cursor, values):
     cursor.execute('DROP TABLE IF EXISTS Terms')
-    cursor.execute('CREATE TABLE Terms(expression TEXT, reading TEXT, definitions TEXT, tags TEXT)')
+    cursor.execute('CREATE TABLE Terms(expression TEXT, reading TEXT, glossary TEXT, tags TEXT)')
     cursor.executemany('INSERT INTO Terms VALUES(?, ?, ?, ?)', values)
 
 
