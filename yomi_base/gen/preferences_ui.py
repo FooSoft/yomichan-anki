@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Sun Nov 10 11:59:08 2013
+# Created: Sun Nov 10 12:44:02 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -94,6 +94,7 @@ class Ui_DialogPreferences(object):
         self.verticalLayout_3.addWidget(self.textSample)
         self.tabWidget.addTab(self.tabAppearance, _fromUtf8(""))
         self.tabAnki = QtGui.QWidget()
+        self.tabAnki.setEnabled(False)
         self.tabAnki.setObjectName(_fromUtf8("tabAnki"))
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.tabAnki)
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
@@ -139,13 +140,13 @@ class Ui_DialogPreferences(object):
         self.label = QtGui.QLabel(self.tabAnki)
         self.label.setObjectName(_fromUtf8("label"))
         self.horizontalLayout_2.addWidget(self.label)
-        self.radioButtonSettingsVocab = QtGui.QRadioButton(self.tabAnki)
-        self.radioButtonSettingsVocab.setChecked(True)
-        self.radioButtonSettingsVocab.setObjectName(_fromUtf8("radioButtonSettingsVocab"))
-        self.horizontalLayout_2.addWidget(self.radioButtonSettingsVocab)
-        self.radioButtonSettingsKanji = QtGui.QRadioButton(self.tabAnki)
-        self.radioButtonSettingsKanji.setObjectName(_fromUtf8("radioButtonSettingsKanji"))
-        self.horizontalLayout_2.addWidget(self.radioButtonSettingsKanji)
+        self.radioButtonVocab = QtGui.QRadioButton(self.tabAnki)
+        self.radioButtonVocab.setChecked(True)
+        self.radioButtonVocab.setObjectName(_fromUtf8("radioButtonVocab"))
+        self.horizontalLayout_2.addWidget(self.radioButtonVocab)
+        self.radioButtonKanji = QtGui.QRadioButton(self.tabAnki)
+        self.radioButtonKanji.setObjectName(_fromUtf8("radioButtonKanji"))
+        self.horizontalLayout_2.addWidget(self.radioButtonKanji)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
@@ -181,9 +182,9 @@ class Ui_DialogPreferences(object):
         item.setText(_translate("DialogPreferences", "Field", None))
         item = self.tableFields.horizontalHeaderItem(1)
         item.setText(_translate("DialogPreferences", "Value", None))
-        self.label.setText(_translate("DialogPreferences", "Show settings for", None))
-        self.radioButtonSettingsVocab.setText(_translate("DialogPreferences", "Vocabulary", None))
-        self.radioButtonSettingsKanji.setText(_translate("DialogPreferences", "Kanji", None))
+        self.label.setText(_translate("DialogPreferences", "Profile", None))
+        self.radioButtonVocab.setText(_translate("DialogPreferences", "Vocabulary", None))
+        self.radioButtonKanji.setText(_translate("DialogPreferences", "Kanji", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAnki), _translate("DialogPreferences", "Anki", None))
 
 import resources_rc
