@@ -80,36 +80,29 @@ def findSentence(content, position):
     return content[start:end].strip()
 
 
-def replaceMarkupInField(field, markup):
-    for marker, value in markup.items():
-        field = field.replace(marker, value or unicode())
-
-    return field
-
-
 def replaceMarkupInFields(fields, markup):
     result = dict()
     for field, value in fields.items():
-        result[field] = replaceMarkupInField(value, markup)
+        result[field] = value.format(**markup)
 
     return result
 
 
 def buildFactMarkupExpression(expression, reading, glossary, sentence=None):
     return {
-        '%e': expression,
-        '%r': reading,
-        '%g': glossary,
-        '%s': sentence
+        'expression': expression,
+        'reading': reading,
+        'glossary': glossary,
+        'sentence': sentence
     }
 
 
 def buildFactMarkupReading(reading, glossary, sentence=None):
     return {
-        '%e': reading,
-        '%r': None,
-        '%g': glossary,
-        '%s': sentence
+        'expression': reading,
+        'reading': unicode(),
+        'glossary': glossary,
+        'sentence': sentence
     }
 
 
@@ -136,7 +129,7 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
 
     conjugations = unicode()
     if len(definition['rules']) > 0:
-        conjugations = u' :: '.join(definition['rules'])
+        conjugations = u' &bull; '.join(definition['rules'])
         conjugations = '<span class = "conjugations">&lt;{0}&gt;<br/></span>'.format(conjugations)
 
     links = '<a href = "copyDefinition:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(factIndex)
