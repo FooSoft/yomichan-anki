@@ -258,14 +258,14 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
                 definition['glossary'],
                 definition['sentence']
             )
-            self.ankiAddFact(markup)
+            self.ankiAddFact('vocab', markup)
         if command == 'addReading':
             markup = reader_util.buildFactMarkupReading(
                 definition['reading'],
                 definition['glossary'],
                 definition['sentence']
             )
-            self.ankiAddFact(markup)
+            self.ankiAddFact('vocab', markup)
         elif command == 'copyDefinition':
             reader_util.copyDefinitions([definition])
 
@@ -429,11 +429,15 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         self.state.searchText = text
 
 
-    def ankiAddFact(self, markup):
+    def ankiAddFact(self, profile, markup):
         if self.anki is None:
             return False
 
-        fields = reader_util.replaceMarkupInFields(self.preferences['tags'], markup)
+        profile = self.preferences["profiles"].get(profile)
+        if profile is None:
+            return False
+
+        fields = reader_util.replaceMarkupInFields(profile['fields'], markup)
         tagsSplit = reader_util.splitTags(unicode(self.comboTags.currentText()))
         tagsJoined = ' '.join(tagsSplit)
 
@@ -444,8 +448,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
             self.comboTags.insertItem(0, tagsJoined)
         self.preferences.updateFactTags(tagsJoined)
 
-        #FIXME
-        factId = self.anki.addNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields, tagsSplit)
+        factId = self.anki.addNote(profile['deck'], profile['model'], fields, tagsSplit)
         if factId is None:
             return False
 
@@ -463,11 +466,16 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         return True
 
 
-    def ankiIsFactValid(self, markup):
-        #FIXME
-        if self.anki is not None:
-            fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
-            return self.anki.canAddNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields)
+    def ankiIsFactValid(self, profile, markup):
+        if self.anki is None:
+            return False
+
+        profile = self.preferences["profiles"].get(profile)
+        if profile is None:
+            return False
+
+        fields = reader_util.replaceMarkupInFields(profile['fields'], markup)
+        return self.anki.canAddNote(profile['deck'], profile['model'], fields)
 
 
     def updateSampleMouseEvent(self, event):
@@ -563,7 +571,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
 
     def updateDefinitions(self):
-        html = reader_util.buildDefinitionsHtml(self.state.definitions, self.ankiIsFactValid)
+        html = reader_util.buildDefinitionsHtml(self.state.definitions, self.ankiIsFactValid, 'vocab')
         self.textDefinitions.setHtml(html)
 
 

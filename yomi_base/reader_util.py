@@ -122,7 +122,7 @@ def copyDefinitions(definitions):
     QtGui.QApplication.clipboard().setText(text)
 
 
-def buildDefinitionHtml(definition, factIndex, factQuery):
+def buildDefinitionHtml(definition, factIndex, factQuery, profile):
     reading = unicode()
     if definition['reading']:
         reading = u'[{0}]'.format(definition['reading'])
@@ -134,9 +134,9 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
 
     links = '<a href = "copyDefinition:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(factIndex)
     if factQuery:
-        if factQuery(buildFactMarkupExpression(definition['expression'], definition['reading'], definition['glossary'])):
+        if factQuery(profile, buildFactMarkupExpression(definition['expression'], definition['reading'], definition['glossary'])):
             links += '<a href = "addExpression:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(factIndex)
-        if factQuery(buildFactMarkupReading(definition['reading'], definition['glossary'])):
+        if factQuery(profile, buildFactMarkupReading(definition['reading'], definition['glossary'])):
             links += '<a href = "addReading:{0}"><img src = "://img/img/icon_add_reading.png" align = "right"/></a>'.format(factIndex)
 
     html = u"""
@@ -149,7 +149,7 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
     return html
 
 
-def buildDefinitionsHtml(definitions, factQuery):
+def buildDefinitionsHtml(definitions, factQuery, profile):
     palette = QtGui.QApplication.palette()
     toolTipBg = palette.color(QtGui.QPalette.Window).name()
     toolTipFg = palette.color(QtGui.QPalette.WindowText).name()
@@ -162,7 +162,7 @@ def buildDefinitionsHtml(definitions, factQuery):
 
     if len(definitions) > 0:
         for i, definition in enumerate(definitions):
-            html += buildDefinitionHtml(definition, i, factQuery)
+            html += buildDefinitionHtml(definition, i, factQuery, profile)
     else:
         html += """
             <p>No definitions to display.</p>
