@@ -29,9 +29,13 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
         self.accepted.connect(self.onAccept)
         self.buttonColorBg.clicked.connect(self.onButtonColorBgClicked)
         self.buttonColorFg.clicked.connect(self.onButtonColorFgClicked)
+        self.comboBoxDeck.currentIndexChanged.connect(self.onDeckChanged)
         self.comboBoxModel.currentIndexChanged.connect(self.onModelChanged)
         self.comboFontFamily.currentFontChanged.connect(self.onFontFamilyChanged)
+        self.radioButtonKanji.toggled.connect(self.onProfileChanged)
+        self.radioButtonVocab.toggled.connect(self.onProfileChanged)
         self.spinFontSize.valueChanged.connect(self.onFontSizeChanged)
+        self.tableFields.itemChanged.connect(self.onFieldsChanged)
 
         self.preferences = preferences
         self.anki = anki
@@ -81,12 +85,19 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
         deck = str() if profile is None else profile['deck']
         model = str() if profile is None else profile['model']
 
+        self.comboBoxDeck.blockSignals(True)
+        self.comboBoxDeck.clear()
         self.comboBoxDeck.addItems(self.anki.deckNames())
         self.comboBoxDeck.setCurrentIndex(self.comboBoxDeck.findText(deck))
+        self.comboBoxDeck.blockSignals(False)
+
         self.comboBoxModel.blockSignals(True)
+        self.comboBoxModel.clear()
         self.comboBoxModel.addItems(self.anki.modelNames())
-        self.comboBoxModel.blockSignals(False)
         self.comboBoxModel.setCurrentIndex(self.comboBoxModel.findText(model))
+        self.comboBoxModel.blockSignals(False)
+
+        self.updateAnkiFields()
 
 
     def updateSampleText(self):
@@ -105,6 +116,7 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
         if fields is None:
             fields = list()
 
+        self.tableFields.blockSignals(True)
         self.tableFields.setRowCount(len(fields))
 
         for i, name in enumerate(fields):
@@ -119,6 +131,8 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
 
             for j, column in enumerate(columns):
                 self.tableFields.setItem(i, j, column)
+
+        self.tableFields.blockSignals(False)
 
 
     def ankiFields(self):
@@ -161,6 +175,23 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
 
 
     def onModelChanged(self, index):
+        self.updateAnkiFields()
+        self.dialogToProfile()
+
+    
+    def onDeckChanged(self, index):
+        self.dialogToProfile()
+
+
+    def onFieldsChanged(self, item):
+        self.dialogToProfile()
+
+
+    def onProfileChanged(self, data):
+        self.profileToDialog()
+
+
+    def updateAnkiFields(self):
         modelName = self.comboBoxModel.currentText()
         fieldNames = self.anki.modelFieldNames(modelName) or list()
 
