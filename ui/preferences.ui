@@ -177,7 +177,7 @@
        <item>
         <widget class="QLabel" name="label_11">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify how your model fields are populated when adding facts.&lt;br /&gt;Allowed tags: &lt;strong&gt;{expression}&lt;/strong&gt;, &lt;strong&gt;{reading}&lt;/strong&gt;, &lt;strong&gt;{glossary}&lt;/strong&gt; and &lt;strong&gt;{sentence}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Specify how your model fields are populated when adding facts</string>
          </property>
         </widget>
        </item>
@@ -193,6 +193,13 @@
            <string>Value</string>
           </property>
          </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="labelTags">
+         <property name="text">
+          <string/>
+         </property>
         </widget>
        </item>
        <item>

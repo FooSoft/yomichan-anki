@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Sun Nov 10 12:44:02 2013
+# Created: Sun Nov 10 15:33:42 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -135,6 +135,10 @@ class Ui_DialogPreferences(object):
         item = QtGui.QTableWidgetItem()
         self.tableFields.setHorizontalHeaderItem(1, item)
         self.verticalLayout_2.addWidget(self.tableFields)
+        self.labelTags = QtGui.QLabel(self.tabAnki)
+        self.labelTags.setText(_fromUtf8(""))
+        self.labelTags.setObjectName(_fromUtf8("labelTags"))
+        self.verticalLayout_2.addWidget(self.labelTags)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
         self.label = QtGui.QLabel(self.tabAnki)
@@ -177,7 +181,7 @@ class Ui_DialogPreferences(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAppearance), _translate("DialogPreferences", "Appearance", None))
         self.label_13.setText(_translate("DialogPreferences", "Deck", None))
         self.label_12.setText(_translate("DialogPreferences", "Model", None))
-        self.label_11.setText(_translate("DialogPreferences", "<html><head/><body><p>Specify how your model fields are populated when adding facts.<br />Allowed tags: <strong>{expression}</strong>, <strong>{reading}</strong>, <strong>{glossary}</strong> and <strong>{sentence}</p></body></html>", None))
+        self.label_11.setText(_translate("DialogPreferences", "Specify how your model fields are populated when adding facts", None))
         item = self.tableFields.horizontalHeaderItem(0)
         item.setText(_translate("DialogPreferences", "Field", None))
         item = self.tableFields.horizontalHeaderItem(1)

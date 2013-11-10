@@ -80,7 +80,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
 
     def profileToDialog(self):
-        profile = self.activeProfile()
+        profile, name = self.activeProfile()
 
         deck = str() if profile is None else profile['deck']
         model = str() if profile is None else profile['model']
@@ -96,6 +96,14 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.comboBoxModel.addItems(self.anki.modelNames())
         self.comboBoxModel.setCurrentIndex(self.comboBoxModel.findText(model))
         self.comboBoxModel.blockSignals(False)
+
+        allowedTags = {
+            'vocab': ['expression', 'reading', 'glossary', 'sentence'],
+            'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
+        }[name]
+
+        allowedTags = map(lambda t: '<strong>{' + t + '}<strong>', allowedTags)
+        self.labelTags.setText('Allowed tags: {0}'.format(', '.join(allowedTags)))
 
         self.updateAnkiFields()
 
@@ -178,7 +186,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.updateAnkiFields()
         self.dialogToProfile()
 
-    
+
     def onDeckChanged(self, index):
         self.dialogToProfile()
 
@@ -195,17 +203,17 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         modelName = self.comboBoxModel.currentText()
         fieldNames = self.anki.modelFieldNames(modelName) or list()
 
-        profile = self.activeProfile()
+        profile, name = self.activeProfile()
         fields = dict() if profile is None else profile['fields']
 
         self.setAnkiFields(fieldNames, fields)
 
 
     def activeProfile(self):
-        key = 'vocab' if self.radioButtonVocab.isChecked() else 'kanji'
-        return self.profiles.get(key)
+        name = 'vocab' if self.radioButtonVocab.isChecked() else 'kanji'
+        return self.profiles.get(name), name
 
 
     def setActiveProfile(self, profile):
-        key = 'vocab' if self.radioButtonVocab.isChecked() else 'kanji'
-        self.profiles[key] = profile
+        name = 'vocab' if self.radioButtonVocab.isChecked() else 'kanji'
+        self.profiles[name] = profile
