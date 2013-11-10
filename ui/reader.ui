@@ -104,7 +104,7 @@
     <addaction name="menuTextSize"/>
     <addaction name="separator"/>
     <addaction name="actionToggleAnki"/>
-    <addaction name="actionToggleVocabulary"/>
+    <addaction name="actionToggleVocab"/>
     <addaction name="actionToggleKanji"/>
     <addaction name="separator"/>
     <addaction name="actionToggleWrap"/>
@@ -403,7 +403,7 @@
     <string>Toggle word wrap</string>
    </property>
   </action>
-  <action name="actionToggleVocabulary">
+  <action name="actionToggleVocab">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -488,7 +488,7 @@
  </resources>
  <connections>
   <connection>
-   <sender>actionToggleVocabulary</sender>
+   <sender>actionToggleVocab</sender>
    <signal>toggled(bool)</signal>
    <receiver>dockVocab</receiver>
    <slot>setVisible(bool)</slot>
@@ -542,8 +542,8 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>786</x>
-     <y>591</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>762</x>

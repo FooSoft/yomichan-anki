@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Sun Nov 10 10:14:42 2013
+# Created: Sun Nov 10 10:19:59 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -189,9 +189,9 @@ class Ui_MainWindowReader(object):
         self.actionToggleWrap.setCheckable(True)
         self.actionToggleWrap.setChecked(True)
         self.actionToggleWrap.setObjectName(_fromUtf8("actionToggleWrap"))
-        self.actionToggleVocabulary = QtGui.QAction(MainWindowReader)
-        self.actionToggleVocabulary.setCheckable(True)
-        self.actionToggleVocabulary.setObjectName(_fromUtf8("actionToggleVocabulary"))
+        self.actionToggleVocab = QtGui.QAction(MainWindowReader)
+        self.actionToggleVocab.setCheckable(True)
+        self.actionToggleVocab.setObjectName(_fromUtf8("actionToggleVocab"))
         self.actionCopyDefinition = QtGui.QAction(MainWindowReader)
         icon9 = QtGui.QIcon()
         icon9.addPixmap(QtGui.QPixmap(_fromUtf8(":/img/img/icon_copy_definition.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -243,7 +243,7 @@ class Ui_MainWindowReader(object):
         self.menuView.addAction(self.menuTextSize.menuAction())
         self.menuView.addSeparator()
         self.menuView.addAction(self.actionToggleAnki)
-        self.menuView.addAction(self.actionToggleVocabulary)
+        self.menuView.addAction(self.actionToggleVocab)
         self.menuView.addAction(self.actionToggleKanji)
         self.menuView.addSeparator()
         self.menuView.addAction(self.actionToggleWrap)
@@ -260,7 +260,7 @@ class Ui_MainWindowReader(object):
         self.toolBar.addAction(self.actionFind)
 
         self.retranslateUi(MainWindowReader)
-        QtCore.QObject.connect(self.actionToggleVocabulary, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.dockVocab.setVisible)
+        QtCore.QObject.connect(self.actionToggleVocab, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.dockVocab.setVisible)
         QtCore.QObject.connect(self.actionQuit, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindowReader.close)
         QtCore.QObject.connect(self.actionToggleAnki, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.dockAnki.setVisible)
         QtCore.QObject.connect(self.actionToggleKanji, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.dockKanji.setVisible)
@@ -308,8 +308,8 @@ class Ui_MainWindowReader(object):
         self.actionFindNext.setShortcut(_translate("MainWindowReader", "F3", None))
         self.actionToggleWrap.setText(_translate("MainWindowReader", "&Word wrap", None))
         self.actionToggleWrap.setToolTip(_translate("MainWindowReader", "Toggle word wrap", None))
-        self.actionToggleVocabulary.setText(_translate("MainWindowReader", "&Vocabulary", None))
-        self.actionToggleVocabulary.setToolTip(_translate("MainWindowReader", "Toggle definitions", None))
+        self.actionToggleVocab.setText(_translate("MainWindowReader", "&Vocabulary", None))
+        self.actionToggleVocab.setToolTip(_translate("MainWindowReader", "Toggle definitions", None))
         self.actionCopyDefinition.setText(_translate("MainWindowReader", "Copy &definition", None))
         self.actionCopyDefinition.setShortcut(_translate("MainWindowReader", "Ctrl+D", None))
         self.actionCopyAllDefinitions.setText(_translate("MainWindowReader", "Copy &all definitions", None))
