@@ -41,7 +41,7 @@ class Translator:
 
         results = map(self.formatResult, groups.items())
         results = filter(operator.truth, results)
-        results = sorted(results, key=lambda d: ('P' in d['tags'], len(d['source'])), reverse=True)
+        results = sorted(results, key=lambda d: (len(d['source']), 'P' in d['tags'], -len(d['rules'])), reverse=True)
 
         length = 0
         for result in results:

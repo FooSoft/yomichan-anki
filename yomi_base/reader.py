@@ -269,8 +269,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
     def onDefinitionSearchReturn(self):
         text = unicode(self.textDefinitionSearch.text())
-        definitions, length = self.language.findTerm(text, True)
-        self.state.definitions = reader_util.convertDefinitions(definitions)
+        self.state.definitions, length = self.language.findTerm(text, True)
         self.updateDefinitions()
 
 
@@ -489,10 +488,12 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
             return
 
         contentSampleFlat = contentSample.replace('\n', unicode())
-        definitionsMatched, lengthMatched = self.language.findTerm(contentSampleFlat)
-        sentence = reader_util.findSentence(content, samplePosStart)
+        self.state.definitions, lengthMatched = self.language.findTerm(contentSampleFlat)
 
-        self.state.definitions = reader_util.convertDefinitions(definitionsMatched, sentence)
+        sentence = reader_util.findSentence(content, samplePosStart)
+        for definition in self.state.definitions:
+            definition['sentence'] = sentence
+
         self.updateDefinitions()
 
         lengthSelect = 0
