@@ -1,8 +1,8 @@
-#!/bin/sh
+#/bin/sh
 
-KANJIDIC=util/data/kanjidic
-KRADFILE=util/data/kradfile
-EDICT=util/data/edict
+KANJIDIC=util/kanjidic
+KRADFILE=util/kradfile
+EDICT=util/edict
 DICT=yomi_base/japanese/dictionary.db
 
 rm $DICT
