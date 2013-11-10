@@ -17,17 +17,17 @@
 
 
 from PyQt4 import QtGui, QtCore
-from about import DialogAbout
-from gen import reader_ui
-from preferences import DialogPreferences
+import about
 import constants
+import gen.reader_ui
 import os
+import preferences
 import reader_util
 import tarfile
 import update
 
 
-class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
+class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     class State:
         def __init__(self):
             self.filename = unicode()
@@ -66,26 +66,26 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
             if len(filenames) > 0:
                 self.openFile(filenames[0])
 
+        self.actionAbout.triggered.connect(self.onActionAbout)
+        self.actionCopyAllDefinitions.triggered.connect(self.onActionCopyAllDefinitions)
+        self.actionCopyDefinition.triggered.connect(self.onActionCopyDefinition)
+        self.actionCopySentence.triggered.connect(self.onActionCopySentence)
+        self.actionFeedback.triggered.connect(self.onActionFeedback)
+        self.actionFind.triggered.connect(self.onActionFind)
+        self.actionFindNext.triggered.connect(self.onActionFindNext)
+        self.actionHomepage.triggered.connect(self.onActionHomepage)
         self.actionOpen.triggered.connect(self.onActionOpen)
         self.actionPreferences.triggered.connect(self.onActionPreferences)
-        self.actionAbout.triggered.connect(self.onActionAbout)
+        self.actionToggleWrap.toggled.connect(self.onActionToggleWrap)
         self.actionZoomIn.triggered.connect(self.onActionZoomIn)
         self.actionZoomOut.triggered.connect(self.onActionZoomOut)
         self.actionZoomReset.triggered.connect(self.onActionZoomReset)
-        self.actionFind.triggered.connect(self.onActionFind)
-        self.actionFindNext.triggered.connect(self.onActionFindNext)
-        self.actionToggleWrap.toggled.connect(self.onActionToggleWrap)
-        self.actionCopyDefinition.triggered.connect(self.onActionCopyDefinition)
-        self.actionCopyAllDefinitions.triggered.connect(self.onActionCopyAllDefinitions)
-        self.actionCopySentence.triggered.connect(self.onActionCopySentence)
-        self.actionHomepage.triggered.connect(self.onActionHomepage)
-        self.actionFeedback.triggered.connect(self.onActionFeedback)
+        self.dockAnki.visibilityChanged.connect(self.onVisibilityChanged)
+        self.dockKanji.visibilityChanged.connect(self.onVisibilityChanged)
+        self.dockVocab.visibilityChanged.connect(self.onVisibilityChanged)
+        self.listDefinitions.itemDoubleClicked.connect(self.onDefinitionDoubleClicked)
         self.textDefinitions.anchorClicked.connect(self.onDefinitionsAnchorClicked)
         self.textVocabSearch.returnPressed.connect(self.onDefinitionSearchReturn)
-        self.listDefinitions.itemDoubleClicked.connect(self.onDefinitionDoubleClicked)
-        self.dockVocab.visibilityChanged.connect(self.onVisibilityChanged)
-        self.dockKanji.visibilityChanged.connect(self.onVisibilityChanged)
-        self.dockAnki.visibilityChanged.connect(self.onVisibilityChanged)
         self.updateFinder.updateResult.connect(self.onUpdaterSearchResult)
 
         if self.preferences['checkForUpdates']:
@@ -166,13 +166,13 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
 
     def onActionPreferences(self):
-        dialog = DialogPreferences(self, self.preferences, self.anki)
+        dialog = preferences.DialogPreferences(self, self.preferences, self.anki)
         if dialog.exec_() == QtGui.QDialog.Accepted:
             self.applyPreferencesContent()
 
 
     def onActionAbout(self):
-        dialog = DialogAbout(self)
+        dialog = about.DialogAbout(self)
         dialog.exec_()
 
 

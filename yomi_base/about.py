@@ -17,11 +17,11 @@
 
 
 from PyQt4 import QtGui
-from gen import about_ui
 import constants
+import gen.about_ui
 
 
-class DialogAbout(QtGui.QDialog, about_ui.Ui_DialogAbout):
+class DialogAbout(QtGui.QDialog, gen.about_ui.Ui_DialogAbout):
     def __init__(self, parent):
         QtGui.QDialog.__init__(self, parent)
         self.setupUi(self)
