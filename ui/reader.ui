@@ -21,7 +21,7 @@
     <normaloff>:/img/img/icon_logo_32.png</normaloff>:/img/img/icon_logo_32.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
      <widget class="QPlainTextEdit" name="textContent">
       <property name="mouseTracking">
@@ -103,8 +103,9 @@
     </widget>
     <addaction name="menuTextSize"/>
     <addaction name="separator"/>
-    <addaction name="actionToggleDefinitions"/>
     <addaction name="actionToggleAnki"/>
+    <addaction name="actionToggleVocabulary"/>
+    <addaction name="actionToggleKanji"/>
     <addaction name="separator"/>
     <addaction name="actionToggleWrap"/>
    </widget>
@@ -137,9 +138,9 @@
    <addaction name="separator"/>
    <addaction name="actionFind"/>
   </widget>
-  <widget class="QDockWidget" name="dockDefinitions">
+  <widget class="QDockWidget" name="dockVocab">
    <property name="windowTitle">
-    <string>Definitions</string>
+    <string>Vocabulary</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -166,7 +167,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="textDefinitionSearch"/>
+        <widget class="QLineEdit" name="textVocabSearch"/>
        </item>
       </layout>
      </item>
@@ -207,6 +208,35 @@
           <bool>true</bool>
          </property>
         </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockKanji">
+   <property name="windowTitle">
+    <string>Kanji</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QTextBrowser" name="textBrowser"/>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Search</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="textKanjiSearch"/>
        </item>
       </layout>
      </item>
@@ -373,12 +403,12 @@
     <string>Toggle word wrap</string>
    </property>
   </action>
-  <action name="actionToggleDefinitions">
+  <action name="actionToggleVocabulary">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Definitions</string>
+    <string>&amp;Vocabulary</string>
    </property>
    <property name="toolTip">
     <string>Toggle definitions</string>
@@ -444,15 +474,23 @@
     <string>&amp;Feedback...</string>
    </property>
   </action>
+  <action name="actionToggleKanji">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Kanji</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc"/>
  </resources>
  <connections>
   <connection>
-   <sender>actionToggleDefinitions</sender>
+   <sender>actionToggleVocabulary</sender>
    <signal>toggled(bool)</signal>
-   <receiver>dockDefinitions</receiver>
+   <receiver>dockVocab</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -494,6 +532,22 @@
     <hint type="destinationlabel">
      <x>136</x>
      <y>342</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionToggleKanji</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>dockKanji</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>786</x>
+     <y>591</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>762</x>
+     <y>479</y>
     </hint>
    </hints>
   </connection>
