@@ -117,14 +117,6 @@ def splitTags(tags):
     return filter(lambda tag: tag.strip(), re.split('[;,\s]', tags))
 
 
-def convertDefinitions(definitions, sentence=None):
-    if sentence is not None:
-        for definition in definitions:
-            definition['sentence'] = sentence
-
-    return definitions
-        
-
 def copyDefinitions(definitions):
     text = unicode()
 
