@@ -61,9 +61,9 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
         if filename:
             self.openFile(filename)
-        elif self.preferences.generalRecentLoad:
+        elif self.preferences['loadRecentFile']:
             filenames = self.preferences.recentFiles()
-            if filenames:
+            if len(filenames) > 0:
                 self.openFile(filenames[0])
 
         self.actionOpen.triggered.connect(self.onActionOpen)
@@ -88,40 +88,40 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         self.dockAnki.visibilityChanged.connect(self.onVisibilityChanged)
         self.updateFinder.updateResult.connect(self.onUpdaterSearchResult)
 
-        if self.preferences.generalFindUpdates:
+        if self.preferences['checkForUpdates']:
             self.updateFinder.start()
 
 
     def applyPreferences(self):
-        if self.preferences.uiReaderState is not None:
-            self.restoreState(QtCore.QByteArray.fromBase64(self.preferences.uiReaderState))
-        if self.preferences.uiReaderPosition is not None:
-            self.move(QtCore.QPoint(*self.preferences.uiReaderPosition))
-        if self.preferences.uiReaderSize is not None:
-            self.resize(QtCore.QSize(*self.preferences.uiReaderSize))
+        if self.preferences['windowState'] is not None:
+            self.restoreState(QtCore.QByteArray.fromBase64(self.preferences['windowState']))
+        if self.preferences['windowPosition'] is not None:
+            self.move(QtCore.QPoint(*self.preferences['windowPosition']))
+        if self.preferences['windowSize'] is not None:
+            self.resize(QtCore.QSize(*self.preferences['windowSize']))
 
-        self.comboTags.addItems(self.preferences.ankiTags)
+        self.comboTags.addItems(self.preferences['tags'])
         self.applyPreferencesContent()
 
 
     def applyPreferencesContent(self):
         palette = self.textContent.palette()
-        palette.setColor(QtGui.QPalette.Base, QtGui.QColor(self.preferences.uiContentColorBg))
-        palette.setColor(QtGui.QPalette.Text, QtGui.QColor(self.preferences.uiContentColorFg))
+        palette.setColor(QtGui.QPalette.Base, QtGui.QColor(self.preferences['bgColor']))
+        palette.setColor(QtGui.QPalette.Text, QtGui.QColor(self.preferences['fgColor']))
         self.textContent.setPalette(palette)
 
         font = self.textContent.font()
-        font.setFamily(self.preferences.uiContentFontFamily)
-        font.setPointSize(self.preferences.uiContentFontSize + self.zoom)
-        self.textContent.setLineWrapMode(self.preferences.uiContentWordWrap)
+        font.setFamily(self.preferences['fontFamily'])
+        font.setPointSize(self.preferences['fontSize'] + self.zoom)
+        self.textContent.setLineWrapMode(self.preferences['wordWrap'])
         self.textContent.setFont(font)
 
-        self.actionToggleWrap.setChecked(self.preferences.uiContentWordWrap)
+        self.actionToggleWrap.setChecked(self.preferences['wordWrap'])
 
 
     def closeEvent(self, event):
         self.closeFile()
-        self.preferences.uiReaderState = self.saveState().toBase64()
+        self.preferences['windowState'] = str(self.saveState().toBase64())
         self.preferences.save()
 
         if self.anki is not None:
@@ -148,11 +148,11 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
 
     def moveEvent(self, event):
-        self.preferences.uiReaderPosition = (event.pos().x(), event.pos().y())
+        self.preferences['windowPosition'] = event.pos().x(), event.pos().y()
 
 
     def resizeEvent(self, event):
-        self.preferences.uiReaderSize = (event.size().width(), event.size().height())
+        self.preferences['windowSize'] = event.size().width(), event.size().height()
 
 
     def onActionOpen(self):
@@ -219,7 +219,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
     def onActionToggleWrap(self, wrap):
         mode = QtGui.QPlainTextEdit.WidgetWidth if wrap else QtGui.QPlainTextEdit.NoWrap
-        self.preferences.uiContentWordWrap = wrap
+        self.preferences['wordWrap'] = wrap
         self.textContent.setLineWrapMode(wrap)
 
 
@@ -328,7 +328,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         self.updateRecentFiles()
 
         content, encoding = reader_util.decodeContent(content)
-        if self.preferences.generalReadingsStrip:
+        if self.preferences['stripReadings']:
             content = reader_util.stripContentReadings(content)
 
         self.textContent.setPlainText(content)
@@ -339,7 +339,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
             self.textContent.centerCursor()
 
         self.setStatus(u'Loaded file {0}'.format(filename))
-        self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.split(filename)[1], encoding))
+        self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.basename(filename), encoding))
 
 
     def openFileByExtension(self, filename):
@@ -433,7 +433,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         if self.anki is None:
             return False
 
-        fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
+        fields = reader_util.replaceMarkupInFields(self.preferences['tags'], markup)
         tagsSplit = reader_util.splitTags(unicode(self.comboTags.currentText()))
         tagsJoined = ' '.join(tagsSplit)
 
@@ -444,6 +444,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
             self.comboTags.insertItem(0, tagsJoined)
         self.preferences.updateFactTags(tagsJoined)
 
+        #FIXME
         factId = self.anki.addNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields, tagsSplit)
         if factId is None:
             return False
@@ -463,6 +464,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
 
     def ankiIsFactValid(self, markup):
+        #FIXME
         if self.anki is not None:
             fields = reader_util.replaceMarkupInFields(self.preferences.ankiFields, markup)
             return self.anki.canAddNote(self.preferences.ankiDeck, self.preferences.ankiModel, fields)
@@ -479,7 +481,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
     def updateSampleFromPosition(self):
         samplePosStart = self.state.scanPosition
-        samplePosEnd = self.state.scanPosition + self.preferences.searchScanMax
+        samplePosEnd = self.state.scanPosition + self.preferences['scanLength']
 
         cursor = self.textContent.textCursor()
         content = unicode(self.textContent.toPlainText())
@@ -544,11 +546,11 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         self.menuOpenRecent.clear()
 
         filenames = self.preferences.recentFiles()
-        if not filenames:
+        if len(filenames) == 0:
             return
 
         for filename in filenames:
-            self.menuOpenRecent.addAction(filename, lambda fn=filename: self.openFile(fn))
+            self.menuOpenRecent.addAction(filename, lambda f=filename: self.openFile(f))
 
         self.menuOpenRecent.addSeparator()
         self.menuOpenRecent.addAction('Clear file history', self.clearRecentFiles)

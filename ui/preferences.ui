@@ -27,33 +27,33 @@
        <item row="0" column="0" colspan="2">
         <widget class="QCheckBox" name="checkLoadRecentFile">
          <property name="text">
-          <string>Load recent file on startup</string>
+          <string>Load most recent file</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0" colspan="2">
         <widget class="QCheckBox" name="checkStripReadings">
          <property name="text">
-          <string>Strip readings from loaded files</string>
+          <string>Strip readings from files</string>
          </property>
         </widget>
        </item>
        <item row="2" column="0" colspan="2">
         <widget class="QCheckBox" name="checkCheckForUpdates">
          <property name="text">
-          <string>Check for updates on startup</string>
+          <string>Check for updates</string>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_14">
          <property name="text">
-          <string>Maximum scan length</string>
+          <string>Text scan length</string>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QSpinBox" name="spinMaxScanLength">
+        <widget class="QSpinBox" name="spinScanLength">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
