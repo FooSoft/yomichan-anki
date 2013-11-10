@@ -23,7 +23,7 @@ import translate
 
 
 def initLanguage():
-    directory = os.path.split(__file__)[0]
+    directory = os.path.dirname(__file__)
     return translate.Translator(
         deinflect.Deinflector(os.path.join(directory, 'deinflect.json')),
         dictionary.Dictionary(os.path.join(directory, 'dictionary.db'))

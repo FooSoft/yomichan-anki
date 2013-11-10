@@ -1,13 +1,13 @@
 {
+    "bgColor": 4294967295, 
     "checkForUpdates": true, 
-    "colorBg": 4294967295, 
-    "colorFg": 4278190080, 
-    "decks": [], 
-    "fantFamily": "Arial", 
+    "fontFamily": "Arial", 
+    "fgColor": 4278190080, 
     "fontSize": 12, 
     "loadRecentFile": true, 
     "recentFiles": [], 
     "scanLength": 16, 
     "stripReadings": false, 
+    "tags": [],
     "wordWrap": false
 }
