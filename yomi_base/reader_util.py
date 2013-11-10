@@ -95,20 +95,20 @@ def replaceMarkupInFields(fields, markup):
     return result
 
 
-def buildFactMarkupExpression(expression, reading, definitions, sentence=None):
+def buildFactMarkupExpression(expression, reading, glossary, sentence=None):
     return {
         '%e': expression,
         '%r': reading,
-        '%g': definitions,
+        '%g': glossary,
         '%s': sentence
     }
 
 
-def buildFactMarkupReading(reading, definitions, sentence=None):
+def buildFactMarkupReading(reading, glossary, sentence=None):
     return {
         '%e': reading,
         '%r': None,
-        '%g': definitions,
+        '%g': glossary,
         '%s': sentence
     }
 
@@ -130,7 +130,7 @@ def copyDefinitions(definitions):
 
     for definition in definitions:
         if definition['reading']:
-            text += u'{expression}\t{reading}\t{definitions}\n'.format(**definition)
+            text += u'{expression}\t{reading}\t{glossary}\n'.format(**definition)
         else:
             text += u'{expression}\t{meanings}\n'.format(**definition)
 
@@ -149,9 +149,9 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
 
     links = '<a href = "copyDefinition:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(factIndex)
     if factQuery:
-        if factQuery(buildFactMarkupExpression(definition['expression'], definition['reading'], definition['definitions'])):
+        if factQuery(buildFactMarkupExpression(definition['expression'], definition['reading'], definition['glossary'])):
             links += '<a href = "addExpression:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(factIndex)
-        if factQuery(buildFactMarkupReading(definition['reading'], definition['definitions'])):
+        if factQuery(buildFactMarkupReading(definition['reading'], definition['glossary'])):
             links += '<a href = "addReading:{0}"><img src = "://img/img/icon_add_reading.png" align = "right"/></a>'.format(factIndex)
 
     html = u"""
@@ -159,7 +159,7 @@ def buildDefinitionHtml(definition, factIndex, factQuery):
         <span class = "expression">{1}&nbsp;{2}<br/></span>
         <span class = "glossary">{3}<br/></span>
         <span class = "conjugations">{4}</span>
-        <br clear = "all"/>""".format(links, definition['expression'], reading, definition['definitions'], conjugations)
+        <br clear = "all"/>""".format(links, definition['expression'], reading, definition['glossary'], conjugations)
 
     return html
 
