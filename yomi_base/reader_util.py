@@ -21,7 +21,7 @@ import re
 
 
 def decodeContent(content):
-    encodings = ['utf-8', 'shift_jis', 'utf-16']
+    encodings = ['utf-8', 'shift_jis', 'euc-jp', 'utf-16']
     errors = dict()
 
     for encoding in encodings:
