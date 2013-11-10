@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011  Alex Yatskov
+# Copyright (C) 2013  Alex Yatskov
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,10 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import urllib2
-from xml.dom import minidom
 from PyQt4 import QtCore
-from constants import constants
+from xml.dom import minidom
+import constants
+import urllib2
 
 
 class UpdateFinder(QtCore.QThread):
@@ -28,7 +28,7 @@ class UpdateFinder(QtCore.QThread):
     def run(self):
         latest = None
         try:
-            fp = urllib2.urlopen(constants['urlUpdates'])
+            fp = urllib2.urlopen(constants.c['urlUpdates'])
             data = fp.read()
             doc = minidom.parseString(data)
             root = doc.documentElement
@@ -37,4 +37,4 @@ class UpdateFinder(QtCore.QThread):
         except:
             pass
         finally:
-            self.updateResult.emit(latest or constants['version'])
+            self.updateResult.emit(latest or constants.c['appVersion'])

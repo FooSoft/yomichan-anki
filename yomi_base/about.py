@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011  Alex Yatskov
+# Copyright (C) 2013  Alex Yatskov
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
 
 
 from PyQt4 import QtGui
-from constants import constants
 from gen import about_ui
+import constants
 
 
 class DialogAbout(QtGui.QDialog, about_ui.Ui_DialogAbout):
@@ -27,5 +27,5 @@ class DialogAbout(QtGui.QDialog, about_ui.Ui_DialogAbout):
         self.setupUi(self)
 
         text = unicode(self.labelVersion.text())
-        text = text.format(constants['version'])
+        text = text.format(constants.c['appVersion'])
         self.labelVersion.setText(text)

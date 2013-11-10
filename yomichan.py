@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011  Alex Yatskov
+# Copyright (C) 2013  Alex Yatskov
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import sys
 from PyQt4 import QtGui, QtCore
 from yomi_base import japanese
 from yomi_base.preference_data import Preferences
 from yomi_base.reader import MainWindowReader
+import sys
 
 
 class Yomichan:
