@@ -41,7 +41,7 @@ class Translator:
 
         results = map(self.formatResult, groups.items())
         results = filter(operator.truth, results)
-        results = sorted(results, key=lambda x: len(x['source']), reverse=True)
+        results = sorted(results, key=lambda d: ('P' in d['tags'], len(d['source'])), reverse=True)
 
         length = 0
         for result in results:
@@ -56,17 +56,18 @@ class Translator:
         for entry in self.dictionary.findTerm(root, partial):
             key = entry['expression'], entry['reading'], entry['glossary']
             if key not in groups:
-                groups[key] = entry, source, rules
+                groups[key] = entry['tags'], source, rules
 
 
     def formatResult(self, group):
-        (expression, reading, glossary), (entry, source, rules) = group
+        (expression, reading, glossary), (tags, source, rules) = group
         return {
             'expression': expression,
             'reading': reading,
             'glossary': glossary,
             'rules': rules,
-            'source': source
+            'source': source,
+            'tags': tags
         }
 
 
