@@ -1,0 +1,13 @@
+{
+    "checkForUpdates": true, 
+    "colorBg": 4294967295, 
+    "colorFg": 4278190080, 
+    "decks": [], 
+    "fantFamily": "Arial", 
+    "fontSize": 12, 
+    "loadRecentFile": true, 
+    "recentFiles": [], 
+    "scanLength": 16, 
+    "stripReadings": false, 
+    "wordWrap": false
+}
