@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Sun Nov 10 10:19:59 2013
+# Created: Sun Nov 10 11:59:08 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -47,15 +47,15 @@ class Ui_DialogPreferences(object):
         self.label_14 = QtGui.QLabel(self.tabGeneral)
         self.label_14.setObjectName(_fromUtf8("label_14"))
         self.formLayout_2.setWidget(3, QtGui.QFormLayout.LabelRole, self.label_14)
-        self.spinMaxScanLength = QtGui.QSpinBox(self.tabGeneral)
+        self.spinScanLength = QtGui.QSpinBox(self.tabGeneral)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.spinMaxScanLength.sizePolicy().hasHeightForWidth())
-        self.spinMaxScanLength.setSizePolicy(sizePolicy)
-        self.spinMaxScanLength.setMinimum(1)
-        self.spinMaxScanLength.setObjectName(_fromUtf8("spinMaxScanLength"))
-        self.formLayout_2.setWidget(3, QtGui.QFormLayout.FieldRole, self.spinMaxScanLength)
+        sizePolicy.setHeightForWidth(self.spinScanLength.sizePolicy().hasHeightForWidth())
+        self.spinScanLength.setSizePolicy(sizePolicy)
+        self.spinScanLength.setMinimum(1)
+        self.spinScanLength.setObjectName(_fromUtf8("spinScanLength"))
+        self.formLayout_2.setWidget(3, QtGui.QFormLayout.FieldRole, self.spinScanLength)
         self.tabWidget.addTab(self.tabGeneral, _fromUtf8(""))
         self.tabAppearance = QtGui.QWidget()
         self.tabAppearance.setObjectName(_fromUtf8("tabAppearance"))
@@ -165,10 +165,10 @@ class Ui_DialogPreferences(object):
 
     def retranslateUi(self, DialogPreferences):
         DialogPreferences.setWindowTitle(_translate("DialogPreferences", "Preferences", None))
-        self.checkLoadRecentFile.setText(_translate("DialogPreferences", "Load recent file on startup", None))
-        self.checkStripReadings.setText(_translate("DialogPreferences", "Strip readings from loaded files", None))
-        self.checkCheckForUpdates.setText(_translate("DialogPreferences", "Check for updates on startup", None))
-        self.label_14.setText(_translate("DialogPreferences", "Maximum scan length", None))
+        self.checkLoadRecentFile.setText(_translate("DialogPreferences", "Load most recent file", None))
+        self.checkStripReadings.setText(_translate("DialogPreferences", "Strip readings from files", None))
+        self.checkCheckForUpdates.setText(_translate("DialogPreferences", "Check for updates", None))
+        self.label_14.setText(_translate("DialogPreferences", "Text scan length", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabGeneral), _translate("DialogPreferences", "General", None))
         self.buttonColorFg.setText(_translate("DialogPreferences", "Foreground...", None))
         self.buttonColorBg.setText(_translate("DialogPreferences", "Background...", None))

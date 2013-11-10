@@ -26,11 +26,11 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
         self.setupUi(self)
 
         self.accepted.connect(self.onAccept)
-        self.buttonContentColorFg.clicked.connect(self.onButtonColorFgClicked)
-        self.buttonContentColorBg.clicked.connect(self.onButtonColorBgClicked)
-        self.comboContentFontFamily.currentFontChanged.connect(self.onFontFamilyChanged)
-        self.spinContentFontSize.valueChanged.connect(self.onFontSizeChanged)
-        self.comboBoxAnkiModel.currentIndexChanged.connect(self.onAnkiModelChanged)
+        self.buttonColorBg.clicked.connect(self.onButtonColorBgClicked)
+        self.buttonColorFg.clicked.connect(self.onButtonColorFgClicked)
+        self.comboBoxModel.currentIndexChanged.connect(self.onModelChanged)
+        self.comboFontFamily.currentFontChanged.connect(self.onFontFamilyChanged)
+        self.spinFontSize.valueChanged.connect(self.onFontSizeChanged)
 
         self.preferences = preferences
         self.anki = anki
@@ -39,63 +39,57 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
 
 
     def dataToDialog(self):
-        self.checkGeneralRecentLoad.setChecked(self.preferences.generalRecentLoad)
-        self.checkGeneralReadingsStrip.setChecked(self.preferences.generalReadingsStrip)
-        self.checkGeneralFindUpdates.setChecked(self.preferences.generalFindUpdates)
+        self.checkCheckForUpdates.setChecked(self.preferences['checkForUpdates'])
+        self.checkLoadRecentFile.setChecked(self.preferences['loadRecentFile'])
+        self.checkStripReadings.setChecked(self.preferences['stripReadings'])
+        self.spinScanLength.setValue(self.preferences['scanLength'])
 
         self.updateSampleText()
-        font = self.textContentSample.font()
-        self.comboContentFontFamily.setCurrentFont(font)
-        self.spinContentFontSize.setValue(font.pointSize())
-
-        self.spinSearchScanMax.setValue(self.preferences.searchScanMax)
-        self.spinSearchResultMax.setValue(self.preferences.searchResultMax)
-        self.checkSearchGroupByExp.setChecked(self.preferences.searchGroupByExp)
+        font = self.textSample.font()
+        self.comboFontFamily.setCurrentFont(font)
+        self.spinFontSize.setValue(font.pointSize())
 
         self.tabAnki.setEnabled(self.anki is not None)
-        if self.anki:
-            self.comboBoxAnkiDeck.addItems(self.anki.deckNames())
-            self.comboBoxAnkiDeck.setCurrentIndex(self.comboBoxAnkiDeck.findText(self.preferences.ankiDeck))
-            self.comboBoxAnkiModel.blockSignals(True)
-            self.comboBoxAnkiModel.addItems(self.anki.modelNames())
-            self.comboBoxAnkiModel.blockSignals(False)
-            self.comboBoxAnkiModel.setCurrentIndex(self.comboBoxAnkiModel.findText(self.preferences.ankiModel))
+        if self.anki is not None:
+            self.comboBoxDeck.addItems(self.anki.deckNames())
+            self.comboBoxDeck.setCurrentIndex(self.comboBoxDeck.findText(self.preferences.ankiDeck))
+            self.comboBoxModel.blockSignals(True)
+            self.comboBoxModel.addItems(self.anki.modelNames())
+            self.comboBoxModel.blockSignals(False)
+            self.comboBoxModel.setCurrentIndex(self.comboBoxModel.findText(self.preferences.ankiModel))
 
 
     def dialogToData(self):
-        self.preferences.generalRecentLoad = self.checkGeneralRecentLoad.isChecked()
-        self.preferences.generalReadingsStrip = self.checkGeneralReadingsStrip.isChecked()
-        self.preferences.generalFindUpdates = self.checkGeneralFindUpdates.isChecked()
+        self.preferences['checkForUpdates'] = self.checkCheckForUpdates.isChecked()
+        self.preferences['loadRecentFile'] = self.checkLoadRecentFile.isChecked()
+        self.preferences['scanLength'] = self.spinScanLength.value()
+        self.preferences['stripReadings'] = self.checkStripReadings.isChecked()
 
-        self.preferences.searchScanMax = self.spinSearchScanMax.value()
-        self.preferences.searchResultMax = self.spinSearchResultMax.value()
-        self.preferences.searchGroupByExp = self.checkSearchGroupByExp.isChecked()
-
-        if self.anki:
-            self.preferences.ankiDeck = unicode(self.comboBoxAnkiDeck.currentText())
-            self.preferences.ankiModel = unicode(self.comboBoxAnkiModel.currentText())
+        if self.anki is not None:
+            self.preferences.ankiDeck = unicode(self.comboBoxDeck.currentText())
+            self.preferences.ankiModel = unicode(self.comboBoxModel.currentText())
             self.preferences.ankiFields = self.ankiFields()
 
 
     def updateSampleText(self):
-        palette = self.textContentSample.palette()
-        palette.setColor(QtGui.QPalette.Base, QtGui.QColor(self.preferences.uiContentColorBg))
-        palette.setColor(QtGui.QPalette.Text, QtGui.QColor(self.preferences.uiContentColorFg))
-        self.textContentSample.setPalette(palette)
+        palette = self.textSample.palette()
+        palette.setColor(QtGui.QPalette.Base, QtGui.QColor(self.preferences['bgColor']))
+        palette.setColor(QtGui.QPalette.Text, QtGui.QColor(self.preferences['fgColor']))
+        self.textSample.setPalette(palette)
 
-        font = self.textContentSample.font()
-        font.setFamily(self.preferences.uiContentFontFamily)
-        font.setPointSize(self.preferences.uiContentFontSize)
-        self.textContentSample.setFont(font)
+        font = self.textSample.font()
+        font.setFamily(self.preferences['fontFamily'])
+        font.setPointSize(self.preferences['fontSize'])
+        self.textSample.setFont(font)
 
 
-    def setAnkiFields(self, fieldsAnki, fieldsPrefs):
-        if fieldsAnki is None:
-            fieldsAnki = list()
+    def setFields(self, fields, fieldsPrefs):
+        if fields is None:
+            fields = list()
 
-        self.tableAnkiFields.setRowCount(len(fieldsAnki))
+        self.tableFields.setRowCount(len(fields))
 
-        for i, name in enumerate(fieldsAnki):
+        for i, name in enumerate(fields):
             columns = list()
 
             itemName = QtGui.QTableWidgetItem(name)
@@ -106,15 +100,15 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
             columns.append(itemValue)
 
             for j, column in enumerate(columns):
-                self.tableAnkiFields.setItem(i, j, column)
+                self.tableFields.setItem(i, j, column)
 
 
     def ankiFields(self):
         result = dict()
 
-        for i in range(0, self.tableAnkiFields.rowCount()):
-            itemName = unicode(self.tableAnkiFields.item(i, 0).text())
-            itemValue = unicode(self.tableAnkiFields.item(i, 1).text())
+        for i in range(0, self.tableFields.rowCount()):
+            itemName = unicode(self.tableFields.item(i, 0).text())
+            itemValue = unicode(self.tableFields.item(i, 1).text())
             result[itemName] = itemValue
 
         return result
@@ -125,30 +119,30 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
 
 
     def onButtonColorFgClicked(self):
-        color, ok = QtGui.QColorDialog.getRgba(self.preferences.uiContentColorFg, self)
+        color, ok = QtGui.QColorDialog.getRgba(self.preferences['fgColor'], self)
         if ok:
-            self.preferences.uiContentColorFg = color
+            self.preferences['fgColor'] = color
             self.updateSampleText()
 
 
     def onButtonColorBgClicked(self):
-        color, ok = QtGui.QColorDialog.getRgba(self.preferences.uiContentColorBg, self)
+        color, ok = QtGui.QColorDialog.getRgba(self.preferences['bgColor'], self)
         if ok:
-            self.preferences.uiContentColorBg = color
+            self.preferences['bgColor'] = color
             self.updateSampleText()
 
 
     def onFontFamilyChanged(self, font):
-        self.preferences.uiContentFontFamily = font.family()
+        self.preferences['fontFamily'] = str(font.family())
         self.updateSampleText()
 
 
     def onFontSizeChanged(self, size):
-        self.preferences.uiContentFontSize = size
+        self.preferences['fontSize'] = size
         self.updateSampleText()
 
 
-    def onAnkiModelChanged(self, index):
-        modelName = self.comboBoxAnkiModel.currentText()
+    def onModelChanged(self, index):
+        modelName = self.comboBoxModel.currentText()
         fieldNames = self.anki.modelFieldNames(modelName) or list()
-        self.setAnkiFields(fieldNames, self.preferences.ankiFields)
+        self.setFields(fieldNames, self.preferences.ankiFields)
