@@ -112,6 +112,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         font = self.textContent.font()
         font.setFamily(self.preferences.uiContentFontFamily)
         font.setPointSize(self.preferences.uiContentFontSize + self.zoom)
+        self.textContent.setLineWrapMode(self.preferences.uiContentWordWrap)
         self.textContent.setFont(font)
 
         self.actionToggleWrap.setChecked(self.preferences.uiContentWordWrap)
