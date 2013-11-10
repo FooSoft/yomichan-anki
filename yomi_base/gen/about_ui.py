@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/about.ui'
 #
-# Created: Mon Feb  4 19:14:32 2013
-#      by: PyQt4 UI code generator 4.9.6
+# Created: Sun Nov 10 10:14:42 2013
+#      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -26,19 +26,16 @@ except AttributeError:
 class Ui_DialogAbout(object):
     def setupUi(self, DialogAbout):
         DialogAbout.setObjectName(_fromUtf8("DialogAbout"))
-        DialogAbout.resize(650, 400)
-        self.horizontalLayout = QtGui.QHBoxLayout(DialogAbout)
-        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.verticalLayout_2 = QtGui.QVBoxLayout()
+        DialogAbout.resize(500, 400)
+        self.verticalLayout_2 = QtGui.QVBoxLayout(DialogAbout)
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.label = QtGui.QLabel(DialogAbout)
         self.label.setText(_fromUtf8(""))
         self.label.setPixmap(QtGui.QPixmap(_fromUtf8(":/img/img/icon_logo_64.png")))
         self.label.setObjectName(_fromUtf8("label"))
-        self.verticalLayout_2.addWidget(self.label)
-        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout_2.addItem(spacerItem)
-        self.horizontalLayout.addLayout(self.verticalLayout_2)
+        self.horizontalLayout.addWidget(self.label)
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.labelVersion = QtGui.QLabel(DialogAbout)
@@ -51,37 +48,41 @@ class Ui_DialogAbout(object):
         self.label_4.setOpenExternalLinks(True)
         self.label_4.setObjectName(_fromUtf8("label_4"))
         self.verticalLayout.addWidget(self.label_4)
+        self.horizontalLayout.addLayout(self.verticalLayout)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.line = QtGui.QFrame(DialogAbout)
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName(_fromUtf8("line"))
-        self.verticalLayout.addWidget(self.line)
+        self.verticalLayout_2.addWidget(self.line)
         self.label_6 = QtGui.QLabel(DialogAbout)
         self.label_6.setWordWrap(True)
         self.label_6.setOpenExternalLinks(True)
         self.label_6.setObjectName(_fromUtf8("label_6"))
-        self.verticalLayout.addWidget(self.label_6)
+        self.verticalLayout_2.addWidget(self.label_6)
         self.label_7 = QtGui.QLabel(DialogAbout)
         self.label_7.setWordWrap(True)
         self.label_7.setOpenExternalLinks(True)
         self.label_7.setObjectName(_fromUtf8("label_7"))
-        self.verticalLayout.addWidget(self.label_7)
+        self.verticalLayout_2.addWidget(self.label_7)
         self.label_5 = QtGui.QLabel(DialogAbout)
         self.label_5.setWordWrap(True)
         self.label_5.setOpenExternalLinks(True)
         self.label_5.setObjectName(_fromUtf8("label_5"))
-        self.verticalLayout.addWidget(self.label_5)
+        self.verticalLayout_2.addWidget(self.label_5)
         self.plainTextEdit = QtGui.QPlainTextEdit(DialogAbout)
+        self.plainTextEdit.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.plainTextEdit.setLineWrapMode(QtGui.QPlainTextEdit.NoWrap)
         self.plainTextEdit.setReadOnly(True)
         self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
-        self.verticalLayout.addWidget(self.plainTextEdit)
+        self.verticalLayout_2.addWidget(self.plainTextEdit)
         self.buttonBox = QtGui.QDialogButtonBox(DialogAbout)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
-        self.verticalLayout.addWidget(self.buttonBox)
-        self.horizontalLayout.addLayout(self.verticalLayout)
+        self.verticalLayout_2.addWidget(self.buttonBox)
 
         self.retranslateUi(DialogAbout)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), DialogAbout.accept)
@@ -91,7 +92,7 @@ class Ui_DialogAbout(object):
     def retranslateUi(self, DialogAbout):
         DialogAbout.setWindowTitle(_translate("DialogAbout", "About", None))
         self.labelVersion.setText(_translate("DialogAbout", "<b>Yomichan {0}</b>", None))
-        self.label_3.setText(_translate("DialogAbout", "(c) 2012 by Alex Yatskov", None))
+        self.label_3.setText(_translate("DialogAbout", "(c) 2013 by Alex Yatskov", None))
         self.label_4.setText(_translate("DialogAbout", "<a href = \"http://foosoft.net/yomichan\">http://foosoft.net/yomichan</a>", None))
         self.label_6.setText(_translate("DialogAbout", "This software uses the <a href = \"http://www.famfamfam.com/lab/icons/silk/\">Silk web icon set</a> created by Mark James.", None))
         self.label_7.setText(_translate("DialogAbout", "Portions of this application\'s code and data are based on the <a href=\"http://www.polarcloud.com/rikaichan/\">Rikaichan</a> extension developed by Jonathan Zarate.", None))
