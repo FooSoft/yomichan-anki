@@ -16,15 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os
-import tarfile
 from PyQt4 import QtGui, QtCore
-from preferences import DialogPreferences
-from update import UpdateFinder
 from about import DialogAbout
-from constants import constants
 from gen import reader_ui
+from preferences import DialogPreferences
+import constants
+import os
 import reader_util
+import tarfile
+import update
 
 
 class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
@@ -47,7 +47,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         self.dockAnki.setEnabled(bool(anki))
 
         self.preferences = preferences
-        self.updateFinder = UpdateFinder()
+        self.updateFinder = update.UpdateFinder()
         self.state = self.State()
         self.language = language
         self.addedFacts = list()
@@ -235,12 +235,12 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
 
     def onActionHomepage(self):
-        url = QtCore.QUrl(constants['urlHomepage'])
+        url = QtCore.QUrl(constants.c['urlHomepage'])
         QtGui.QDesktopServices().openUrl(url)
 
 
     def onActionFeedback(self):
-        url = QtCore.QUrl(constants['urlFeedback'])
+        url = QtCore.QUrl(constants.c['urlFeedback'])
         QtGui.QDesktopServices().openUrl(url)
 
 
@@ -285,12 +285,12 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
 
     def onUpdaterSearchResult(self, result):
-        if result and unicode(result) > constants['version']:
+        if result and unicode(result) > constants.c['appVersion']:
             QtGui.QMessageBox.information(
                 self,
                 'Yomichan',
                 'A new version of Yomichan is available for download!\n\nYou can download this update ({0} > {1}) ' \
-                'from "Shared Plugins" in Anki or directly from the Yomichan homepage.'.format(constants['version'], result)
+                'from "Shared Plugins" in Anki or directly from the Yomichan homepage.'.format(constants.c['appVersion'], result)
             )
 
 
@@ -447,7 +447,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         if markup['reading']:
             summary = u'{expression} [{reading}]'.format(**markup)
         else:
-            summary = expression
+            summary = markup['expression']
 
         self.addedFacts.append(factId)
         self.listDefinitions.addItem(summary)
