@@ -129,6 +129,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tabAnki">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <attribute name="title">
        <string>Anki</string>
       </attribute>
@@ -197,12 +200,12 @@
          <item>
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>Show settings for</string>
+            <string>Profile</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButtonSettingsVocab">
+          <widget class="QRadioButton" name="radioButtonVocab">
            <property name="text">
             <string>Vocabulary</string>
            </property>
@@ -212,7 +215,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButtonSettingsKanji">
+          <widget class="QRadioButton" name="radioButtonKanji">
            <property name="text">
             <string>Kanji</string>
            </property>

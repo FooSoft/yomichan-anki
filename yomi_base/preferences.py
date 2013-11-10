@@ -18,6 +18,7 @@
 
 from PyQt4 import QtGui, QtCore
 from gen import preferences_ui
+import copy
 
 
 class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
@@ -49,14 +50,10 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
         self.comboFontFamily.setCurrentFont(font)
         self.spinFontSize.setValue(font.pointSize())
 
-        self.tabAnki.setEnabled(self.anki is not None)
         if self.anki is not None:
-            self.comboBoxDeck.addItems(self.anki.deckNames())
-            self.comboBoxDeck.setCurrentIndex(self.comboBoxDeck.findText(self.preferences.ankiDeck))
-            self.comboBoxModel.blockSignals(True)
-            self.comboBoxModel.addItems(self.anki.modelNames())
-            self.comboBoxModel.blockSignals(False)
-            self.comboBoxModel.setCurrentIndex(self.comboBoxModel.findText(self.preferences.ankiModel))
+            self.tabAnki.setEnabled(True)
+            self.profiles = copy.deepcopy(self.preferences['profiles'])
+            self.profileToDialog()
 
 
     def dialogToData(self):
@@ -66,9 +63,30 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
         self.preferences['stripReadings'] = self.checkStripReadings.isChecked()
 
         if self.anki is not None:
-            self.preferences.ankiDeck = unicode(self.comboBoxDeck.currentText())
-            self.preferences.ankiModel = unicode(self.comboBoxModel.currentText())
-            self.preferences.ankiFields = self.ankiFields()
+            self.dialogToProfile()
+            self.preferences['profiles'] = self.profiles
+
+
+    def dialogToProfile(self):
+        self.setActiveProfile({
+            'deck': unicode(self.comboBoxDeck.currentText()),
+            'model': unicode(self.comboBoxModel.currentText()),
+            'fields': self.ankiFields()
+        })
+
+
+    def profileToDialog(self):
+        profile = self.activeProfile()
+
+        deck = str() if profile is None else profile['deck']
+        model = str() if profile is None else profile['model']
+
+        self.comboBoxDeck.addItems(self.anki.deckNames())
+        self.comboBoxDeck.setCurrentIndex(self.comboBoxDeck.findText(deck))
+        self.comboBoxModel.blockSignals(True)
+        self.comboBoxModel.addItems(self.anki.modelNames())
+        self.comboBoxModel.blockSignals(False)
+        self.comboBoxModel.setCurrentIndex(self.comboBoxModel.findText(model))
 
 
     def updateSampleText(self):
@@ -83,7 +101,7 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
         self.textSample.setFont(font)
 
 
-    def setFields(self, fields, fieldsPrefs):
+    def setAnkiFields(self, fields, fieldsPrefs):
         if fields is None:
             fields = list()
 
@@ -145,4 +163,18 @@ class DialogPreferences(QtGui.QDialog, preferences_ui.Ui_DialogPreferences):
     def onModelChanged(self, index):
         modelName = self.comboBoxModel.currentText()
         fieldNames = self.anki.modelFieldNames(modelName) or list()
-        self.setFields(fieldNames, self.preferences.ankiFields)
+
+        profile = self.activeProfile()
+        fields = dict() if profile is None else profile['fields']
+
+        self.setAnkiFields(fieldNames, fields)
+
+
+    def activeProfile(self):
+        key = 'vocab' if self.radioButtonVocab.isChecked() else 'kanji'
+        return self.profiles.get(key)
+
+
+    def setActiveProfile(self, profile):
+        key = 'vocab' if self.radioButtonVocab.isChecked() else 'kanji'
+        self.profiles[key] = profile
