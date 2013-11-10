@@ -81,9 +81,10 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         self.actionHomepage.triggered.connect(self.onActionHomepage)
         self.actionFeedback.triggered.connect(self.onActionFeedback)
         self.textDefinitions.anchorClicked.connect(self.onDefinitionsAnchorClicked)
-        self.textDefinitionSearch.returnPressed.connect(self.onDefinitionSearchReturn)
+        self.textVocabSearch.returnPressed.connect(self.onDefinitionSearchReturn)
         self.listDefinitions.itemDoubleClicked.connect(self.onDefinitionDoubleClicked)
-        self.dockDefinitions.visibilityChanged.connect(self.onVisibilityChanged)
+        self.dockVocab.visibilityChanged.connect(self.onVisibilityChanged)
+        self.dockKanji.visibilityChanged.connect(self.onVisibilityChanged)
         self.dockAnki.visibilityChanged.connect(self.onVisibilityChanged)
         self.updateFinder.updateResult.connect(self.onUpdaterSearchResult)
 
@@ -131,7 +132,8 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
 
     def keyPressEvent(self, event):
-        if self.dockDefinitions.isVisible() and event.key() == QtCore.Qt.Key_Shift:
+        visible = self.dockVocab.isVisible() or self.dockKanji.isVisible()
+        if visible and event.key() == QtCore.Qt.Key_Shift:
             self.updateSampleFromPosition()
 
 
@@ -269,7 +271,7 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
 
     def onDefinitionSearchReturn(self):
-        text = unicode(self.textDefinitionSearch.text())
+        text = unicode(self.textVocabSearch.text())
         self.state.definitions, length = self.language.findTerm(text, True)
         self.updateDefinitions()
 
@@ -282,7 +284,8 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
 
     def onVisibilityChanged(self, visible):
         self.actionToggleAnki.setChecked(self.dockAnki.isVisible())
-        self.actionToggleDefinitions.setChecked(self.dockDefinitions.isVisible())
+        self.actionToggleVocab.setChecked(self.dockVocab.isVisible())
+        self.actionToggleKanji.setChecked(self.dockKanji.isVisible())
 
 
     def onUpdaterSearchResult(self, result):
@@ -469,7 +472,8 @@ class MainWindowReader(QtGui.QMainWindow, reader_ui.Ui_MainWindowReader):
         cursor = self.textContent.cursorForPosition(event.pos())
         self.state.scanPosition = cursor.position()
         requested = event.buttons() & QtCore.Qt.MidButton or event.modifiers() & QtCore.Qt.ShiftModifier
-        if self.dockDefinitions.isVisible() and requested:
+        visible = self.dockVocab.isVisible() or self.dockKanji.isVisible()
+        if visible and requested:
             self.updateSampleFromPosition()
 
 
