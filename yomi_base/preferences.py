@@ -47,6 +47,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.checkCheckForUpdates.setChecked(self.preferences['checkForUpdates'])
         self.checkLoadRecentFile.setChecked(self.preferences['loadRecentFile'])
         self.checkStripReadings.setChecked(self.preferences['stripReadings'])
+        self.spinMaxResults.setValue(self.preferences['maxResults'])
         self.spinScanLength.setValue(self.preferences['scanLength'])
 
         self.updateSampleText()
@@ -63,6 +64,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
     def dialogToData(self):
         self.preferences['checkForUpdates'] = self.checkCheckForUpdates.isChecked()
         self.preferences['loadRecentFile'] = self.checkLoadRecentFile.isChecked()
+        self.preferences['maxResults'] = self.spinMaxResults.value()
         self.preferences['scanLength'] = self.spinScanLength.value()
         self.preferences['stripReadings'] = self.checkStripReadings.isChecked()
 
@@ -103,7 +105,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         }[name]
 
         allowedTags = map(lambda t: '<strong>{' + t + '}<strong>', allowedTags)
-        self.labelTags.setText('Allowed tags: {0}'.format(', '.join(allowedTags)))
+        self.labelTags.setText('Allowed tags are {0}'.format(', '.join(allowedTags)))
 
         self.updateAnkiFields()
 
