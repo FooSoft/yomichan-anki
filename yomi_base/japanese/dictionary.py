@@ -46,6 +46,8 @@ class Dictionary:
 
 
     def findCharacter(self, character):
+        self.requireIndex('Kanji', 'character')
+
         cursor = self.db.cursor()
         cursor.execute('SELECT * FROM Kanji WHERE character=? LIMIT 1', character)
 
@@ -66,12 +68,18 @@ class Dictionary:
             for radical in self.findRadicalsByCharacter(character):
                 radicals[radical] = radicals.get(radical, 0) + 1
 
-        results = dict()
+        characters = dict()
         for radical, count in radicals.items():
             for character in self.findCharactersByRadical(radical):
-                results[character] = results.get(character, 0) + count
+                characters[character] = characters.get(character, 0) + count
 
-        return sorted(results.items(), key=operator.itemgetter(1), reverse=True)
+        results = list()
+        for character, score in sorted(characters.items(), key=operator.itemgetter(1), reverse=True):
+            result = self.findCharacter(character)
+            if result is not None:
+                results.append(result)
+
+        return results
 
 
     def findRadicalsByCharacter(self, character):

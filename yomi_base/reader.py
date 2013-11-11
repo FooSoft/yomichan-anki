@@ -58,7 +58,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         self.applyPreferences()
         self.updateRecentFiles()
-        self.updateDefinitions()
+        self.updateVocabDefs()
+        self.updateKanjiDefs()
 
         if filename:
             self.openFile(filename)
@@ -264,17 +265,23 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def onVocabDefSearchReturn(self):
         text = unicode(self.textVocabSearch.text())
         self.state.vocabDefs, length = self.language.findTerm(text, True)
-        self.updateDefinitions()
+        self.updateVocabDefs()
 
 
     def onKanjiDefSearchReturn(self):
         text = unicode(self.textKanjiSearch.text())
-        self.updateDefinitions()
+        if len(text) == 1:
+            result = self.language.findCharacter(text)
+            self.state.kanjiDefs = list() if result is None else [result]
+        else:
+            self.state.kanjiDefs = self.language.findCharacterVisually(text)
+
+        self.updateKanjiDefs()
 
 
     def onDefinitionDoubleClicked(self, item):
         if self.anki is not None:
-            row = self.listDefinitions.row(item)
+            row = self.istDefinitions.row(item)
             self.anki.browseNote(self.addedFacts[row])
 
 
@@ -429,7 +436,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if self.anki is None:
             return False
 
-        profile = self.preferences["profiles"].get(profile)
+        profile = self.preferences['profiles'].get(profile)
         if profile is None:
             return False
 
@@ -458,7 +465,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
         self.setStatus(u'Added expression {0}; {1} new fact(s) total'.format(markup['expression'], len(self.addedFacts)))
 
-        self.updateDefinitions()
+        self.updateVocabDefs()
+        self.updateKanjiDefs()
         return True
 
 
@@ -466,7 +474,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if self.anki is None:
             return False
 
-        profile = self.preferences["profiles"].get(profile)
+        profile = self.preferences['profiles'].get(profile)
         if profile is None:
             return False
 
@@ -503,7 +511,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         for definition in self.state.vocabDefs:
             definition['sentence'] = sentence
 
-        self.updateDefinitions()
+        self.updateVocabDefs()
 
         lengthSelect = 0
         if lengthMatched:
@@ -566,9 +574,20 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                 self.preferences.updateRecentFile(self.state.filename, self.state.scanPosition)
 
 
-    def updateDefinitions(self):
-        html = reader_util.buildVocabDefs(self.state.vocabDefs, self.ankiIsFactValid)
+    def updateVocabDefs(self):
+        html = reader_util.buildVocabDefs(
+            self.state.vocabDefs[:self.preferences['maxResults']],
+            self.ankiIsFactValid
+        )
         self.textVocabDefs.setHtml(html)
+
+
+    def updateKanjiDefs(self):
+        html = reader_util.buildKanjiDefs(
+            self.state.kanjiDefs[:self.preferences['maxRsults']],
+            self.ankiIsFactValid
+        )
+        self.textKanjiDefs.setHtml(html)
 
 
     def setStatus(self, status):

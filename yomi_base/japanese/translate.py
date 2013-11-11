@@ -26,11 +26,11 @@ class Translator:
         self.dictionary = dictionary
 
 
-    def findTerm(self, selection, partial=False):
+    def findTerm(self, text, partial=False):
         groups = dict()
 
-        for i in xrange(len(selection), 0, -1):
-            term = selection[:i]
+        for i in xrange(len(text), 0, -1):
+            term = text[:i]
 
             deinflections = self.deinflector.deinflect(term, self.validator)
             if deinflections is None:
@@ -48,6 +48,14 @@ class Translator:
             length = max(length, len(result['source']))
         
         return results, length
+
+
+    def findCharacter(self, text):
+        return self.dictionary.findCharacter(text)
+
+
+    def findCharacterVisually(self, text):
+        return self.dictionary.findCharacterVisually(text)
 
 
     def processTerm(self, groups, source, rules=list(), root=str(), partial=False):
