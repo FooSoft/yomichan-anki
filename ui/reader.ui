@@ -70,9 +70,6 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionCopyDefinition"/>
-    <addaction name="actionCopyAllDefinitions"/>
-    <addaction name="actionCopySentence"/>
     <addaction name="separator"/>
     <addaction name="actionFind"/>
     <addaction name="actionFindNext"/>
@@ -148,7 +145,7 @@
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTextBrowser" name="textDefinitions">
+      <widget class="QTextBrowser" name="textVocabDefs">
        <property name="acceptDrops">
         <bool>false</bool>
        </property>
@@ -224,7 +221,7 @@
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <widget class="QTextBrowser" name="textBrowser"/>
+      <widget class="QTextBrowser" name="textKanjiDefs"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -414,26 +411,6 @@
     <string>Toggle definitions</string>
    </property>
   </action>
-  <action name="actionCopyDefinition">
-   <property name="icon">
-    <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
-     <normaloff>:/img/img/icon_copy_definition.png</normaloff>:/img/img/icon_copy_definition.png</iconset>
-   </property>
-   <property name="text">
-    <string>Copy &amp;definition</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+D</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
-  <action name="actionCopyAllDefinitions">
-   <property name="text">
-    <string>Copy &amp;all definitions</string>
-   </property>
-  </action>
   <action name="actionHomepage">
    <property name="icon">
     <iconset resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">
@@ -455,14 +432,6 @@
    </property>
    <property name="text">
     <string>&amp;Anki</string>
-   </property>
-  </action>
-  <action name="actionCopySentence">
-   <property name="text">
-    <string>Copy sen&amp;tence</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="actionFeedback">
