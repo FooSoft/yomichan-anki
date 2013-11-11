@@ -28,7 +28,7 @@ class UpdateFinder(QtCore.QThread):
     def run(self):
         latest = None
         try:
-            fp = urllib2.urlopen(constants.c['urlUpdates'])
+            fp = urllib2.urlopen('http://foosoft.net/pub/projects/yomichan/updates.xml')
             data = fp.read()
             doc = minidom.parseString(data)
             root = doc.documentElement
