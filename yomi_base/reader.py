@@ -455,10 +455,13 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if factId is None:
             return False
 
-        if markup['reading']:
-            summary = u'{expression} [{reading}]'.format(**markup)
+        if profile == 'vocab':
+            if markup['reading']:
+                summary = u'{expression} [{reading}]'.format(**markup)
+            else:
+                summary = markup['expression']
         else:
-            summary = markup['expression']
+            summary = markup['character']
 
         self.addedFacts.append(factId)
         self.listDefinitions.addItem(summary)
