@@ -5,6 +5,7 @@
     "fontFamily": "Arial",
     "fontSize": 12,
     "loadRecentFile": true,
+    "maxResults": 20,
     "profiles": {},
     "recentFiles": [],
     "scanLength": 16,

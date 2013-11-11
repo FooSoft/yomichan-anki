@@ -122,7 +122,23 @@ def copyVocabDefs(definitions):
     QtGui.QApplication.clipboard().setText(text)
 
 
-def buildVocabDef(definition, factIndex, factQuery):
+def buildDefHeader():
+    palette = QtGui.QApplication.palette()
+    toolTipBg = palette.color(QtGui.QPalette.Window).name()
+    toolTipFg = palette.color(QtGui.QPalette.WindowText).name()
+
+    return u"""
+        <html><head><style>
+        body {{ background-color: {0}; color: {1}; font-size: 11pt; }}
+        span.expression {{ font-size: 15pt; }}
+        </style></head><body>""".format(toolTipBg, toolTipFg)
+
+
+def buildDefFooter():
+    return '</body></html>'
+
+
+def buildVocabDef(definition, index, query):
     reading = unicode()
     if definition['reading']:
         reading = u'[{0}]'.format(definition['reading'])
@@ -132,12 +148,12 @@ def buildVocabDef(definition, factIndex, factQuery):
         rules = ' &bull; '.join(definition['rules'])
         rules = '<span class = "rules">&lt;{0}&gt;<br/></span>'.format(rules)
 
-    links = '<a href = "copyVocabDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(factIndex)
-    if factQuery:
-        if factQuery('vocab', markupVocabExp(definition)):
-            links += '<a href = "addVocabExp:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(factIndex)
-        if factQuery('vocab', markupVocabReading(definition)):
-            links += '<a href = "addVocabReading:{0}"><img src = "://img/img/icon_add_reading.png" align = "right"/></a>'.format(factIndex)
+    links = '<a href = "copyVocabDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(index)
+    if query:
+        if query('vocab', markupVocabExp(definition)):
+            links += '<a href = "addVocabExp:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(index)
+        if query('vocab', markupVocabReading(definition)):
+            links += '<a href = "addVocabReading:{0}"><img src = "://img/img/icon_add_reading.png" align = "right"/></a>'.format(index)
 
     html = u"""
         <span class = "links">{0}</span>
@@ -149,25 +165,41 @@ def buildVocabDef(definition, factIndex, factQuery):
     return html
 
 
-def buildVocabDefs(definitions, factQuery):
-    palette = QtGui.QApplication.palette()
-    toolTipBg = palette.color(QtGui.QPalette.Window).name()
-    toolTipFg = palette.color(QtGui.QPalette.WindowText).name()
-
-    html = u"""
-        <html><head><style>
-        body {{ background-color: {0}; color: {1}; font-size: 11pt; }}
-        span.expression {{ font-size: 15pt; }}
-        </style></head><body>""".format(toolTipBg, toolTipFg)
-
+def buildVocabDefs(definitions, query):
+    html = buildDefHeader()
     if len(definitions) > 0:
         for i, definition in enumerate(definitions):
-            html += buildVocabDef(definition, i, factQuery)
+            html += buildVocabDef(definition, i, query)
     else:
         html += """
             <p>No definitions to display.</p>
             <p>Mouse over text with the <em>middle mouse button</em> or <em>shift key</em> pressed to search.</p>
             <p>You can also also input terms in the search box below.</p>"""
 
-    html += '</body></html>'
+    return html + buildDefFooter()
+
+
+def buildKanjiDef(definition, index, query):
+    links = '<a href = "copyKanjiDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(index)
+    if query and query('kanji', definition):
+        links += '<a href = "addKanji:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(index)
+
+    html = u"""
+        <span class = "links">{0}</span>
+        <span class = "character">{1}<br/></span>
+        <span class = "glossary">{2}<br/></span>
+        <br clear = "all"/>""".format(links, definition['character'], definition['glossary'])
+
     return html
+
+
+def buildKanjiDefs(definitions, query):
+    html = buildDefHeader()
+
+    if len(definitions) > 0:
+        for i, definition in enumerate(definitions):
+            html += buildKanjiDef(definition, i, query)
+    else:
+        html += '<p>No definitions to display.</p>'
+
+    return html + buildDefFooter()
