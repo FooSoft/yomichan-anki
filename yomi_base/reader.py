@@ -30,12 +30,13 @@ import update
 class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     class State:
         def __init__(self):
+            self.archiveIndex = None
             self.filename = unicode()
-            self.definitions = list()
+            self.kanjiDefs = list()
+            self.scanPosition = 0
             self.searchPosition = 0
             self.searchText = unicode()
-            self.scanPosition = 0
-            self.archiveIndex = None
+            self.vocabDefs = list()
 
 
     def __init__(self, parent, preferences, language, filename=None, anki=None, closed=None):
@@ -44,15 +45,15 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         self.textContent.mouseMoveEvent = self.onContentMouseMove
         self.textContent.mousePressEvent = self.onContentMousePress
-        self.dockAnki.setEnabled(bool(anki))
+        self.dockAnki.setEnabled(anki is not None)
 
-        self.preferences = preferences
-        self.updateFinder = update.UpdateFinder()
-        self.state = self.State()
-        self.language = language
         self.addedFacts = list()
         self.anki = anki
         self.closed = closed
+        self.language = language
+        self.preferences = preferences
+        self.state = self.State()
+        self.updateFinder = update.UpdateFinder()
         self.zoom = 0
 
         self.applyPreferences()
@@ -67,9 +68,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                 self.openFile(filenames[0])
 
         self.actionAbout.triggered.connect(self.onActionAbout)
-        self.actionCopyAllDefinitions.triggered.connect(self.onActionCopyAllDefinitions)
-        self.actionCopyDefinition.triggered.connect(self.onActionCopyDefinition)
-        self.actionCopySentence.triggered.connect(self.onActionCopySentence)
         self.actionFeedback.triggered.connect(self.onActionFeedback)
         self.actionFind.triggered.connect(self.onActionFind)
         self.actionFindNext.triggered.connect(self.onActionFindNext)
@@ -84,8 +82,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.dockKanji.visibilityChanged.connect(self.onVisibilityChanged)
         self.dockVocab.visibilityChanged.connect(self.onVisibilityChanged)
         self.listDefinitions.itemDoubleClicked.connect(self.onDefinitionDoubleClicked)
-        self.textDefinitions.anchorClicked.connect(self.onDefinitionsAnchorClicked)
-        self.textVocabSearch.returnPressed.connect(self.onDefinitionSearchReturn)
+        self.textKanjiDefs.anchorClicked.connect(self.onKanjiDefsAnchorClicked)
+        self.textKanjiSearch.returnPressed.connect(self.onKanjiDefSearchReturn)
+        self.textVocabDefs.anchorClicked.connect(self.onVocabDefsAnchorClicked)
+        self.textVocabSearch.returnPressed.connect(self.onVocabDefSearchReturn)
         self.updateFinder.updateResult.connect(self.onUpdaterSearchResult)
 
         if self.preferences['checkForUpdates']:
@@ -223,20 +223,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.textContent.setLineWrapMode(wrap)
 
 
-    def onActionCopyDefinition(self):
-        reader_util.copyVocabDefs(self.state.definitions[:1])
-
-
-    def onActionCopyAllDefinitions(self):
-        reader_util.copyVocabDefs(self.state.definitions)
-
-
-    def onActionCopySentence(self):
-        content = unicode(self.textContent.toPlainText())
-        sentence = reader_util.findSentence(content, self.state.scanPosition)
-        QtGui.QApplication.clipboard().setText(sentence)
-
-
     def onActionHomepage(self):
         url = QtCore.QUrl(constants.c['urlHomepage'])
         QtGui.QDesktopServices().openUrl(url)
@@ -247,9 +233,9 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         QtGui.QDesktopServices().openUrl(url)
 
 
-    def onDefinitionsAnchorClicked(self, url):
+    def onVocabDefsAnchorClicked(self, url):
         command, index = unicode(url.toString()).split(':')
-        definition = self.state.definitions[int(index)]
+        definition = self.state.vocabDefs[int(index)]
 
         if command == 'addVocabExp':
             markup = reader_util.markupVocabExp(definition)
@@ -261,9 +247,28 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             reader_util.copyVocabDefs([definition])
 
 
-    def onDefinitionSearchReturn(self):
+    def onKanjiDefsAnchorClicked(self, url):
+        command, index = unicode(url.toString()).split(':')
+        definition = self.state.kanjiDefs[int(index)]
+
+        if command == 'addVocabExp':
+            markup = reader_util.markupVocabExp(definition)
+            self.ankiAddFact('vocab', markup)
+        if command == 'addVocabReading':
+            markup = reader_util.markupVocabReading(definition)
+            self.ankiAddFact('vocab', markup)
+        elif command == 'copyVocabDef':
+            reader_util.copyVocabDefs([definition])
+
+
+    def onVocabDefSearchReturn(self):
         text = unicode(self.textVocabSearch.text())
-        self.state.definitions, length = self.language.findTerm(text, True)
+        self.state.vocabDefs, length = self.language.findTerm(text, True)
+        self.updateDefinitions()
+
+
+    def onKanjiDefSearchReturn(self):
+        text = unicode(self.textKanjiSearch.text())
         self.updateDefinitions()
 
 
@@ -492,10 +497,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             return
 
         contentSampleFlat = contentSample.replace('\n', unicode())
-        self.state.definitions, lengthMatched = self.language.findTerm(contentSampleFlat)
+        self.state.vocabDefs, lengthMatched = self.language.findTerm(contentSampleFlat)
 
         sentence = reader_util.findSentence(content, samplePosStart)
-        for definition in self.state.definitions:
+        for definition in self.state.vocabDefs:
             definition['sentence'] = sentence
 
         self.updateDefinitions()
@@ -562,8 +567,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def updateDefinitions(self):
-        html = reader_util.buildVocabDefs(self.state.definitions, self.ankiIsFactValid)
-        self.textDefinitions.setHtml(html)
+        html = reader_util.buildVocabDefs(self.state.vocabDefs, self.ankiIsFactValid)
+        self.textVocabDefs.setHtml(html)
 
 
     def setStatus(self, status):
