@@ -224,12 +224,12 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def onActionHomepage(self):
-        url = QtCore.QUrl(constants.c['urlHomepage'])
+        url = QtCore.QUrl('http://foosoft.net/yomichan/')
         QtGui.QDesktopServices().openUrl(url)
 
 
     def onActionFeedback(self):
-        url = QtCore.QUrl(constants.c['urlFeedback'])
+        url = QtCore.QUrl('http://foosoft.net/comments/')
         QtGui.QDesktopServices().openUrl(url)
 
 

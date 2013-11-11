@@ -18,7 +18,4 @@
 
 c = {
     'appVersion': '0.10b',
-    'urlFeedback': 'http://foosoft.net/comments/',
-    'urlHomepage': 'http://foosoft.net/yomichan/',
-    'urlUpdates': 'http://foosoft.net/pub/projects/yomichan/updates.xml',
 }
