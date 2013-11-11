@@ -224,11 +224,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def onActionCopyDefinition(self):
-        reader_util.copyDefinitions(self.state.definitions[:1])
+        reader_util.copyVocabDefs(self.state.definitions[:1])
 
 
     def onActionCopyAllDefinitions(self):
-        reader_util.copyDefinitions(self.state.definitions)
+        reader_util.copyVocabDefs(self.state.definitions)
 
 
     def onActionCopySentence(self):
@@ -251,23 +251,14 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         command, index = unicode(url.toString()).split(':')
         definition = self.state.definitions[int(index)]
 
-        if command == 'addExpression':
-            markup = reader_util.buildFactMarkupExpression(
-                definition['expression'],
-                definition['reading'],
-                definition['glossary'],
-                definition['sentence']
-            )
+        if command == 'addVocabExp':
+            markup = reader_util.markupVocabExp(definition)
             self.ankiAddFact('vocab', markup)
-        if command == 'addReading':
-            markup = reader_util.buildFactMarkupReading(
-                definition['reading'],
-                definition['glossary'],
-                definition['sentence']
-            )
+        if command == 'addVocabReading':
+            markup = reader_util.markupVocabReading(definition)
             self.ankiAddFact('vocab', markup)
-        elif command == 'copyDefinition':
-            reader_util.copyDefinitions([definition])
+        elif command == 'copyVocabDef':
+            reader_util.copyVocabDefs([definition])
 
 
     def onDefinitionSearchReturn(self):
@@ -329,7 +320,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         content, encoding = reader_util.decodeContent(content)
         if self.preferences['stripReadings']:
-            content = reader_util.stripContentReadings(content)
+            content = reader_util.stripReadings(content)
 
         self.textContent.setPlainText(content)
         if self.state.scanPosition > 0:
@@ -437,7 +428,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if profile is None:
             return False
 
-        fields = reader_util.replaceMarkupInFields(profile['fields'], markup)
+        fields = reader_util.formatFields(profile['fields'], markup)
         tagsSplit = reader_util.splitTags(unicode(self.comboTags.currentText()))
         tagsJoined = ' '.join(tagsSplit)
 
@@ -474,7 +465,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if profile is None:
             return False
 
-        fields = reader_util.replaceMarkupInFields(profile['fields'], markup)
+        fields = reader_util.formatFields(profile['fields'], markup)
         return self.anki.canAddNote(profile['deck'], profile['model'], fields)
 
 
@@ -571,7 +562,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def updateDefinitions(self):
-        html = reader_util.buildDefinitionsHtml(self.state.definitions, self.ankiIsFactValid, 'vocab')
+        html = reader_util.buildVocabDefs(self.state.definitions, self.ankiIsFactValid)
         self.textDefinitions.setHtml(html)
 
 

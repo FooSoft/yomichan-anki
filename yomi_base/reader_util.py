@@ -34,7 +34,7 @@ def decodeContent(content):
     return content.decode(encoding, 'replace'), encoding
 
 
-def stripContentReadings(content):
+def stripReadings(content):
     return re.sub(u'《[^》]+》', unicode(), content)
 
 
@@ -80,7 +80,7 @@ def findSentence(content, position):
     return content[start:end].strip()
 
 
-def replaceMarkupInFields(fields, markup):
+def formatFields(fields, markup):
     result = dict()
     for field, value in fields.items():
         result[field] = value.format(**markup)
@@ -88,29 +88,29 @@ def replaceMarkupInFields(fields, markup):
     return result
 
 
-def buildFactMarkupExpression(expression, reading, glossary, sentence=None):
-    return {
-        'expression': expression,
-        'reading': reading,
-        'glossary': glossary,
-        'sentence': sentence
-    }
-
-
-def buildFactMarkupReading(reading, glossary, sentence=None):
-    return {
-        'expression': reading,
-        'reading': unicode(),
-        'glossary': glossary,
-        'sentence': sentence
-    }
-
-
 def splitTags(tags):
     return filter(lambda tag: tag.strip(), re.split('[;,\s]', tags))
 
 
-def copyDefinitions(definitions):
+def markupVocabExp(definition):
+    return {
+        'expression': definition['expression'],
+        'reading': definition['reading'],
+        'glossary': definition['glossary'],
+        'sentence': definition.get('sentence')
+    }
+
+
+def markupVocabReading(definition):
+    return {
+        'expression': definition['reading'],
+        'reading': unicode(),
+        'glossary': definition['glossary'],
+        'sentence': definition.get('sentence')
+    }
+
+
+def copyVocabDefs(definitions):
     text = unicode()
 
     for definition in definitions:
@@ -122,34 +122,34 @@ def copyDefinitions(definitions):
     QtGui.QApplication.clipboard().setText(text)
 
 
-def buildDefinitionHtml(definition, factIndex, factQuery, profile):
+def buildVocabDef(definition, factIndex, factQuery):
     reading = unicode()
     if definition['reading']:
         reading = u'[{0}]'.format(definition['reading'])
 
-    conjugations = unicode()
+    rules = unicode()
     if len(definition['rules']) > 0:
-        conjugations = u' &bull; '.join(definition['rules'])
-        conjugations = '<span class = "conjugations">&lt;{0}&gt;<br/></span>'.format(conjugations)
+        rules = ' &bull; '.join(definition['rules'])
+        rules = '<span class = "rules">&lt;{0}&gt;<br/></span>'.format(rules)
 
-    links = '<a href = "copyDefinition:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(factIndex)
+    links = '<a href = "copyVocabDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(factIndex)
     if factQuery:
-        if factQuery(profile, buildFactMarkupExpression(definition['expression'], definition['reading'], definition['glossary'])):
-            links += '<a href = "addExpression:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(factIndex)
-        if factQuery(profile, buildFactMarkupReading(definition['reading'], definition['glossary'])):
-            links += '<a href = "addReading:{0}"><img src = "://img/img/icon_add_reading.png" align = "right"/></a>'.format(factIndex)
+        if factQuery('vocab', markupVocabExp(definition)):
+            links += '<a href = "addVocabExp:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(factIndex)
+        if factQuery('vocab', markupVocabReading(definition)):
+            links += '<a href = "addVocabReading:{0}"><img src = "://img/img/icon_add_reading.png" align = "right"/></a>'.format(factIndex)
 
     html = u"""
         <span class = "links">{0}</span>
         <span class = "expression">{1}&nbsp;{2}<br/></span>
         <span class = "glossary">{3}<br/></span>
-        <span class = "conjugations">{4}</span>
-        <br clear = "all"/>""".format(links, definition['expression'], reading, definition['glossary'], conjugations)
+        <span class = "rules">{4}</span>
+        <br clear = "all"/>""".format(links, definition['expression'], reading, definition['glossary'], rules)
 
     return html
 
 
-def buildDefinitionsHtml(definitions, factQuery, profile):
+def buildVocabDefs(definitions, factQuery):
     palette = QtGui.QApplication.palette()
     toolTipBg = palette.color(QtGui.QPalette.Window).name()
     toolTipFg = palette.color(QtGui.QPalette.WindowText).name()
@@ -162,7 +162,7 @@ def buildDefinitionsHtml(definitions, factQuery, profile):
 
     if len(definitions) > 0:
         for i, definition in enumerate(definitions):
-            html += buildDefinitionHtml(definition, i, factQuery, profile)
+            html += buildVocabDef(definition, i, factQuery)
     else:
         html += """
             <p>No definitions to display.</p>
