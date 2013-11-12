@@ -97,7 +97,8 @@ def markupVocabExp(definition):
         'expression': definition['expression'],
         'reading': definition['reading'],
         'glossary': definition['glossary'],
-        'sentence': definition.get('sentence')
+        'sentence': definition.get('sentence'),
+        'summary': u'{expression} [{reading}]'.format(**definition)
     }
 
 
@@ -106,20 +107,28 @@ def markupVocabReading(definition):
         'expression': definition['reading'],
         'reading': unicode(),
         'glossary': definition['glossary'],
-        'sentence': definition.get('sentence')
+        'sentence': definition.get('sentence'),
+        'summary': definition['reading']
     }
 
 
-def copyVocabDefs(definitions):
-    text = unicode()
+def copyVocabDef(definition):
+    if definition['reading']:
+        result = u'{expression}\t{reading}\t{glossary}\n'.format(**definition)
+    else:
+        result = u'{expression}\t{meanings}\n'.format(**definition)
 
-    for definition in definitions:
-        if definition['reading']:
-            text += u'{expression}\t{reading}\t{glossary}\n'.format(**definition)
-        else:
-            text += u'{expression}\t{meanings}\n'.format(**definition)
+    QtGui.QApplication.clipboard().setText(result)
 
-    QtGui.QApplication.clipboard().setText(text)
+
+def markupKanji(definition):
+    return {
+        'character': definition['character'],
+        'onyomi': definition['onyomi'],
+        'kunyomi': definition['kunyomi'],
+        'glossary': definition['glossary'],
+        'summary': definition['character']
+    }
 
 
 def buildDefHeader():
@@ -181,7 +190,7 @@ def buildVocabDefs(definitions, query):
 
 def buildKanjiDef(definition, index, query):
     links = '<a href = "copyKanjiDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(index)
-    if query and query('kanji', definition):
+    if query and query('kanji', markupKanji(definition)):
         links += '<a href = "addKanji:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(index)
 
     html = u"""

@@ -244,21 +244,18 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             markup = reader_util.markupVocabReading(definition)
             self.ankiAddFact('vocab', markup)
         elif command == 'copyVocabDef':
-            reader_util.copyVocabDefs([definition])
+            reader_util.copyVocabDef(definition)
 
 
     def onKanjiDefsAnchorClicked(self, url):
         command, index = unicode(url.toString()).split(':')
         definition = self.state.kanjiDefs[int(index)]
 
-        if command == 'addVocabExp':
-            markup = reader_util.markupVocabExp(definition)
-            self.ankiAddFact('vocab', markup)
-        if command == 'addVocabReading':
-            markup = reader_util.markupVocabReading(definition)
-            self.ankiAddFact('vocab', markup)
-        elif command == 'copyVocabDef':
-            reader_util.copyVocabDefs([definition])
+        if command == 'addKanji':
+            markup = reader_util.markupKanji(definition)
+            self.ankiAddFact('kanji', markup)
+        elif command == 'copyKanjiDef':
+            reader_util.copyKanjiDef(definition)
 
 
     def onVocabDefSearchReturn(self):
@@ -280,7 +277,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
     def onDefinitionDoubleClicked(self, item):
         if self.anki is not None:
-            row = self.istDefinitions.row(item)
+            row = self.listDefinitions.row(item)
             self.anki.browseNote(self.addedFacts[row])
 
 
@@ -454,18 +451,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if factId is None:
             return False
 
-        if profile == 'vocab':
-            if markup['reading']:
-                summary = u'{expression} [{reading}]'.format(**markup)
-            else:
-                summary = markup['expression']
-        else:
-            summary = markup['character']
-
         self.addedFacts.append(factId)
-        self.listDefinitions.addItem(summary)
+        self.listDefinitions.addItem(markup['summary'])
         self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
-        self.setStatus(u'Added expression {0}; {1} new fact(s) total'.format(markup['expression'], len(self.addedFacts)))
+        self.setStatus(u'Added fact {0}; {1} new fact(s) total'.format(markup['summary'], len(self.addedFacts)))
 
         self.updateVocabDefs()
         self.updateKanjiDefs()
