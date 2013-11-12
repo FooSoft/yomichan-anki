@@ -114,7 +114,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         font = self.textContent.font()
         font.setFamily(self.preferences['fontFamily'])
         font.setPointSize(self.preferences['fontSize'] + self.zoom)
-        self.textContent.setLineWrapMode(self.preferences['wordWrap'])
+        self.textContent.setLineWrapMode(QtGui.QPlainTextEdit.WidgetWidth if self.preferences['wordWrap'] else QtGui.QPlainTextEdit.NoWrap)
         self.textContent.setFont(font)
 
         self.actionToggleWrap.setChecked(self.preferences['wordWrap'])
@@ -219,9 +219,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def onActionToggleWrap(self, wrap):
-        mode = QtGui.QPlainTextEdit.WidgetWidth if wrap else QtGui.QPlainTextEdit.NoWrap
         self.preferences['wordWrap'] = wrap
-        self.textContent.setLineWrapMode(wrap)
+        self.textContent.setLineWrapMode(QtGui.QPlainTextEdit.WidgetWidth if self.preferences['wordWrap'] else QtGui.QPlainTextEdit.NoWrap)
 
 
     def onActionHomepage(self):
