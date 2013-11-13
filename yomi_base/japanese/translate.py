@@ -51,6 +51,7 @@ class Translator:
 
 
     def findCharacter(self, text):
+        assert len(text) == 1
         return self.dictionary.findCharacter(text)
 
 
