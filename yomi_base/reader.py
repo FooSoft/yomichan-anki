@@ -30,7 +30,6 @@ import update
 class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     class State:
         def __init__(self):
-            self.archiveIndex = None
             self.filename = unicode()
             self.kanjiDefs = list()
             self.scanPosition = 0
@@ -47,13 +46,13 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.textContent.mousePressEvent = self.onContentMousePress
         self.dockAnki.setEnabled(anki is not None)
 
-        self.addedFacts = list()
+        self.facts = list()
         self.anki = anki
         self.closed = closed
         self.language = language
         self.preferences = preferences
         self.state = self.State()
-        self.updateFinder = update.UpdateFinder()
+        self.updater = update.UpdateFinder()
         self.zoom = 0
 
         self.applyPreferences()
@@ -61,7 +60,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.updateVocabDefs()
         self.updateKanjiDefs()
 
-        if filename:
+        if filename is not None:
             self.openFile(filename)
         elif self.preferences['loadRecentFile']:
             filenames = self.preferences.recentFiles()
@@ -87,10 +86,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.textKanjiSearch.returnPressed.connect(self.onKanjiDefSearchReturn)
         self.textVocabDefs.anchorClicked.connect(self.onVocabDefsAnchorClicked)
         self.textVocabSearch.returnPressed.connect(self.onVocabDefSearchReturn)
-        self.updateFinder.updateResult.connect(self.onUpdaterSearchResult)
+        self.updater.updateResult.connect(self.onUpdaterSearchResult)
 
         if self.preferences['checkForUpdates']:
-            self.updateFinder.start()
+            self.updater.start()
 
 
     def applyPreferences(self):
@@ -160,7 +159,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         filename = QtGui.QFileDialog.getOpenFileName(
             parent=self,
             caption='Select a file to open',
-            filter='Text files (*.txt);;Archive files (*.bz2 *.gz *.tar *.tgz);;All files (*.*)'
+            filter='Text files (*.txt);;All files (*.*)'
         )
         if filename:
             self.openFile(filename)
@@ -278,7 +277,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def onDefinitionDoubleClicked(self, item):
         if self.anki is not None:
             row = self.listDefinitions.row(item)
-            self.anki.browseNote(self.addedFacts[row])
+            self.anki.browseNote(self.facts[row])
 
 
     def onVisibilityChanged(self, visible):
@@ -308,9 +307,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def openFile(self, filename):
-        filename = unicode(filename)
         try:
-            content = self.openFileByExtension(filename)
+            filename = unicode(filename)
+            with open(filename) as fp:
+                content = fp.read()
         except IOError:
             self.setStatus(u'Failed to load file {0}'.format(filename))
             QtGui.QMessageBox.critical(self, 'Yomichan', 'Cannot open file for read')
@@ -339,65 +339,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         self.setStatus(u'Loaded file {0}'.format(filename))
         self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.basename(filename), encoding))
-
-
-    def openFileByExtension(self, filename):
-        self.clearArchiveFiles()
-
-        if tarfile.is_tarfile(filename):
-            with tarfile.open(filename, 'r:*') as tp:
-                files = [f for f in tp.getnames() if tp.getmember(f).isfile()]
-                names = [f.decode('utf-8') for f in files]
-
-                self.updateArchiveFiles(filename, names)
-
-                content = unicode()
-                if len(files) == 1:
-                    fp = tp.extractfile(files[0])
-                    content = fp.read()
-                    fp.close()
-                elif len(files) > 1:
-                    index, ok = self.selectFileName(names)
-                    if ok:
-                        fp = tp.extractfile(files[index])
-                        content = fp.read()
-                        fp.close()
-                        self.state.archiveIndex = index
-        else:
-            self.state.archiveIndex = None
-            with open(filename, 'rb') as fp:
-                content = fp.read()
-
-        return content
-
-
-    def selectFileName(self, names):
-        if self.state.archiveIndex is not None:
-            return self.state.archiveIndex, True
-
-        item, ok = QtGui.QInputDialog.getItem(
-            self,
-            'Yomichan',
-            'Select file to open:',
-            self.formatQStringList(names),
-            current = 0,
-            editable=False
-        )
-
-        index, success = self.getItemIndex(item)
-        return index - 1, ok and success
-
-
-    def getItemIndex(self, item):
-        return item.split('.').first().toInt()
-
-
-    def formatQStringList(self, list):
-        return [self.formatQString(i, x) for i, x in enumerate(list)]
-
-
-    def formatQString(self, index, item):
-        return QtCore.QString(str(index + 1) + '. ').append(QtCore.QString(item))
 
 
     def closeFile(self):
@@ -451,10 +392,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if factId is None:
             return False
 
-        self.addedFacts.append(factId)
+        self.facts.append(factId)
         self.listDefinitions.addItem(markup['summary'])
         self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
-        self.setStatus(u'Added fact {0}; {1} new fact(s) total'.format(markup['summary'], len(self.addedFacts)))
+        self.setStatus(u'Added fact {0}; {1} new fact(s) total'.format(markup['summary'], len(self.facts)))
 
         self.updateVocabDefs()
         self.updateKanjiDefs()
@@ -516,28 +457,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         cursor.setPosition(samplePosStart, QtGui.QTextCursor.MoveAnchor)
         cursor.setPosition(samplePosStart + lengthSelect, QtGui.QTextCursor.KeepAnchor)
         self.textContent.setTextCursor(cursor)
-
-
-    def clearArchiveFiles(self):
-        self.menuOpenArchive.clear()
-        self.menuOpenArchive.setEnabled(False)
-
-
-    def updateArchiveFiles(self, filename, names):
-        self.menuOpenArchive.setEnabled(True)
-        for name in self.formatQStringList(names):
-            index, ok = self.getItemIndex(name)
-            if ok:
-                index = index - 1
-                self.menuOpenArchive.addAction(name, lambda fn=filename, idx=index: self.openFileInArchive(fn, idx))
-            else:
-                self.menuOpenArchive.addAction(name, lambda fn=filename: self.openFile(fn))
-
-
-    def openFileInArchive(self, filename, index):
-        self.state.scanPosition = 0
-        self.state.archiveIndex = index
-        self.openFile(filename)
 
 
     def clearRecentFiles(self):
