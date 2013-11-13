@@ -46,6 +46,7 @@ class Dictionary:
 
 
     def findCharacter(self, character):
+        assert len(character) == 1
         self.requireIndex('Kanji', 'character')
 
         cursor = self.db.cursor()
@@ -65,12 +66,12 @@ class Dictionary:
     def findCharacterVisually(self, characters):
         radicals = dict()
         for character in characters:
-            for radical in self.findRadicalsByCharacter(character):
+            for radical in self.findRadicalsByCharacter(character) or list():
                 radicals[radical] = radicals.get(radical, 0) + 1
 
         characters = dict()
         for radical, count in radicals.items():
-            for character in self.findCharactersByRadical(radical):
+            for character in self.findCharactersByRadical(radical) or list():
                 characters[character] = characters.get(character, 0) + count
 
         results = list()
