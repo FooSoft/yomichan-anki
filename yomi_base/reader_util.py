@@ -162,7 +162,7 @@ def buildVocabDef(definition, index, query):
         rules = '<span class = "rules">&lt;{0}&gt;<br/></span>'.format(rules)
 
     links = '<a href = "copyVocabDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(index)
-    if query:
+    if query is not None:
         if query('vocab', markupVocabExp(definition)):
             links += '<a href = "addVocabExp:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(index)
         if query('vocab', markupVocabReading(definition)):
@@ -170,7 +170,8 @@ def buildVocabDef(definition, index, query):
 
     html = u"""
         <span class = "links">{0}</span>
-        <span class = "expression">{1}&nbsp;{2}<br/></span>
+        <span class = "expression">{1}<br/></span>
+        <span class = "reading">{2}<br/></span>
         <span class = "glossary">{3}<br/></span>
         <span class = "rules">{4}</span>
         <br clear = "all"/>""".format(links, definition['expression'], reading, definition['glossary'], rules)
@@ -194,14 +195,16 @@ def buildVocabDefs(definitions, query):
 
 def buildKanjiDef(definition, index, query):
     links = '<a href = "copyKanjiDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(index)
-    if query and query('kanji', markupKanji(definition)):
+    if query is not None and query('kanji', markupKanji(definition)):
         links += '<a href = "addKanji:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(index)
 
+    readings = ', '.join([definition['kunyomi'], definition['onyomi']])
     html = u"""
         <span class = "links">{0}</span>
-        <span class = "character">{1}<br/></span>
-        <span class = "glossary">{2}<br/></span>
-        <br clear = "all"/>""".format(links, definition['character'], definition['glossary'])
+        <span class = "expression">{1}<br/></span>
+        <span class = "reading">[{2}]<br/></span>
+        <span class = "glossary">{3}</span>
+        <br clear = "all"/>""".format(links, definition['character'], readings, definition['glossary'])
 
     return html
 

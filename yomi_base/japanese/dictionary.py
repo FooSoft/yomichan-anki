@@ -31,7 +31,7 @@ class Dictionary:
         self.requireIndex('Terms', 'reading')
 
         cursor = self.db.cursor()
-        cursor.execute('SELECT * FROM Terms WHERE expression {0} ? OR reading=?'.format('LIKE' if partial else '='), (word, word))
+        cursor.execute('SELECT * FROM Terms WHERE expression {0} ? OR reading=? LIMIT 100'.format('LIKE' if partial else '='), (word, word))
 
         results = list()
         for expression, reading, glossary, tags in cursor.fetchall():
@@ -61,48 +61,6 @@ class Dictionary:
                 'onyomi': onyomi,
                 'glossary': glossary
             }
-
-
-    def findCharacterVisually(self, characters):
-        radicals = dict()
-        for character in characters:
-            for radical in self.findRadicalsByCharacter(character) or list():
-                radicals[radical] = radicals.get(radical, 0) + 1
-
-        characters = dict()
-        for radical, count in radicals.items():
-            for character in self.findCharactersByRadical(radical) or list():
-                characters[character] = characters.get(character, 0) + count
-
-        results = list()
-        for character, score in sorted(characters.items(), key=operator.itemgetter(1), reverse=True):
-            result = self.findCharacter(character)
-            if result is not None:
-                results.append(result)
-
-        return results
-
-
-    def findRadicalsByCharacter(self, character):
-        cursor = self.db.cursor()
-        cursor.execute('SELECT radicals FROM Radicals WHERE character=? LIMIT 1', character)
-
-        columns = cursor.fetchone()
-        if columns is None:
-            return None
-
-        return columns[0].split()
-
-
-    def findCharactersByRadical(self, radical):
-        cursor = self.db.cursor()
-        cursor.execute('SELECT character FROM Radicals WHERE radicals LIKE ?', (u'%{0}%'.format(radical),))
-
-        columns = cursor.fetchall()
-        if columns is None:
-            return None
-
-        return map(operator.itemgetter(0), columns)
 
 
     def requireIndex(self, table, column):

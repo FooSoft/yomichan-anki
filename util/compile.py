@@ -110,7 +110,7 @@ def parseKanjiDic(path):
         kunyomi = ', '.join(filter(lambda x: filter(isHiragana, x), segments[1:]))
         onyomi = ', '.join(filter(lambda x: filter(isKatakana, x), segments[1:]))
         glossary = '; '.join(re.findall('\{([^\}]+)\}', line))
-        results.append((character, onyomi, kunyomi, glossary))
+        results.append((character, kunyomi, onyomi, glossary))
 
     return results
 

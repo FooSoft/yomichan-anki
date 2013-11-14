@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Thu Nov 14 08:32:50 2013
+# Created: Thu Nov 14 09:02:10 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -122,6 +122,7 @@ class Ui_MainWindowReader(object):
         self.verticalLayout_3 = QtGui.QVBoxLayout(self.dockWidgetContents_3)
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.textKanjiDefs = QtGui.QTextBrowser(self.dockWidgetContents_3)
+        self.textKanjiDefs.setAcceptDrops(False)
         self.textKanjiDefs.setOpenLinks(False)
         self.textKanjiDefs.setObjectName(_fromUtf8("textKanjiDefs"))
         self.verticalLayout_3.addWidget(self.textKanjiDefs)

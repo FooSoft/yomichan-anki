@@ -222,6 +222,9 @@
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
       <widget class="QTextBrowser" name="textKanjiDefs">
+       <property name="acceptDrops">
+        <bool>false</bool>
+       </property>
        <property name="openLinks">
         <bool>false</bool>
        </property>
