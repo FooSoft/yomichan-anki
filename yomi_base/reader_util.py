@@ -131,6 +131,10 @@ def markupKanji(definition):
     }
 
 
+def copyKanjiDef(definition):
+    return QtGui.QApplication.clipboard().setText(u'{character}\t{kunyomi}\t{onyomi}\t{glossary}'.format(**definition))
+
+
 def buildDefHeader():
     palette = QtGui.QApplication.palette()
     toolTipBg = palette.color(QtGui.QPalette.Window).name()
