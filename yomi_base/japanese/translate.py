@@ -46,17 +46,17 @@ class Translator:
         length = 0
         for result in results:
             length = max(length, len(result['source']))
-        
+
         return results, length
 
 
-    def findCharacter(self, text):
-        assert len(text) == 1
-        return self.dictionary.findCharacter(text)
+    def findCharacters(self, text):
+        results = dict()
+        for c in text:
+            if c not in results:
+                results[c] = self.dictionary.findCharacter(c)
 
-
-    def findCharacterVisually(self, text):
-        return self.dictionary.findCharacterVisually(text)
+        return filter(operator.truth, results.values())
 
 
     def processTerm(self, groups, source, rules=list(), root=str(), partial=False):

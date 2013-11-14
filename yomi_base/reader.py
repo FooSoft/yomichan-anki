@@ -265,12 +265,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
     def onKanjiDefSearchReturn(self):
         text = unicode(self.textKanjiSearch.text())
-        if len(text) == 1:
-            result = self.language.findCharacter(text)
-            self.state.kanjiDefs = list() if result is None else [result]
-        else:
-            self.state.kanjiDefs = self.language.findCharacterVisually(text)
-
+        self.state.kanjiDefs = self.language.findCharacters(text)
         self.updateKanjiDefs()
 
 
