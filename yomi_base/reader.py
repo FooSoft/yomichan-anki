@@ -132,8 +132,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def keyPressEvent(self, event):
-        visible = self.dockVocab.isVisible() or self.dockKanji.isVisible()
-        if visible and event.key() == QtCore.Qt.Key_Shift:
+        if event.key() == QtCore.Qt.Key_Shift:
             self.updateSampleFromPosition()
 
 
@@ -412,9 +411,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def updateSampleMouseEvent(self, event):
         cursor = self.textContent.cursorForPosition(event.pos())
         self.state.scanPosition = cursor.position()
-        requested = event.buttons() & QtCore.Qt.MidButton or event.modifiers() & QtCore.Qt.ShiftModifier
-        visible = self.dockVocab.isVisible() or self.dockKanji.isVisible()
-        if visible and requested:
+        if event.buttons() & QtCore.Qt.MidButton or event.modifiers() & QtCore.Qt.ShiftModifier:
             self.updateSampleFromPosition()
 
 
@@ -425,29 +422,37 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         cursor = self.textContent.textCursor()
         content = unicode(self.textContent.toPlainText())
         contentSample = content[samplePosStart:samplePosEnd]
+        contentSampleFlat = contentSample.replace(u'\n', unicode())
 
-        if not contentSample or unicode.isspace(contentSample[0]):
+        if len(contentSampleFlat) == 0:
             cursor.clearSelection()
             self.textContent.setTextCursor(cursor)
             return
 
-        contentSampleFlat = contentSample.replace('\n', unicode())
-        self.state.vocabDefs, lengthMatched = self.language.findTerm(contentSampleFlat)
+        lengthMatched = 0
+        if self.dockVocab.isVisible():
+            self.state.vocabDefs, lengthMatched = self.language.findTerm(contentSampleFlat)
+            sentence = reader_util.findSentence(content, samplePosStart)
+            for definition in self.state.vocabDefs:
+                definition['sentence'] = sentence
+            self.updateVocabDefs()
 
-        sentence = reader_util.findSentence(content, samplePosStart)
-        for definition in self.state.vocabDefs:
-            definition['sentence'] = sentence
-
-        self.updateVocabDefs()
+        if self.dockKanji.isVisible():
+            if lengthMatched == 0:
+                self.state.kanjiDefs = self.language.findCharacters(contentSampleFlat[0])
+                if len(self.state.kanjiDefs) > 0:
+                    lengthMatched = 1
+            else:
+                self.state.kanjiDefs = self.language.findCharacters(contentSampleFlat[:lengthMatched])
+            self.updateKanjiDefs()
 
         lengthSelect = 0
-        if lengthMatched:
-            for c in contentSample:
-                lengthSelect += 1
-                if c != '\n':
-                    lengthMatched -= 1
-                if lengthMatched <= 0:
-                    break
+        for c in contentSample:
+            if lengthMatched <= 0:
+                break
+            lengthSelect += 1
+            if c != u'\n':
+                lengthMatched -= 1
 
         cursor.setPosition(samplePosStart, QtGui.QTextCursor.MoveAnchor)
         cursor.setPosition(samplePosStart + lengthSelect, QtGui.QTextCursor.KeepAnchor)
