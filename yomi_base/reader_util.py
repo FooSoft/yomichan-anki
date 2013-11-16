@@ -83,7 +83,10 @@ def findSentence(content, position):
 def formatFields(fields, markup):
     result = dict()
     for field, value in fields.items():
-        result[field] = value.format(**markup)
+        try:
+            result[field] = value.format(**markup)
+        except KeyError:
+            pass
 
     return result
 
