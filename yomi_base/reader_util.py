@@ -151,6 +151,13 @@ def buildDefFooter():
     return '</body></html>'
 
 
+def buildEmpty():
+    return u"""
+        <p>No definitions to display.</p>
+        <p>Mouse over text with the <em>middle mouse button</em> or <em>shift key</em> pressed to search.</p>
+        <p>You can also also input terms in the search box below."""
+
+
 def buildVocabDef(definition, index, query):
     reading = unicode()
     if definition['reading']:
@@ -185,10 +192,7 @@ def buildVocabDefs(definitions, query):
         for i, definition in enumerate(definitions):
             html += buildVocabDef(definition, i, query)
     else:
-        html += """
-            <p>No definitions to display.</p>
-            <p>Mouse over text with the <em>middle mouse button</em> or <em>shift key</em> pressed to search.</p>
-            <p>You can also also input terms in the search box below, using the "*" and "?" wildcards where needed.</p>"""
+        html += buildEmpty()
 
     return html + buildDefFooter()
 
@@ -216,9 +220,6 @@ def buildKanjiDefs(definitions, query):
         for i, definition in enumerate(definitions):
             html += buildKanjiDef(definition, i, query)
     else:
-        html += """
-            <p>No definitions to display.</p>
-            <p>Mouse over text with the <em>middle mouse button</em> or <em>shift key</em> pressed to search.</p>
-            <p>You can also also input terms in the search box below."""
+        html += buildEmpty()
 
     return html + buildDefFooter()

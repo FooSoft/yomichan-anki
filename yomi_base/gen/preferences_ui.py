@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Fri Nov 15 20:29:12 2013
+# Created: Sat Nov 16 11:47:57 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -192,7 +192,7 @@ class Ui_DialogPreferences(object):
         self.buttonColorBg.setText(_translate("DialogPreferences", "Background...", None))
         self.textSample.setPlainText(_translate("DialogPreferences", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam accumsan nisi a leo faucibus ut varius velit fringilla. Cras hendrerit eleifend porttitor. Quisque eu elit quis tellus hendrerit ornare et ac tellus. Nunc id felis ut sapien blandit viverra vel ac est. Ut erat lorem, rutrum at scelerisque sollicitudin, lacinia quis diam. Suspendisse potenti. Integer id justo ac ligula aliquet mattis. Etiam malesuada faucibus risus, vel hendrerit elit consectetur quis. Etiam consectetur ipsum ut odio feugiat suscipit. Etiam a tellus metus. ", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAppearance), _translate("DialogPreferences", "Appearance", None))
-        self.label.setText(_translate("DialogPreferences", "Profile", None))
+        self.label.setText(_translate("DialogPreferences", "Displayed profile", None))
         self.radioButtonVocab.setText(_translate("DialogPreferences", "Vocabulary", None))
         self.radioButtonKanji.setText(_translate("DialogPreferences", "Kanji", None))
         self.label_13.setText(_translate("DialogPreferences", "Deck", None))
