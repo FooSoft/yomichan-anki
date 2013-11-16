@@ -18,6 +18,7 @@
 
 
 import operator
+import util
 
 
 class Translator:
@@ -26,15 +27,15 @@ class Translator:
         self.dictionary = dictionary
 
 
-    def findTerm(self, text, partial=False):
-        groups = dict()
+    def findTerm(self, text, wildcards=False):
+        text = util.sanitize(text, wildcards=wildcards)
 
+        groups = dict()
         for i in xrange(len(text), 0, -1):
             term = text[:i]
-
             deinflections = self.deinflector.deinflect(term, self.validator)
             if deinflections is None:
-                self.processTerm(groups, term, partial=partial)
+                self.processTerm(groups, term, wildcards=wildcards)
             else:
                 for deinflection in deinflections:
                     self.processTerm(groups, **deinflection)
@@ -51,6 +52,7 @@ class Translator:
 
 
     def findCharacters(self, text):
+        text = util.sanitize(text, kana=False)
         results = list()
 
         processed = dict()
@@ -64,10 +66,10 @@ class Translator:
         return results
 
 
-    def processTerm(self, groups, source, rules=list(), root=str(), partial=False):
+    def processTerm(self, groups, source, rules=list(), root=str(), wildcards=False):
         root = root or source
 
-        for entry in self.dictionary.findTerm(root, partial):
+        for entry in self.dictionary.findTerm(root, wildcards):
             key = entry['expression'], entry['reading'], entry['glossary']
             if key not in groups:
                 groups[key] = entry['tags'], source, rules
