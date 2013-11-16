@@ -451,7 +451,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             if lengthMatched <= 0:
                 break
             lengthSelect += 1
-            if c != u'\n':
+            if c not in [u'\n', u' ', u'　']:
                 lengthMatched -= 1
 
         cursor.setPosition(samplePosStart, QtGui.QTextCursor.MoveAnchor)
