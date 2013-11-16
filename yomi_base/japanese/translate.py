@@ -51,12 +51,17 @@ class Translator:
 
 
     def findCharacters(self, text):
-        results = dict()
-        for c in text:
-            if c not in results:
-                results[c] = self.dictionary.findCharacter(c)
+        results = list()
 
-        return filter(operator.truth, results.values())
+        processed = dict()
+        for c in text:
+            if c not in processed:
+                match = self.dictionary.findCharacter(c)
+                if match is not None:
+                    results.append(match)
+                processed[c] = match
+
+        return results
 
 
     def processTerm(self, groups, source, rules=list(), root=str(), partial=False):
