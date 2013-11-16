@@ -161,12 +161,12 @@ def buildEmpty():
 def buildVocabDef(definition, index, query):
     reading = unicode()
     if definition['reading']:
-        reading = u'[{0}]'.format(definition['reading'])
+        reading = u'<span class = "reading">[{0}]<br/></span>'.format(definition['reading'])
 
     rules = unicode()
     if len(definition['rules']) > 0:
-        rules = ' &bull; '.join(definition['rules'])
-        rules = '<span class = "rules">&lt;{0}&gt;<br/></span>'.format(rules)
+        rules = ' :: '.join(definition['rules'])
+        rules = '<span class = "rules">{0}<br/></span>'.format(rules)
 
     links = '<a href = "copyVocabDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(index)
     if query is not None:
@@ -178,9 +178,9 @@ def buildVocabDef(definition, index, query):
     html = u"""
         <span class = "links">{0}</span>
         <span class = "expression">{1}<br/></span>
-        <span class = "reading">{2}<br/></span>
+        {2}
         <span class = "glossary">{3}<br/></span>
-        <span class = "rules">{4}</span>
+        {4}
         <br clear = "all"/>""".format(links, definition['expression'], reading, definition['glossary'], rules)
 
     return html
@@ -207,7 +207,7 @@ def buildKanjiDef(definition, index, query):
         <span class = "links">{0}</span>
         <span class = "expression">{1}<br/></span>
         <span class = "reading">[{2}]<br/></span>
-        <span class = "glossary">{3}</span>
+        <span class = "glossary">{3}<br/></span>
         <br clear = "all"/>""".format(links, definition['character'], readings, definition['glossary'])
 
     return html
