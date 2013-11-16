@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Thu Nov 14 09:02:10 2013
+# Created: Fri Nov 15 20:29:13 2013
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -266,11 +266,11 @@ class Ui_MainWindowReader(object):
         self.menuTextSize.setTitle(_translate("MainWindowReader", "&Zoom", None))
         self.toolBar.setWindowTitle(_translate("MainWindowReader", "toolBar", None))
         self.dockVocab.setWindowTitle(_translate("MainWindowReader", "Vocabulary", None))
-        self.label.setText(_translate("MainWindowReader", "Search", None))
+        self.label.setText(_translate("MainWindowReader", "Expression", None))
         self.dockAnki.setWindowTitle(_translate("MainWindowReader", "Anki", None))
         self.label_3.setText(_translate("MainWindowReader", "Active tag(s)", None))
         self.dockKanji.setWindowTitle(_translate("MainWindowReader", "Kanji", None))
-        self.label_2.setText(_translate("MainWindowReader", "Search", None))
+        self.label_2.setText(_translate("MainWindowReader", "Character", None))
         self.actionOpen.setText(_translate("MainWindowReader", "&Open...", None))
         self.actionOpen.setToolTip(_translate("MainWindowReader", "Open file", None))
         self.actionOpen.setShortcut(_translate("MainWindowReader", "Ctrl+O", None))
