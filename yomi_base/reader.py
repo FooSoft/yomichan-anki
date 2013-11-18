@@ -20,6 +20,7 @@ from PyQt4 import QtGui, QtCore
 import about
 import constants
 import gen.reader_ui
+import japanese.util
 import os
 import preferences
 import reader_util
@@ -424,7 +425,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         contentSample = content[samplePosStart:samplePosEnd]
         contentSampleFlat = contentSample.replace(u'\n', unicode())
 
-        if len(contentSampleFlat) == 0:
+        if len(contentSampleFlat) == 0 or not japanese.util.isJapanese(contentSampleFlat[0]):
             cursor.clearSelection()
             self.textContent.setTextCursor(cursor)
             return
@@ -451,7 +452,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             if lengthMatched <= 0:
                 break
             lengthSelect += 1
-            if c not in [u'\n', u' ', u'　']:
+            if c != u'\n':
                 lengthMatched -= 1
 
         cursor.setPosition(samplePosStart, QtGui.QTextCursor.MoveAnchor)
