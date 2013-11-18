@@ -168,8 +168,8 @@ def buildVocabDef(definition, index, query):
 
     rules = unicode()
     if len(definition['rules']) > 0:
-        rules = ' :: '.join(definition['rules'])
-        rules = '<span class = "rules">{0}<br/></span>'.format(rules)
+        rules = ' &lt; '.join(definition['rules'])
+        rules = '<span class = "rules">({0})<br/></span>'.format(rules)
 
     links = '<a href = "copyVocabDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(index)
     if query is not None:
