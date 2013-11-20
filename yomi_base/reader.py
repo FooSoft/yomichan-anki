@@ -344,8 +344,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def findText(self, text):
-        content = self.textContent.toPlainText()
-        index = content.indexOf(text, self.state.searchPosition)
+        content = unicode(self.textContent.toPlainText())
+        index = content.find(unicode(text), self.state.searchPosition)
 
         if index == -1:
             wrap = self.state.searchPosition != 0
