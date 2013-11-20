@@ -55,7 +55,7 @@ class Preferences(object):
 
 
     def filePosition(self, filename):
-        matches = filter(lambda f: f['path'] != filename, self['recentFiles'])
+        matches = filter(lambda f: f['path'] == filename, self['recentFiles'])
         return 0 if len(matches) == 0 else matches[0]['position']
 
 
