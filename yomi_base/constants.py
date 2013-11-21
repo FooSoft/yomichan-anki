@@ -17,5 +17,5 @@
 
 
 c = {
-    'appVersion': '0.10b',
+    'appVersion': '0.11b',
 }
