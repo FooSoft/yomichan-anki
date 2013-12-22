@@ -398,6 +398,9 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def ankiIsFactValid(self, profile, markup):
+        if markup is None:
+            return False
+
         if self.anki is None:
             return False
 

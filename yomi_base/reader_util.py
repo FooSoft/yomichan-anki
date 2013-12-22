@@ -96,30 +96,36 @@ def splitTags(tags):
 
 
 def markupVocabExp(definition):
+    if definition['reading']:
+        summary = u'{expression} [{reading}]'.format(**definition)
+    else:
+        summary = u'{expression}'.format(**definition)
+
     return {
         'expression': definition['expression'],
-        'reading': definition['reading'],
+        'reading': definition['reading'] or unicode(),
         'glossary': definition['glossary'],
         'sentence': definition.get('sentence'),
-        'summary': u'{expression} [{reading}]'.format(**definition)
+        'summary': summary
     }
 
 
 def markupVocabReading(definition):
-    return {
-        'expression': definition['reading'],
-        'reading': unicode(),
-        'glossary': definition['glossary'],
-        'sentence': definition.get('sentence'),
-        'summary': definition['reading']
-    }
+    if definition['reading']:
+        return {
+            'expression': definition['reading'],
+            'reading': unicode(),
+            'glossary': definition['glossary'],
+            'sentence': definition.get('sentence'),
+            'summary': definition['reading']
+        }
 
 
 def copyVocabDef(definition):
     if definition['reading']:
         result = u'{expression}\t{reading}\t{glossary}\n'.format(**definition)
     else:
-        result = u'{expression}\t{meanings}\n'.format(**definition)
+        result = u'{expression}\t{glossary}\n'.format(**definition)
 
     QtGui.QApplication.clipboard().setText(result)
 
