@@ -139,7 +139,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             index = event.key() - ord('0') - 1
             if index < 0:
                 index = 9
-
             if event.modifiers() & QtCore.Qt.ShiftModifier:
                 if event.modifiers() & QtCore.Qt.ControlModifier:
                     self.executeKanjiCommand('addKanji', index)
@@ -148,6 +147,12 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                     self.executeVocabCommand('addVocabExp', index)
                 if event.modifiers() & QtCore.Qt.AltModifier:
                     self.executeVocabCommand('addVocabReading', index)
+        elif event.key() == ord('[') and self.state.scanPosition > 0:
+            self.state.scanPosition -= 1
+            self.updateSampleFromPosition()
+        elif event.key() == ord(']') and self.state.scanPosition < len(self.textContent.toPlainText()) - 1:
+            self.state.scanPosition += 1
+            self.updateSampleFromPosition()
 
 
     def dragEnterEvent(self, event):
