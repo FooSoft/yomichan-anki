@@ -280,7 +280,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections>
   <connection>
