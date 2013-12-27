@@ -65,7 +65,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.openFile(filename)
         elif self.preferences['loadRecentFile']:
             filenames = self.preferences.recentFiles()
-            if len(filenames) > 0:
+            if len(filenames) > 0 and os.path.isfile(filenames[0]):
                 self.openFile(filenames[0])
 
         self.actionAbout.triggered.connect(self.onActionAbout)
