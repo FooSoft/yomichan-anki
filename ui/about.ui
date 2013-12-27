@@ -22,7 +22,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc">:/img/img/icon_logo_64.png</pixmap>
+        <pixmap resource="resources.qrc">:/img/img/icon_logo_64.png</pixmap>
        </property>
       </widget>
      </item>
@@ -818,7 +818,7 @@ Public License instead of this License.  But first, please read
   </layout>
  </widget>
  <resources>
-  <include location="../../../../../mnt/izumi/projects/yomichan/ui/resources.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections>
   <connection>
