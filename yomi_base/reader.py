@@ -135,6 +135,19 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Shift:
             self.updateSampleFromPosition()
+        elif ord('0') <= event.key() <= ord('9'):
+            index = event.key() - ord('0') - 1
+            if index < 0:
+                index = 9
+
+            if event.modifiers() & QtCore.Qt.ShiftModifier:
+                if event.modifiers() & QtCore.Qt.ControlModifier:
+                    self.executeKanjiCommand('addKanji', index)
+            else:
+                if event.modifiers() & QtCore.Qt.ControlModifier:
+                    self.executeVocabCommand('addVocabExp', index)
+                if event.modifiers() & QtCore.Qt.AltModifier:
+                    self.executeVocabCommand('addVocabReading', index)
 
 
     def dragEnterEvent(self, event):
@@ -234,27 +247,12 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
     def onVocabDefsAnchorClicked(self, url):
         command, index = unicode(url.toString()).split(':')
-        definition = self.state.vocabDefs[int(index)]
-
-        if command == 'addVocabExp':
-            markup = reader_util.markupVocabExp(definition)
-            self.ankiAddFact('vocab', markup)
-        if command == 'addVocabReading':
-            markup = reader_util.markupVocabReading(definition)
-            self.ankiAddFact('vocab', markup)
-        elif command == 'copyVocabDef':
-            reader_util.copyVocabDef(definition)
+        self.executeVocabCommand(command, int(index))
 
 
     def onKanjiDefsAnchorClicked(self, url):
         command, index = unicode(url.toString()).split(':')
-        definition = self.state.kanjiDefs[int(index)]
-
-        if command == 'addKanji':
-            markup = reader_util.markupKanji(definition)
-            self.ankiAddFact('kanji', markup)
-        elif command == 'copyKanjiDef':
-            reader_util.copyKanjiDef(definition)
+        self.executeKanjiCommand(command, int(index))
 
 
     def onVocabDefSearchReturn(self):
@@ -368,6 +366,9 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def ankiAddFact(self, profile, markup):
+        if markup is None:
+            return False
+
         if self.anki is None:
             return False
 
@@ -413,6 +414,33 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         fields = reader_util.formatFields(profile['fields'], markup)
         return self.anki.canAddNote(profile['deck'], profile['model'], fields)
+
+
+    def executeVocabCommand(self, command, index):
+        if index >= len(self.state.vocabDefs):
+            return
+
+        definition = self.state.vocabDefs[index]
+        if command == 'addVocabExp':
+            markup = reader_util.markupVocabExp(definition)
+            self.ankiAddFact('vocab', markup)
+        if command == 'addVocabReading':
+            markup = reader_util.markupVocabReading(definition)
+            self.ankiAddFact('vocab', markup)
+        elif command == 'copyVocabDef':
+            reader_util.copyVocabDef(definition)
+
+
+    def executeKanjiCommand(self, command, index):
+        if index >= len(self.state.kanjiDefs):
+            return
+
+        definition = self.state.kanjiDefs[index]
+        if command == 'addKanji':
+            markup = reader_util.markupKanji(definition)
+            self.ankiAddFact('kanji', markup)
+        elif command == 'copyKanjiDef':
+            reader_util.copyKanjiDef(definition)
 
 
     def updateSampleMouseEvent(self, event):
