@@ -175,7 +175,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
 
     def onFontFamilyChanged(self, font):
-        self.preferences['fontFamily'] = str(font.family())
+        self.preferences['fontFamily'] = unicode(font.family())
         self.updateSampleText()
 
 
