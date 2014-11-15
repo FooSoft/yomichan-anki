@@ -24,7 +24,6 @@ import japanese.util
 import os
 import preferences
 import reader_util
-import tarfile
 import update
 
 
