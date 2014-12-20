@@ -64,7 +64,7 @@
     <addaction name="menuOpenArchive"/>
     <addaction name="menuOpenRecent"/>
     <addaction name="separator"/>
-    <addaction name="menuImportKindleDeck"/>
+    <addaction name="actionImportKindleDeck"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -460,7 +460,7 @@
     <string>&amp;Kanji</string>
    </property>
   </action>
-  <action name="menuImportKindleDeck">
+  <action name="actionImportKindleDeck">
    <property name="text">
     <string>Import &amp;Kindle deck...</string>
    </property>
