@@ -18,6 +18,7 @@
 
 from PyQt4 import QtGui
 import re
+import sqlite3
 
 
 def decodeContent(content):
@@ -232,3 +233,21 @@ def buildKanjiDefs(definitions, query):
         html += buildEmpty()
 
     return html + buildDefFooter()
+
+
+def extractKindleDeck(filename):
+    words = list()
+
+    try:
+        connection = sqlite3.connect(unicode(filename))
+        for row in connection.execute('select word from WORDS'):
+            words.append(row[0])
+        connection.close()
+    except sqlite3.OperationalError:
+        pass
+
+    return words
+
+
+def importWordList(self, words):
+    pass

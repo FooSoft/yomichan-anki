@@ -72,6 +72,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.actionFind.triggered.connect(self.onActionFind)
         self.actionFindNext.triggered.connect(self.onActionFindNext)
         self.actionHomepage.triggered.connect(self.onActionHomepage)
+        self.actionImportKindleDeck.triggered.connect(self.onActionImportKindleDeck)
         self.actionOpen.triggered.connect(self.onActionOpen)
         self.actionPreferences.triggered.connect(self.onActionPreferences)
         self.actionToggleWrap.toggled.connect(self.onActionToggleWrap)
@@ -180,6 +181,17 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         )
         if filename:
             self.openFile(filename)
+
+
+    def onActionImportKindleDeck(self):
+        filename = QtGui.QFileDialog.getOpenFileName(
+            parent=self,
+            caption='Select a Kindle deck to import',
+            filter='Deck files (*.db)'
+        )
+        if filename:
+            words = reader_util.extractKindleDeck(filename)
+            self.importWordList(words)
 
 
     def onActionPreferences(self):
@@ -537,6 +549,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.ankiIsFactValid
         )
         self.textKanjiDefs.setHtml(html)
+
+
+    def importWordList(self, words):
+        pass
 
 
     def setStatus(self, status):
