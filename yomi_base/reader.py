@@ -412,8 +412,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
         self.setStatus(u'Added fact {0}; {1} new fact(s) total'.format(markup['summary'], len(self.facts)))
 
-        self.updateVocabDefs()
-        self.updateKanjiDefs()
+        self.updateVocabDefs(False)
+        self.updateKanjiDefs(False)
         return True
 
 
@@ -535,22 +535,34 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                 self.preferences.updateRecentFile(self.state.filename, self.state.scanPosition)
 
 
-    def updateVocabDefs(self, trim=True):
+    def updateVocabDefs(self, scroll=True, trim=True):
         vocabDefs = self.state.vocabDefs
         if trim:
             vocabDefs = vocabDefs[:self.preferences['maxResults']]
 
         html = reader_util.buildVocabDefs(vocabDefs, self.ankiIsFactValid)
+
+        scrollbar = self.textVocabDefs.verticalScrollBar()
+        position = scrollbar.sliderPosition()
         self.textVocabDefs.setHtml(html)
 
+        if not scroll:
+            scrollbar.setSliderPosition(position)
 
-    def updateKanjiDefs(self, trim=True):
+
+    def updateKanjiDefs(self, scroll=True, trim=True):
         kanjiDefs = self.state.kanjiDefs
         if trim:
             kanjiDefs = kanjiDefs[:self.preferences['maxResults']]
 
         html = reader_util.buildKanjiDefs(kanjiDefs, self.ankiIsFactValid)
+
+        scrollbar = self.textKanjiDefs.verticalScrollBar()
+        position = scrollbar.sliderPosition()
         self.textKanjiDefs.setHtml(html)
+
+        if not scroll:
+            scrollbar.setSliderPosition(position)
 
 
     def importWordList(self, words):
@@ -564,8 +576,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             if self.dockKanji.isVisible():
                 self.state.kanjiDefs += self.language.findCharacters(word)
 
-        self.updateVocabDefs(False)
-        self.updateKanjiDefs(False)
+        self.updateVocabDefs(True, False)
+        self.updateKanjiDefs(True, False)
 
 
     def setStatus(self, status):
