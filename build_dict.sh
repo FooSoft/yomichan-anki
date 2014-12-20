@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 KANJIDIC=util/kanjidic
 EDICT=util/edict
