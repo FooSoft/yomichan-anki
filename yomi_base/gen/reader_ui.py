@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Sat Nov 16 11:47:57 2013
-#      by: PyQt4 UI code generator 4.10
+# Created: Sat Dec 20 19:45:21 2014
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -42,7 +42,7 @@ class Ui_MainWindowReader(object):
         self.verticalLayout_4.addWidget(self.textContent)
         MainWindowReader.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindowReader)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 900, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 900, 27))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
@@ -211,9 +211,13 @@ class Ui_MainWindowReader(object):
         self.actionToggleKanji = QtGui.QAction(MainWindowReader)
         self.actionToggleKanji.setCheckable(True)
         self.actionToggleKanji.setObjectName(_fromUtf8("actionToggleKanji"))
+        self.menuImportKindleDeck = QtGui.QAction(MainWindowReader)
+        self.menuImportKindleDeck.setObjectName(_fromUtf8("menuImportKindleDeck"))
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.menuOpenArchive.menuAction())
         self.menuFile.addAction(self.menuOpenRecent.menuAction())
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.menuImportKindleDeck)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionQuit)
         self.menuEdit.addSeparator()
@@ -304,5 +308,6 @@ class Ui_MainWindowReader(object):
         self.actionToggleAnki.setText(_translate("MainWindowReader", "&Anki", None))
         self.actionFeedback.setText(_translate("MainWindowReader", "&Feedback...", None))
         self.actionToggleKanji.setText(_translate("MainWindowReader", "&Kanji", None))
+        self.menuImportKindleDeck.setText(_translate("MainWindowReader", "Import &Kindle deck...", None))
 
 import resources_rc

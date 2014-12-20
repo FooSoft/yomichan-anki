@@ -40,7 +40,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -63,6 +63,8 @@
     <addaction name="actionOpen"/>
     <addaction name="menuOpenArchive"/>
     <addaction name="menuOpenRecent"/>
+    <addaction name="separator"/>
+    <addaction name="menuImportKindleDeck"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -456,6 +458,11 @@
    </property>
    <property name="text">
     <string>&amp;Kanji</string>
+   </property>
+  </action>
+  <action name="menuImportKindleDeck">
+   <property name="text">
+    <string>Import &amp;Kindle deck...</string>
    </property>
   </action>
  </widget>
