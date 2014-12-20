@@ -552,7 +552,18 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def importWordList(self, words):
-        pass
+        self.state.vocabDefs = list()
+        self.state.kanjiDefs = list()
+
+        for word in words:
+            if self.dockVocab.isVisible():
+                self.state.vocabDefs += self.language.dictionary.findTerm(word)
+
+            if self.dockKanji.isVisible():
+                self.state.kanjiDefs += self.language.findCharacters(word)
+
+        self.updateVocabDefs()
+        self.updateKanjiDefs()
 
 
     def setStatus(self, status):

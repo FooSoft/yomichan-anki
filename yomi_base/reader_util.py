@@ -174,7 +174,7 @@ def buildVocabDef(definition, index, query):
         reading = u'<span class = "reading">[{0}]<br/></span>'.format(definition['reading'])
 
     rules = unicode()
-    if len(definition['rules']) > 0:
+    if definition.get('rules'):
         rules = ' &lt; '.join(definition['rules'])
         rules = '<span class = "rules">({0})<br/></span>'.format(rules)
 
