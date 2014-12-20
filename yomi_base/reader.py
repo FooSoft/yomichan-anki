@@ -535,19 +535,21 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                 self.preferences.updateRecentFile(self.state.filename, self.state.scanPosition)
 
 
-    def updateVocabDefs(self):
-        html = reader_util.buildVocabDefs(
-            self.state.vocabDefs[:self.preferences['maxResults']],
-            self.ankiIsFactValid
-        )
+    def updateVocabDefs(self, trim=True):
+        vocabDefs = self.state.vocabDefs
+        if trim:
+            vocabDefs = vocabDefs[:self.preferences['maxResults']]
+
+        html = reader_util.buildVocabDefs(vocabDefs, self.ankiIsFactValid)
         self.textVocabDefs.setHtml(html)
 
 
-    def updateKanjiDefs(self):
-        html = reader_util.buildKanjiDefs(
-            self.state.kanjiDefs[:self.preferences['maxRsults']],
-            self.ankiIsFactValid
-        )
+    def updateKanjiDefs(self, trim=True):
+        kanjiDefs = self.state.kanjiDefs
+        if trim:
+            kanjiDefs = kanjiDefs[:self.preferences['maxResults']]
+
+        html = reader_util.buildKanjiDefs(kanjiDefs, self.ankiIsFactValid)
         self.textKanjiDefs.setHtml(html)
 
 
@@ -562,8 +564,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             if self.dockKanji.isVisible():
                 self.state.kanjiDefs += self.language.findCharacters(word)
 
-        self.updateVocabDefs()
-        self.updateKanjiDefs()
+        self.updateVocabDefs(False)
+        self.updateKanjiDefs(False)
 
 
     def setStatus(self, status):
