@@ -412,8 +412,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
         self.setStatus(u'Added fact {0}; {1} new fact(s) total'.format(markup['summary'], len(self.facts)))
 
-        self.updateVocabDefs(False)
-        self.updateKanjiDefs(False)
+        self.updateVocabDefs(scroll=True)
+        self.updateKanjiDefs(scroll=True)
         return True
 
 
@@ -535,34 +535,36 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                 self.preferences.updateRecentFile(self.state.filename, self.state.scanPosition)
 
 
-    def updateVocabDefs(self, scroll=True, trim=True):
-        vocabDefs = self.state.vocabDefs
-        if trim:
-            vocabDefs = vocabDefs[:self.preferences['maxResults']]
+    def updateDefs(self, defs, builder, control, **options):
+        if options.get('trim', True):
+            defs = defs[:self.preferences['maxResults']]
 
-        html = reader_util.buildVocabDefs(vocabDefs, self.ankiIsFactValid)
+        html = builder(defs, self.ankiIsFactValid)
 
-        scrollbar = self.textVocabDefs.verticalScrollBar()
+        scrollbar = control.verticalScrollBar()
         position = scrollbar.sliderPosition()
-        self.textVocabDefs.setHtml(html)
+        control.setHtml(html)
 
-        if not scroll:
+        if options.get('scroll', False):
             scrollbar.setSliderPosition(position)
 
 
-    def updateKanjiDefs(self, scroll=True, trim=True):
-        kanjiDefs = self.state.kanjiDefs
-        if trim:
-            kanjiDefs = kanjiDefs[:self.preferences['maxResults']]
+    def updateVocabDefs(self, **options):
+        self.updateDefs(
+            self.state.vocabDefs,
+            reader_util.buildVocabDefs,
+            self.textVocabDefs,
+            **options
+        )
 
-        html = reader_util.buildKanjiDefs(kanjiDefs, self.ankiIsFactValid)
 
-        scrollbar = self.textKanjiDefs.verticalScrollBar()
-        position = scrollbar.sliderPosition()
-        self.textKanjiDefs.setHtml(html)
-
-        if not scroll:
-            scrollbar.setSliderPosition(position)
+    def updateKanjiDefs(self, **options):
+        self.updateDefs(
+            self.state.kanjiDefs,
+            reader_util.buildKanjiDefs,
+            self.textKanjiDefs,
+            **options
+        )
 
 
     def importWordList(self, words):
@@ -576,8 +578,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             if self.dockKanji.isVisible():
                 self.state.kanjiDefs += self.language.findCharacters(word)
 
-        self.updateVocabDefs(True, False)
-        self.updateKanjiDefs(True, False)
+        self.updateVocabDefs(trim=False, scroll=True)
+        self.updateKanjiDefs(trim=False, scroll=True)
 
 
     def setStatus(self, status):
