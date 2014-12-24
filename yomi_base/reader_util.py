@@ -18,6 +18,7 @@
 
 from PyQt4 import QtGui
 import re
+import codecs
 import sqlite3
 
 
@@ -249,5 +250,10 @@ def extractKindleDeck(filename):
     return words
 
 
-def importWordList(self, words):
-    pass
+def extractWordList(filename):
+    words = list()
+
+    with codecs.open(unicode(filename), 'rb', 'utf-8') as fp:
+        words = re.split('[;,\s]', fp.read())
+
+    return filter(None, words)
