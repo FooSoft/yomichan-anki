@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Sat Dec 20 20:08:13 2014
+# Created: Wed Dec 24 17:04:45 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -46,11 +46,10 @@ class Ui_MainWindowReader(object):
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
-        self.menuOpenArchive = QtGui.QMenu(self.menuFile)
-        self.menuOpenArchive.setEnabled(False)
-        self.menuOpenArchive.setObjectName(_fromUtf8("menuOpenArchive"))
         self.menuOpenRecent = QtGui.QMenu(self.menuFile)
         self.menuOpenRecent.setObjectName(_fromUtf8("menuOpenRecent"))
+        self.menuImport = QtGui.QMenu(self.menuFile)
+        self.menuImport.setObjectName(_fromUtf8("menuImport"))
         self.menuEdit = QtGui.QMenu(self.menubar)
         self.menuEdit.setObjectName(_fromUtf8("menuEdit"))
         self.menuHelp = QtGui.QMenu(self.menubar)
@@ -211,13 +210,16 @@ class Ui_MainWindowReader(object):
         self.actionToggleKanji = QtGui.QAction(MainWindowReader)
         self.actionToggleKanji.setCheckable(True)
         self.actionToggleKanji.setObjectName(_fromUtf8("actionToggleKanji"))
-        self.actionImportKindleDeck = QtGui.QAction(MainWindowReader)
-        self.actionImportKindleDeck.setObjectName(_fromUtf8("actionImportKindleDeck"))
+        self.actionKindleDeck = QtGui.QAction(MainWindowReader)
+        self.actionKindleDeck.setObjectName(_fromUtf8("actionKindleDeck"))
+        self.actionWordList = QtGui.QAction(MainWindowReader)
+        self.actionWordList.setObjectName(_fromUtf8("actionWordList"))
+        self.menuImport.addAction(self.actionKindleDeck)
+        self.menuImport.addAction(self.actionWordList)
         self.menuFile.addAction(self.actionOpen)
-        self.menuFile.addAction(self.menuOpenArchive.menuAction())
         self.menuFile.addAction(self.menuOpenRecent.menuAction())
         self.menuFile.addSeparator()
-        self.menuFile.addAction(self.actionImportKindleDeck)
+        self.menuFile.addAction(self.menuImport.menuAction())
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionQuit)
         self.menuEdit.addSeparator()
@@ -262,8 +264,8 @@ class Ui_MainWindowReader(object):
     def retranslateUi(self, MainWindowReader):
         MainWindowReader.setWindowTitle(_translate("MainWindowReader", "Yomichan", None))
         self.menuFile.setTitle(_translate("MainWindowReader", "&File", None))
-        self.menuOpenArchive.setTitle(_translate("MainWindowReader", "Open from &archive", None))
         self.menuOpenRecent.setTitle(_translate("MainWindowReader", "Open &recent", None))
+        self.menuImport.setTitle(_translate("MainWindowReader", "&Import", None))
         self.menuEdit.setTitle(_translate("MainWindowReader", "&Edit", None))
         self.menuHelp.setTitle(_translate("MainWindowReader", "&Help", None))
         self.menuView.setTitle(_translate("MainWindowReader", "&View", None))
@@ -308,6 +310,7 @@ class Ui_MainWindowReader(object):
         self.actionToggleAnki.setText(_translate("MainWindowReader", "&Anki", None))
         self.actionFeedback.setText(_translate("MainWindowReader", "&Feedback...", None))
         self.actionToggleKanji.setText(_translate("MainWindowReader", "&Kanji", None))
-        self.actionImportKindleDeck.setText(_translate("MainWindowReader", "Import &Kindle deck...", None))
+        self.actionKindleDeck.setText(_translate("MainWindowReader", "&Kindle deck...", None))
+        self.actionWordList.setText(_translate("MainWindowReader", "&Word list...", None))
 
 import resources_rc

@@ -47,24 +47,22 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <widget class="QMenu" name="menuOpenArchive">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="title">
-      <string>Open from &amp;archive</string>
-     </property>
-    </widget>
     <widget class="QMenu" name="menuOpenRecent">
      <property name="title">
       <string>Open &amp;recent</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuImport">
+     <property name="title">
+      <string>&amp;Import</string>
+     </property>
+     <addaction name="actionKindleDeck"/>
+     <addaction name="actionWordList"/>
+    </widget>
     <addaction name="actionOpen"/>
-    <addaction name="menuOpenArchive"/>
     <addaction name="menuOpenRecent"/>
     <addaction name="separator"/>
-    <addaction name="actionImportKindleDeck"/>
+    <addaction name="menuImport"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -460,9 +458,14 @@
     <string>&amp;Kanji</string>
    </property>
   </action>
-  <action name="actionImportKindleDeck">
+  <action name="actionKindleDeck">
    <property name="text">
-    <string>Import &amp;Kindle deck...</string>
+    <string>&amp;Kindle deck...</string>
+   </property>
+  </action>
+  <action name="actionWordList">
+   <property name="text">
+    <string>&amp;Word list...</string>
    </property>
   </action>
  </widget>
