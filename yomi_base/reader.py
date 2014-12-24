@@ -72,7 +72,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.actionFind.triggered.connect(self.onActionFind)
         self.actionFindNext.triggered.connect(self.onActionFindNext)
         self.actionHomepage.triggered.connect(self.onActionHomepage)
-        self.actionImportKindleDeck.triggered.connect(self.onActionImportKindleDeck)
+        self.actionKindleDeck.triggered.connect(self.onActionKindleDeck)
+        self.actionWordList.triggered.connect(self.onActionWordList)
         self.actionOpen.triggered.connect(self.onActionOpen)
         self.actionPreferences.triggered.connect(self.onActionPreferences)
         self.actionToggleWrap.toggled.connect(self.onActionToggleWrap)
@@ -183,7 +184,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.openFile(filename)
 
 
-    def onActionImportKindleDeck(self):
+    def onActionKindleDeck(self):
         filename = QtGui.QFileDialog.getOpenFileName(
             parent=self,
             caption='Select a Kindle deck to import',
@@ -191,6 +192,17 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         )
         if filename:
             words = reader_util.extractKindleDeck(filename)
+            self.importWordList(words)
+
+
+    def onActionWordList(self):
+        filename = QtGui.QFileDialog.getOpenFileName(
+            parent=self,
+            caption='Select a word list file to import',
+            filter='Text files (*.txt);;All files (*.*)'
+        )
+        if filename:
+            words = reader_util.extractWordList(filename)
             self.importWordList(words)
 
 
