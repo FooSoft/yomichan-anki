@@ -240,10 +240,9 @@ def extractKindleDeck(filename):
     words = list()
 
     try:
-        connection = sqlite3.connect(unicode(filename))
-        for row in connection.execute('select word from WORDS'):
-            words.append(row[0])
-        connection.close()
+        with sqlite3.connect(unicode(filename)) as db:
+            for row in db.execute('select word from WORDS'):
+                words.append(row[0])
     except sqlite3.OperationalError:
         pass
 
