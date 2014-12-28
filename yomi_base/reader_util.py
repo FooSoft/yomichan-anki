@@ -172,27 +172,27 @@ def buildEmpty():
 def buildVocabDef(definition, index, query):
     reading = unicode()
     if definition['reading']:
-        reading = u'<span class = "reading">[{0}]<br/></span>'.format(definition['reading'])
+        reading = u'<span class="reading">[{0}]<br></span>'.format(definition['reading'])
 
     rules = unicode()
     if definition.get('rules'):
         rules = ' &lt; '.join(definition['rules'])
-        rules = '<span class = "rules">({0})<br/></span>'.format(rules)
+        rules = '<span class="rules">({0})<br></span>'.format(rules)
 
-    links = '<a href = "copyVocabDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(index)
+    links = '<a href="copyVocabDef:{0}"><img src="://img/img/icon_copy_definition.png" align="right"></a>'.format(index)
     if query is not None:
         if query('vocab', markupVocabExp(definition)):
-            links += '<a href = "addVocabExp:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(index)
+            links += '<a href="addVocabExp:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
         if query('vocab', markupVocabReading(definition)):
-            links += '<a href = "addVocabReading:{0}"><img src = "://img/img/icon_add_reading.png" align = "right"/></a>'.format(index)
+            links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
 
     html = u"""
-        <span class = "links">{0}</span>
-        <span class = "expression">{1}<br/></span>
+        <span class="links">{0}</span>
+        <span class="expression">{1}<br></span>
         {2}
-        <span class = "glossary">{3}<br/></span>
+        <span class="glossary">{3}<br></span>
         {4}
-        <br clear = "all"/>""".format(links, definition['expression'], reading, definition['glossary'], rules)
+        <br clear="all">""".format(links, definition['expression'], reading, definition['glossary'], rules)
 
     return html
 
@@ -209,17 +209,17 @@ def buildVocabDefs(definitions, query):
 
 
 def buildKanjiDef(definition, index, query):
-    links = '<a href = "copyKanjiDef:{0}"><img src = "://img/img/icon_copy_definition.png" align = "right"/></a>'.format(index)
+    links = '<a href="copyKanjiDef:{0}"><img src="://img/img/icon_copy_definition.png" align="right"></a>'.format(index)
     if query is not None and query('kanji', markupKanji(definition)):
-        links += '<a href = "addKanji:{0}"><img src = "://img/img/icon_add_expression.png" align = "right"/></a>'.format(index)
+        links += '<a href="addKanji:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
 
     readings = ', '.join([definition['kunyomi'], definition['onyomi']])
     html = u"""
-        <span class = "links">{0}</span>
-        <span class = "expression">{1}<br/></span>
-        <span class = "reading">[{2}]<br/></span>
-        <span class = "glossary">{3}<br/></span>
-        <br clear = "all"/>""".format(links, definition['character'], readings, definition['glossary'])
+        <span class="links">{0}</span>
+        <span class="expression">{1}<br></span>
+        <span class="reading">[{2}]<br></span>
+        <span class="glossary">{3}<br></span>
+        <br clear="all">""".format(links, definition['character'], readings, definition['glossary'])
 
     return html
 
