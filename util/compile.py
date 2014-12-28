@@ -26,64 +26,74 @@ import sys
 
 
 PARSED_TAGS = {
-    'P',        # common word
-    'adj',      # former adjective classification (being removed)
-    'adj-f',    # noun or verb acting prenominally (other than the above)
-    'adj-i',    # adjective (keiyoushi)
-    'adj-na',   # adjectival nouns or quasi-adjectives (keiyodoshi)
-    'adj-no',   # nouns which may take the genitive case particle `no'
-    'adj-pn',   # pre-noun adjectival (rentaishi)
-    'adj-t',    # `taru' adjective
-    'adv',      # adverb (fukushi)
-    'adv-n',    # adverbial noun
-    'adv-to',   # adverb taking the `to' particle
-    'aux',      # auxiliary
-    'aux-adj',  # auxiliary adjective
-    'aux-v',    # auxiliary verb
-    'conj',     # conjunction
-    'ctr',      # counter
-    'exp',      # Expressions (phrases, clauses, etc.)
-    'int',      # interjection (kandoushi)
-    'iv',       # irregular verb
-    'n',        # noun (common) (futsuumeishi)
-    'n-adv',    # adverbial noun (fukushitekimeishi)
-    'n-pref',   # noun, used as a prefix
-    'n-suf',    # noun, used as a suffix
-    'n-t',      # noun (temporal) (jisoumeishi)
-    'num',      # numeric
-    'pn',       # pronoun
-    'pref' ,    # prefix
-    'prt',      # particle
-    'suf',      # suffix
-    'v1',       # Ichidan verb
-    'v2a-s',    # Nidan verb with 'u' ending (archaic)
-    'v4h',      # Yodan verb with `hu/fu' ending (archaic)
-    'v4r',      # Yodan verb with `ru' ending (archaic)
-    'v5',       # Godan verb (not completely classified)
-    'v5aru',    # Godan verb - -aru special class
-    'v5b',      # Godan verb with `bu' ending
-    'v5g',      # Godan verb with `gu' ending
-    'v5k',      # Godan verb with `ku' ending
-    'v5k-s',    # Godan verb - iku/yuku special class
-    'v5m',      # Godan verb with `mu' ending
-    'v5n',      # Godan verb with `nu' ending
-    'v5r',      # Godan verb with `ru' ending
-    'v5r-i',    # Godan verb with `ru' ending (irregular verb)
-    'v5s',      # Godan verb with `su' ending
-    'v5t',      # Godan verb with `tsu' ending
-    'v5u',      # Godan verb with `u' ending
-    'v5u-s',    # Godan verb with `u' ending (special class)
-    'v5uru',    # Godan verb - uru old class verb (old form of Eru)
-    'v5z',      # Godan verb with `zu' ending
-    'vi',       # intransitive verb
-    'vk',       # kuru verb - special class
-    'vn',       # irregular nu verb
-    'vs',       # noun or participle which takes the aux. verb suru
-    'vs-c',     # su verb - precursor to the modern suru
-    'vs-i',     # suru verb - irregular
-    'vs-s',     # suru verb - special class
-    'vt',       # transitive verb
-    'vz',       # Ichidan verb - zuru verb - (alternative form of -jiru verbs)
+    'P',       # common word
+    'adj',     # former adjective classification (being removed)
+    'adj-f',   # noun or verb acting prenominally (other than the above)
+    'adj-i',   # adjective (keiyoushi)
+    'adj-na',  # adjectival nouns or quasi-adjectives (keiyodoshi)
+    'adj-no',  # nouns which may take the genitive case particle `no'
+    'adj-pn',  # pre-noun adjectival (rentaishi)
+    'adj-t',   # `taru' adjective
+    'adv',     # adverb (fukushi)
+    'adv-n',   # adverbial noun
+    'adv-to',  # adverb taking the `to' particle
+    'aux',     # auxiliary
+    'aux-adj', # auxiliary adjective
+    'aux-v',   # auxiliary verb
+    'c',       # company name
+    'conj',    # conjunction
+    'ctr',     # counter
+    'exp',     # Expressions (phrases, clauses, etc.)
+    'f',       # female given name
+    'g',       # given name, as-yet not classified by sex
+    'h',       # full (usually family plus given) name of a particular person
+    'int',     # interjection (kandoushi)
+    'iv',      # irregular verb
+    'm',       # male given name
+    'n',       # noun (common) (futsuumeishi)
+    'n-adv',   # adverbial noun (fukushitekimeishi)
+    'n-pref',  # noun, used as a prefix
+    'n-suf',   # noun, used as a suffix
+    'n-t',     # noun (temporal) (jisoumeishi)
+    'num',     # numeric
+    'p',       # place-name
+    'pn',      # pronoun
+    'pr',      # product name
+    'pref' ,   # prefix
+    'prt',     # particle
+    's',       # surname
+    'st',      # stations
+    'suf',     # suffix
+    'u',       # person name, either given or surname, as-yet unclassified
+    'v1',      # Ichidan verb
+    'v2a-s',   # Nidan verb with 'u' ending (archaic)
+    'v4h',     # Yodan verb with `hu/fu' ending (archaic)
+    'v4r',     # Yodan verb with `ru' ending (archaic)
+    'v5',      # Godan verb (not completely classified)
+    'v5aru',   # Godan verb - -aru special class
+    'v5b',     # Godan verb with `bu' ending
+    'v5g',     # Godan verb with `gu' ending
+    'v5k',     # Godan verb with `ku' ending
+    'v5k-s',   # Godan verb - iku/yuku special class
+    'v5m',     # Godan verb with `mu' ending
+    'v5n',     # Godan verb with `nu' ending
+    'v5r',     # Godan verb with `ru' ending
+    'v5r-i',   # Godan verb with `ru' ending (irregular verb)
+    'v5s',     # Godan verb with `su' ending
+    'v5t',     # Godan verb with `tsu' ending
+    'v5u',     # Godan verb with `u' ending
+    'v5u-s',   # Godan verb with `u' ending (special class)
+    'v5uru',   # Godan verb - uru old class verb (old form of Eru)
+    'v5z',     # Godan verb with `zu' ending
+    'vi',      # intransitive verb
+    'vk',      # kuru verb - special class
+    'vn',      # irregular nu verb
+    'vs',      # noun or participle which takes the aux. verb suru
+    'vs-c',    # su verb - precursor to the modern suru
+    'vs-i',    # suru verb - irregular
+    'vs-s',    # suru verb - special class
+    'vt',      # transitive verb
+    'vz',      # Ichidan verb - zuru verb - (alternative form of -jiru verbs)
 }
 
 
@@ -172,18 +182,21 @@ def writeEdict(cursor, values):
     cursor.executemany('INSERT INTO Terms VALUES(?, ?, ?, ?)', values)
 
 
-def build(path, kanjidic, kradfile, edict):
+def build(path, kanjidic, kradfile, edict, enamdict):
     with sqlite3.connect(path) as db:
-        cursor = db.cursor()
-
         if kanjidic is not None:
-            writeKanjiDic(cursor, parseKanjiDic(kanjidic))
+            writeKanjiDic(db, parseKanjiDic(kanjidic))
 
         if kradfile is not None:
-            writeKradFile(cursor, parseKradFile(kradfile))
+            writeKradFile(db, parseKradFile(kradfile))
 
+        terms = []
         if edict is not None:
-            writeEdict(cursor, parseEdict(edict))
+            terms += parseEdict(edict)
+        if enamdict is not None:
+            terms += parseEdict(enamdict)
+        if len(terms) > 0:
+            writeEdict(db, terms)
 
 
 def main():
@@ -191,13 +204,20 @@ def main():
     parser.add_option('--kanjidic', dest='kanjidic')
     parser.add_option('--kradfile', dest='kradfile')
     parser.add_option('--edict', dest='edict')
+    parser.add_option('--enamdict', dest='enamdict')
 
     options, args = parser.parse_args()
 
     if len(args) == 0:
         parser.print_help()
     else:
-        build(args[0], options.kanjidic, options.kradfile, options.edict)
+        build(
+            args[0],
+            options.kanjidic,
+            options.kradfile,
+            options.edict,
+            options.enamdict
+        )
 
 
 if __name__ == '__main__':
