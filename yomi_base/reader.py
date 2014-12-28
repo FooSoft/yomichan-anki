@@ -269,7 +269,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def onActionFeedback(self):
-        url = QtCore.QUrl('http://foosoft.net/comments')
+        url = QtCore.QUrl('http://foosoft.net/about')
         QtGui.QDesktopServices().openUrl(url)
 
 
