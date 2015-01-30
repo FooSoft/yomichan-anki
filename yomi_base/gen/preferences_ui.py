@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Wed Dec 24 17:04:45 2014
+# Created: Fri Jan 30 18:21:34 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -104,6 +104,9 @@ class Ui_DialogPreferences(object):
         self.textSample = QtGui.QPlainTextEdit(self.tabAppearance)
         self.textSample.setObjectName(_fromUtf8("textSample"))
         self.verticalLayout_3.addWidget(self.textSample)
+        self.checkAllowEditing = QtGui.QCheckBox(self.tabAppearance)
+        self.checkAllowEditing.setObjectName(_fromUtf8("checkAllowEditing"))
+        self.verticalLayout_3.addWidget(self.checkAllowEditing)
         self.tabWidget.addTab(self.tabAppearance, _fromUtf8(""))
         self.tabAnki = QtGui.QWidget()
         self.tabAnki.setEnabled(False)
@@ -191,6 +194,7 @@ class Ui_DialogPreferences(object):
         self.buttonColorFg.setText(_translate("DialogPreferences", "Foreground...", None))
         self.buttonColorBg.setText(_translate("DialogPreferences", "Background...", None))
         self.textSample.setPlainText(_translate("DialogPreferences", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam accumsan nisi a leo faucibus ut varius velit fringilla. Cras hendrerit eleifend porttitor. Quisque eu elit quis tellus hendrerit ornare et ac tellus. Nunc id felis ut sapien blandit viverra vel ac est. Ut erat lorem, rutrum at scelerisque sollicitudin, lacinia quis diam. Suspendisse potenti. Integer id justo ac ligula aliquet mattis. Etiam malesuada faucibus risus, vel hendrerit elit consectetur quis. Etiam consectetur ipsum ut odio feugiat suscipit. Etiam a tellus metus. ", None))
+        self.checkAllowEditing.setText(_translate("DialogPreferences", "Allow editing", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAppearance), _translate("DialogPreferences", "Appearance", None))
         self.label.setText(_translate("DialogPreferences", "Displayed profile", None))
         self.radioButtonVocab.setText(_translate("DialogPreferences", "Vocabulary", None))

@@ -112,6 +112,9 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         palette.setColor(QtGui.QPalette.Text, QtGui.QColor(self.preferences['fgColor']))
         self.textContent.setPalette(palette)
 
+        self.textContent.setReadOnly(not self.preferences['allowEditing'])
+        self.textContent.setAttribute(QtCore.Qt.WA_InputMethodEnabled)
+
         font = self.textContent.font()
         font.setFamily(self.preferences['fontFamily'])
         font.setPointSize(self.preferences['fontSize'] + self.zoom)

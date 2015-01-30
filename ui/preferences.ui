@@ -146,6 +146,13 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QCheckBox" name="checkAllowEditing">
+         <property name="text">
+          <string>Allow editing</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tabAnki">
