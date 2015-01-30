@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Fri Jan 30 18:21:34 2015
+# Created: Fri Jan 30 18:40:48 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -263,6 +263,7 @@ class Ui_MainWindowReader(object):
 
     def retranslateUi(self, MainWindowReader):
         MainWindowReader.setWindowTitle(_translate("MainWindowReader", "Yomichan", None))
+        self.textContent.setPlainText(_translate("MainWindowReader", "Paste text here or open a .txt file you want to read!", None))
         self.menuFile.setTitle(_translate("MainWindowReader", "&File", None))
         self.menuOpenRecent.setTitle(_translate("MainWindowReader", "Open &recent", None))
         self.menuImport.setTitle(_translate("MainWindowReader", "&Import", None))
