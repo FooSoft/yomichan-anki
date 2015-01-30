@@ -11,5 +11,6 @@
     "scanLength": 16,
     "stripReadings": false,
     "tags": [],
-    "wordWrap": false
+    "wordWrap": false,
+    "allowEditing": false
 }
