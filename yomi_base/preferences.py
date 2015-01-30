@@ -69,6 +69,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.preferences['maxResults'] = self.spinMaxResults.value()
         self.preferences['scanLength'] = self.spinScanLength.value()
         self.preferences['stripReadings'] = self.checkStripReadings.isChecked()
+        self.preferences['firstRun'] = False
 
         if self.anki is not None:
             self.dialogToProfile()
