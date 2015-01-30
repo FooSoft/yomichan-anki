@@ -105,6 +105,14 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.comboTags.addItems(self.preferences['tags'])
         self.applyPreferencesContent()
 
+        if self.preferences['firstRun']:
+            QtGui.QMessageBox.information(
+                self,
+                'Yomichan',
+                'This may be the first time you are running Yomichan.\nPlease take some time to configure this extension.'
+            )
+
+            self.onActionPreferences()
 
     def applyPreferencesContent(self):
         palette = self.textContent.palette()

@@ -12,5 +12,6 @@
     "stripReadings": false,
     "tags": [],
     "wordWrap": false,
-    "allowEditing": true
+    "allowEditing": true,
+    "firstRun": true
 }
