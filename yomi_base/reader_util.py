@@ -70,7 +70,7 @@ def findSentence(content, position):
             if c in terminators:
                 end = i + 1
                 break
-            elif (c in quotesBwd or c == '\n'):
+            elif c in quotesBwd:
                 end = i
                 break
 
