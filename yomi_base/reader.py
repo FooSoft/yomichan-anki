@@ -24,7 +24,7 @@ import japanese.util
 import os
 import preferences
 import reader_util
-import update
+import updates
 
 
 class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
@@ -52,7 +52,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.language = language
         self.preferences = preferences
         self.state = self.State()
-        self.updater = update.UpdateFinder()
+        self.updates = updates.UpdateFinder()
         self.zoom = 0
 
         self.applyPreferences()
@@ -90,10 +90,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.textKanjiSearch.returnPressed.connect(self.onKanjiDefSearchReturn)
         self.textVocabDefs.anchorClicked.connect(self.onVocabDefsAnchorClicked)
         self.textVocabSearch.returnPressed.connect(self.onVocabDefSearchReturn)
-        self.updater.updateResult.connect(self.onUpdaterSearchResult)
+        self.updates.updateResult.connect(self.onUpdaterSearchResult)
 
         if self.preferences['checkForUpdates']:
-            self.updater.start()
+            self.updates.start()
 
 
     def applyPreferences(self):
@@ -323,14 +323,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.actionToggleKanji.setChecked(self.dockKanji.isVisible())
 
 
-    def onUpdaterSearchResult(self, result):
-        if result and unicode(result) > constants.c['appVersion']:
-            QtGui.QMessageBox.information(
-                self,
-                'Yomichan',
-                'A new version of Yomichan is available for download!\n\nYou can download this update ({0} > {1}) ' \
-                'from "Shared Plugins" in Anki or directly from the Yomichan homepage.'.format(constants.c['appVersion'], result)
-            )
+    def onUpdaterSearchResult(self, versions):
+        if versions['latest'] > constants.c['appVersion']:
+            dialog = updates.DialogUpdates(self, versions)
+            dialog.exec_()
 
 
     def onContentMouseMove(self, event):
