@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Fri Jan 30 18:40:48 2015
+# Created: Sun Feb 15 13:27:51 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -34,6 +34,7 @@ class Ui_DialogPreferences(object):
         self.tabGeneral = QtGui.QWidget()
         self.tabGeneral.setObjectName(_fromUtf8("tabGeneral"))
         self.formLayout = QtGui.QFormLayout(self.tabGeneral)
+        self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
         self.checkLoadRecentFile = QtGui.QCheckBox(self.tabGeneral)
         self.checkLoadRecentFile.setObjectName(_fromUtf8("checkLoadRecentFile"))
@@ -46,7 +47,7 @@ class Ui_DialogPreferences(object):
         self.formLayout.setWidget(2, QtGui.QFormLayout.SpanningRole, self.checkCheckForUpdates)
         self.label_2 = QtGui.QLabel(self.tabGeneral)
         self.label_2.setObjectName(_fromUtf8("label_2"))
-        self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.label_2)
+        self.formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.label_2)
         self.spinMaxResults = QtGui.QSpinBox(self.tabGeneral)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -55,10 +56,10 @@ class Ui_DialogPreferences(object):
         self.spinMaxResults.setSizePolicy(sizePolicy)
         self.spinMaxResults.setMinimum(1)
         self.spinMaxResults.setObjectName(_fromUtf8("spinMaxResults"))
-        self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.spinMaxResults)
+        self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.spinMaxResults)
         self.label_14 = QtGui.QLabel(self.tabGeneral)
         self.label_14.setObjectName(_fromUtf8("label_14"))
-        self.formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.label_14)
+        self.formLayout.setWidget(5, QtGui.QFormLayout.LabelRole, self.label_14)
         self.spinScanLength = QtGui.QSpinBox(self.tabGeneral)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -67,7 +68,10 @@ class Ui_DialogPreferences(object):
         self.spinScanLength.setSizePolicy(sizePolicy)
         self.spinScanLength.setMinimum(1)
         self.spinScanLength.setObjectName(_fromUtf8("spinScanLength"))
-        self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.spinScanLength)
+        self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.spinScanLength)
+        self.checkRememberTextContent = QtGui.QCheckBox(self.tabGeneral)
+        self.checkRememberTextContent.setObjectName(_fromUtf8("checkRememberTextContent"))
+        self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.checkRememberTextContent)
         self.tabWidget.addTab(self.tabGeneral, _fromUtf8(""))
         self.tabAppearance = QtGui.QWidget()
         self.tabAppearance.setObjectName(_fromUtf8("tabAppearance"))
@@ -190,6 +194,7 @@ class Ui_DialogPreferences(object):
         self.checkCheckForUpdates.setText(_translate("DialogPreferences", "Check for updates", None))
         self.label_2.setText(_translate("DialogPreferences", "Max search results", None))
         self.label_14.setText(_translate("DialogPreferences", "Text scan length", None))
+        self.checkRememberTextContent.setText(_translate("DialogPreferences", "Remember text content", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabGeneral), _translate("DialogPreferences", "General", None))
         self.buttonColorFg.setText(_translate("DialogPreferences", "Foreground...", None))
         self.buttonColorBg.setText(_translate("DialogPreferences", "Background...", None))
