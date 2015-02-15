@@ -60,10 +60,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.updateVocabDefs()
         self.updateKanjiDefs()
 
-        if self.preferences['rememberTextBoxContent']:
-            self.textContent.setPlainText(self.preferences['textBoxContent'])
-        elif filename is not None:
+        if filename is not None:
             self.openFile(filename)
+        elif self.preferences['rememberTextContent']:
+            self.textContent.setPlainText(self.preferences['textContent'])
         elif self.preferences['loadRecentFile']:
             filenames = self.preferences.recentFiles()
             if len(filenames) > 0 and os.path.isfile(filenames[0]):
@@ -135,8 +135,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def closeEvent(self, event):
-        if self.preferences['rememberTextBoxContent']: # Before closeFile() because that clears the window
-            self.preferences['textBoxContent'] = unicode(self.textContent.toPlainText()) 
         self.closeFile()
         self.preferences['windowState'] = str(self.saveState().toBase64())
         self.preferences.save()
@@ -381,6 +379,9 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def closeFile(self):
+        if self.preferences['rememberTextContent']:
+            self.preferences['textContent'] = unicode(self.textContent.toPlainText())
+
         self.setWindowTitle('Yomichan')
         self.textContent.setPlainText(unicode())
         self.updateRecentFile(False)
