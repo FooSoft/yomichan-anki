@@ -45,6 +45,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
     def dataToDialog(self):
         self.checkCheckForUpdates.setChecked(self.preferences['checkForUpdates'])
+        self.checkRememberTextContent.setChecked(self.preferences['rememberTextContent'])
         self.checkAllowEditing.setChecked(self.preferences['allowEditing'])
         self.checkLoadRecentFile.setChecked(self.preferences['loadRecentFile'])
         self.checkStripReadings.setChecked(self.preferences['stripReadings'])
@@ -64,6 +65,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
     def dialogToData(self):
         self.preferences['checkForUpdates'] = self.checkCheckForUpdates.isChecked()
+        self.preferences['rememberTextContent'] = self.checkRememberTextContent.isChecked()
         self.preferences['allowEditing'] = self.checkAllowEditing.isChecked()
         self.preferences['loadRecentFile'] = self.checkLoadRecentFile.isChecked()
         self.preferences['maxResults'] = self.spinMaxResults.value()
