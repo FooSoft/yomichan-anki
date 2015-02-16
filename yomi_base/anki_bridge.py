@@ -49,7 +49,8 @@ class Anki:
         note.tags = tags
 
         for name, value in fields.items():
-            note[name] = value
+            if name in note:
+                note[name] = value
 
         if not note.dupeOrEmpty():
             return note
