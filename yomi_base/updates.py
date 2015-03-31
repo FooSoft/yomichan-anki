@@ -60,7 +60,7 @@ class UpdateFinder(QtCore.QThread):
         updates = list()
 
         try:
-            fp = urllib2.urlopen('http://foosoft.net/projects/yomichan/index/updates.json')
+            fp = urllib2.urlopen('http://foosoft.net/dl/yomichan/updates.json')
             updates = json.loads(fp.read())
             fp.close()
 
