@@ -11,10 +11,9 @@ behave well with large text files, doesn't remember where you last stopped readi
 integration with Anki. As such, adding new vocab to my Anki deck was annoying; I wanted to be able to do this with one
 mouse click. After several hours of work, Yomichan could do this and much more.
 
-Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb.net/shared/info/934748696), the
-[Yomichan page on GitHub](https://github.com/FooSoft/yomichan/) or directly from [my
-homepage](http://foosoft.net/dl/yomichan/yomichan.zip). There is an automatic update checker in the plugin that (unless
-you disabled it) will notify you when new versions become available.
+Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb.net/shared/info/934748696) or the
+[Yomichan page on GitHub](https://github.com/FooSoft/yomichan/). There is an automatic update checker included in the
+plugin that (unless you disabled it in options) will notify you when new versions become available.
 
 ## Basic Usage Instructions
 
