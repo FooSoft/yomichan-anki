@@ -1,4 +1,4 @@
-# Yomichan
+# Yomichan #
 
 A while ago I started working on an [Anki](http://ankisrs.net/) plugin in an attempt to solve various annoyances I
 encountered when trying to read Japanese books on my computer. Yomichan is the result of my efforts and makes Japanese
@@ -15,7 +15,7 @@ Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb
 [Yomichan page on GitHub](https://github.com/FooSoft/yomichan/). There is an automatic update checker included in the
 plugin that (unless you disabled it in options) will notify you when new versions become available.
 
-## Basic Usage Instructions
+## Basic Usage Instructions ##
 
 1.  Make sure you are running the latest version of Anki.
 2.  Open your vocab deck and note the fields that are used in your deck.
@@ -49,7 +49,7 @@ plugin that (unless you disabled it in options) will notify you when new version
     *   Add term as it appears in the dictionary including Kanji (e.g. 勉強家).
     *   Copy the expression, reading and definition for the term to the clipboard.
 
-## Keyboard Shortcuts
+## Keyboard Shortcuts ##
 
 By request, I've added several keyboard shortcuts which make Yomichan even easier to use:
 
@@ -62,7 +62,7 @@ By request, I've added several keyboard shortcuts which make Yomichan even easie
 | `Ctrl` + `#`           | Add current term at index  0 - 9 to deck            |
 | `Alt` + `#`            | Add current term at index 0 - 9 to deck as Hiragana |
 
-## Importing Vocabulary
+## Importing Vocabulary ##
 
 Yomichan is capable of importing vocabulary lists from plain text files and the vocabulary deck database the [Amazon
 Kindle](http://en.wikipedia.org/wiki/Kindle) automatically generates when you look up words in the built-in dictionary
