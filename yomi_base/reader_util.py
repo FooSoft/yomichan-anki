@@ -78,8 +78,21 @@ def findSentence(content, position):
             quoteStack.pop()
         elif c in quotesFwd:
             quoteStack.insert(0, quotesFwd[c])
-
-    return content[start:end].strip()
+    cend = len(content)
+    translation_start = 0
+    for i in xrange(end, cend):
+      if content[i] == '\t':
+          translation_start = i+1
+          break
+    translation_end = cend
+    for i in xrange(translation_start, cend):
+      if content[i] == '\n':
+          translation_end = i
+          break      
+    translation = ''
+    if translation_start > 0:
+      translation = content[translation_start:translation_end].strip() 
+    return content[start:end].strip(), translation  
 
 
 def formatFields(fields, markup):

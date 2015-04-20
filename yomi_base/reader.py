@@ -507,9 +507,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         lengthMatched = 0
         if self.dockVocab.isVisible():
             self.state.vocabDefs, lengthMatched = self.language.findTerm(contentSampleFlat)
-            sentence = reader_util.findSentence(content, samplePosStart)
+            sentence, translation = reader_util.findSentence(content, samplePosStart)
             for definition in self.state.vocabDefs:
                 definition['sentence'] = sentence
+                definition['translation'] = translation
             self.updateVocabDefs()
 
         if self.dockKanji.isVisible():
