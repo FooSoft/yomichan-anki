@@ -78,8 +78,14 @@ def findSentence(content, position):
             quoteStack.pop()
         elif c in quotesFwd:
             quoteStack.insert(0, quotesFwd[c])
-
-    return content[start:end].strip()
+    translation = ''
+    translationStart = content.find('\t',end)
+    if translationStart >= 0:
+      translationEnd = content.find('\n',translationStart)
+      if translationEnd == -1:
+        translationEnd = len(content)
+      translation = content[translationStart+1:translationEnd].strip() 
+    return content[start:end].strip(), translation  
 
 
 def formatFields(fields, markup):
@@ -108,6 +114,7 @@ def markupVocabExp(definition):
         'reading': definition['reading'] or unicode(),
         'glossary': definition['glossary'],
         'sentence': definition.get('sentence'),
+        'translation': definition.get('translation'),
         'summary': summary
     }
 
@@ -119,6 +126,7 @@ def markupVocabReading(definition):
             'reading': unicode(),
             'glossary': definition['glossary'],
             'sentence': definition.get('sentence'),
+            'translation': definition.get('translation'),
             'summary': definition['reading']
         }
 
