@@ -105,7 +105,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.comboBoxModel.blockSignals(False)
 
         allowedTags = {
-            'vocab': ['expression', 'reading', 'glossary', 'sentence','translation'],
+            'vocab': ['expression', 'reading', 'glossary', 'sentence', 'translation'],
             'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
         }[name]
 
