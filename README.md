@@ -35,8 +35,8 @@ plugin that (unless you disabled it in options) will notify you when new version
 
     ![Preferences dialog](index/preferences.png)
 
-7.  Now you should add markers such as `{expression}`, `{reading}`, `{reading}` and `{sentence}` to specify how new
-    cards should be created. Card fields will vary depending on your deck model.
+7.  Now you should add markers such as `{expression}`, `{reading}`, `{reading}`, `{line}` and `{sentence}` to specify how new
+    cards should be created. To get tab-separated fields of a line, use `{t0}`, `{t1}` and so on. Card fields will vary depending on your deck model.
 8.  When you look up definitions you will have the option to create Anki cards for them with one click. You will see the
     icons for performing these actions next to each item. *Icons for actions which update your decks won't show up if
     Anki thinks you can't add a fact with those items*. This likely means that they would either be duplicates of
@@ -69,3 +69,15 @@ Kindle](http://en.wikipedia.org/wiki/Kindle) automatically generates when you lo
 (this file can be found as `/system/vocabulary/vocab.db`). Note that importing does not create flash cards
 automatically, but rather outputs the contents of the file to the Vocabulary and Kanji panes so that you can add facts
 the same way as when reading within Yomichan.
+
+## Learning Anki cards by reading ##
+
+1.  It is recommended that your main learning decks have all the same note type. Make sure that the first card of the note type checks if you are able to recognize a Japanese word.
+2.  Open a text file that contains a text that you want to learn
+3.  To add a vocabulary to the vocabulary list of the text file, press shift while hovering over a word and click on the green button of the term that you want to add. If there is a blue button instead, click on this. This means that the vocabulary is already in a deck.
+4.  Save the file anywhere.
+5.  Re-open yomichan and open the file.
+6.  Read the text and press shift on words that you forgot. This adds the vocabulary to the 'wrong' vocabulary list.
+7.  After finishing the text, click on Learn Vocabulary. This reschedules the cards belonging to the vocabularies as follows: If the vocabulary is in the 'wrong' vocabulary list, answer the card as Bad. If not, answer it as Good.
+    This might result in early reviews, where not due cards are answered. Yomichan handles these easily: The earlier the review, the smaller the change to that card. For example, if you answered today a card, and the same card happens to be in the vocabulary list, there is no change at all to that card. 
+8.  Repeat 5.-7. as often as you want.  
