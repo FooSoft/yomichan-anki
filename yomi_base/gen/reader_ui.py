@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Tue Mar 31 12:33:11 2015
-#      by: PyQt4 UI code generator 4.10.4
+# Created: Mon Jun  8 10:10:27 2015
+#      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -42,7 +42,7 @@ class Ui_MainWindowReader(object):
         self.verticalLayout_4.addWidget(self.textContent)
         MainWindowReader.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindowReader)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 900, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 900, 21))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
@@ -112,6 +112,9 @@ class Ui_MainWindowReader(object):
         self.comboTags.setObjectName(_fromUtf8("comboTags"))
         self.horizontalLayout_2.addWidget(self.comboTags)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
+        self.learnVocabulary = QtGui.QPushButton(self.dockWidgetContents_2)
+        self.learnVocabulary.setObjectName(_fromUtf8("learnVocabulary"))
+        self.verticalLayout_2.addWidget(self.learnVocabulary)
         self.dockAnki.setWidget(self.dockWidgetContents_2)
         MainWindowReader.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockAnki)
         self.dockKanji = QtGui.QDockWidget(MainWindowReader)
@@ -214,10 +217,17 @@ class Ui_MainWindowReader(object):
         self.actionKindleDeck.setObjectName(_fromUtf8("actionKindleDeck"))
         self.actionWordList = QtGui.QAction(MainWindowReader)
         self.actionWordList.setObjectName(_fromUtf8("actionWordList"))
+        self.actionSave = QtGui.QAction(MainWindowReader)
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap(_fromUtf8(":/img/img/icon_copy_definition.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionSave.setIcon(icon11)
+        self.actionSave.setIconVisibleInMenu(True)
+        self.actionSave.setObjectName(_fromUtf8("actionSave"))
         self.menuImport.addAction(self.actionKindleDeck)
         self.menuImport.addAction(self.actionWordList)
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.menuOpenRecent.menuAction())
+        self.menuFile.addAction(self.actionSave)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.menuImport.menuAction())
         self.menuFile.addSeparator()
@@ -276,6 +286,7 @@ class Ui_MainWindowReader(object):
         self.label.setText(_translate("MainWindowReader", "Expression", None))
         self.dockAnki.setWindowTitle(_translate("MainWindowReader", "Anki", None))
         self.label_3.setText(_translate("MainWindowReader", "Active tag(s)", None))
+        self.learnVocabulary.setText(_translate("MainWindowReader", "Learn Vocabulary", None))
         self.dockKanji.setWindowTitle(_translate("MainWindowReader", "Kanji", None))
         self.label_2.setText(_translate("MainWindowReader", "Character", None))
         self.actionOpen.setText(_translate("MainWindowReader", "&Open...", None))
@@ -313,5 +324,8 @@ class Ui_MainWindowReader(object):
         self.actionToggleKanji.setText(_translate("MainWindowReader", "&Kanji", None))
         self.actionKindleDeck.setText(_translate("MainWindowReader", "&Kindle deck...", None))
         self.actionWordList.setText(_translate("MainWindowReader", "&Word list...", None))
+        self.actionSave.setText(_translate("MainWindowReader", "&Save...", None))
+        self.actionSave.setToolTip(_translate("MainWindowReader", "Save file", None))
+        self.actionSave.setShortcut(_translate("MainWindowReader", "Ctrl+S", None))
 
 import resources_rc

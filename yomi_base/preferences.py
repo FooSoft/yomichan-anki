@@ -35,7 +35,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.radioButtonKanji.toggled.connect(self.onProfileChanged)
         self.radioButtonVocab.toggled.connect(self.onProfileChanged)
         self.spinFontSize.valueChanged.connect(self.onFontSizeChanged)
-        self.tableFields.itemChanged.connect(self.onFieldsChanged)
+        self.tableFields.itemChanged.connect(self.onFieldsChanged)       
 
         self.preferences = preferences
         self.anki = anki
@@ -51,7 +51,8 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.checkStripReadings.setChecked(self.preferences['stripReadings'])
         self.spinMaxResults.setValue(self.preferences['maxResults'])
         self.spinScanLength.setValue(self.preferences['scanLength'])
-
+        self.checkUnlockVocab.setChecked(self.preferences['unlockVocab'])
+        
         self.updateSampleText()
         font = self.textSample.font()
         self.comboFontFamily.setCurrentFont(font)
@@ -70,6 +71,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.preferences['loadRecentFile'] = self.checkLoadRecentFile.isChecked()
         self.preferences['maxResults'] = self.spinMaxResults.value()
         self.preferences['scanLength'] = self.spinScanLength.value()
+        self.preferences['unlockVocab'] = self.checkUnlockVocab.isChecked()
         self.preferences['stripReadings'] = self.checkStripReadings.isChecked()
         self.preferences['firstRun'] = False
 
@@ -105,7 +107,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.comboBoxModel.blockSignals(False)
 
         allowedTags = {
-            'vocab': ['expression', 'reading', 'glossary', 'sentence','translation'],
+            'vocab': ['expression', 'reading', 'glossary', 'sentence','line'],
             'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
         }[name]
 
@@ -200,6 +202,16 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
     def onFieldsChanged(self, item):
         self.dialogToProfile()
+        
+    def onSubSentenceChanged(self, item):
+        return
+        
+    def onSubVideoChanged(self, item):
+        return
+        
+    def onSubTranslationChanged(self, item):
+        return
+        
 
 
     def onProfileChanged(self, data):

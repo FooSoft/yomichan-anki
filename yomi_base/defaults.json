@@ -15,5 +15,6 @@
     "tags": [],
     "wordWrap": false,
     "allowEditing": true,
-    "firstRun": true
+    "firstRun": true,
+    "unlockVocab":true
 }

@@ -22,6 +22,10 @@ from yomi_base import japanese
 from yomi_base.preference_data import Preferences
 from yomi_base.reader import MainWindowReader
 import sys
+from aqt import mw
+from aqt.reviewer import Reviewer
+from anki.hooks import wrap
+
 
 
 class Yomichan:

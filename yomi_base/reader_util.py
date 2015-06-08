@@ -51,7 +51,7 @@ def findSentence(content, position):
     for i in xrange(position, start, -1):
         c = content[i]
 
-        if not quoteStack and (c in terminators or c in quotesFwd or c == '\n'):
+        if not quoteStack and (c in terminators or c in quotesFwd or c == '\n'):                                                                               
             start = i + 1
             break
 
@@ -67,8 +67,11 @@ def findSentence(content, position):
         c = content[i]
 
         if not quoteStack:
-            if c in terminators:
+            if (c in terminators):
                 end = i + 1
+                break
+            elif c == '\t':
+                end = i
                 break
             elif c in quotesBwd:
                 end = i
@@ -77,19 +80,22 @@ def findSentence(content, position):
         if quoteStack and c == quoteStack[0]:
             quoteStack.pop()
         elif c in quotesFwd:
-            quoteStack.insert(0, quotesFwd[c])
-    translation = ''
-    translationStart = content.find('\t',end)
-    if translationStart >= 0:
-      translationEnd = content.find('\n',translationStart)
-      if translationEnd == -1:
-        translationEnd = len(content)
-      translation = content[translationStart+1:translationEnd].strip() 
-    return content[start:end].strip(), translation  
+            quoteStack.insert(0, quotesFwd[c])   
+    startLine = content[0:start].rfind('\n')
+    endLine = content.find('\n',end)
+    if endLine==-1:
+      line = content[startLine+1:]
+    else:
+      line = content[startLine+1:endLine-1]
+    return content[start:end].strip(),line  
 
 
 def formatFields(fields, markup):
-    result = dict()
+    result = dict()               
+    if 'line' in markup:
+      tabs = markup['line'].split('\t')
+      for i,tab in enumerate(tabs):
+        markup['t'+str(i)] = tab 
     for field, value in fields.items():
         try:
             result[field] = value.format(**markup)
@@ -105,7 +111,7 @@ def splitTags(tags):
 
 def markupVocabExp(definition):
     if definition['reading']:
-        summary = u'{expression} [{reading}]'.format(**definition)
+        summary = u'{expression}[{reading}]'.format(**definition)
     else:
         summary = u'{expression}'.format(**definition)
 
@@ -114,7 +120,7 @@ def markupVocabExp(definition):
         'reading': definition['reading'] or unicode(),
         'glossary': definition['glossary'],
         'sentence': definition.get('sentence'),
-        'translation': definition.get('translation'),
+        'line': definition.get('line'),
         'summary': summary
     }
 
@@ -126,7 +132,7 @@ def markupVocabReading(definition):
             'reading': unicode(),
             'glossary': definition['glossary'],
             'sentence': definition.get('sentence'),
-            'translation': definition.get('translation'),
+            'line': definition.get('line'),
             'summary': definition['reading']
         }
 
@@ -169,7 +175,6 @@ def buildDefHeader():
 def buildDefFooter():
     return '</body></html>'
 
-
 def buildEmpty():
     return u"""
         <p>No definitions to display.</p>
@@ -189,7 +194,10 @@ def buildVocabDef(definition, index, query):
 
     links = '<a href="copyVocabDef:{0}"><img src="://img/img/icon_copy_definition.png" align="right"></a>'.format(index)
     if query is not None:
-        if query('vocab', markupVocabExp(definition)):
+        isq = query('vocab', markupVocabExp(definition))
+        if not isq:
+            links += '<a href="overwriteVocabExp:{0}"><img src="://img/img/icon_action_about.png" align="right"></a>'.format(index)
+        else:
             links += '<a href="addVocabExp:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
         if query('vocab', markupVocabReading(definition)):
             links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
