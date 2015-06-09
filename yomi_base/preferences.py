@@ -107,7 +107,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.comboBoxModel.blockSignals(False)
 
         allowedTags = {
-            'vocab': ['expression', 'reading', 'glossary', 'sentence','line'],
+            'vocab': ['expression', 'reading', 'glossary', 'sentence','line','filename'],
             'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
         }[name]
 
@@ -203,16 +203,6 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
     def onFieldsChanged(self, item):
         self.dialogToProfile()
         
-    def onSubSentenceChanged(self, item):
-        return
-        
-    def onSubVideoChanged(self, item):
-        return
-        
-    def onSubTranslationChanged(self, item):
-        return
-        
-
 
     def onProfileChanged(self, data):
         self.profileToDialog()

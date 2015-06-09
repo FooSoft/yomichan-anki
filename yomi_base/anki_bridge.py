@@ -60,7 +60,34 @@ class Anki:
         browser = aqt.dialogs.open('Browser', self.window())
         browser.form.searchEdit.lineEdit().setText('nid:{0}'.format(noteId))
         browser.onSearch()
-
+        
+    
+    def getNotes(self, modelName, key, value):
+        return self.collection().findNotes(key + u':' + value + u' note:' + modelName)
+        
+        
+    def getCards(self, modelName, onlyFirst = False):
+        model = self.models().byName(modelName)
+        modelid = model[u"id"]
+        query = "select " + ("min(c.id)" if onlyFirst else "c.id")
+        query+= ",n.sfld,n.id from cards c "
+        query+= "join notes n on (c.nid = n.id) " 
+        query+= "where n.mid=%d" % (modelid)
+        if onlyFirst: query+= "group by n.id"
+        return self.collection().db.execute(query)
+        
+    
+    def getCardsByNote(self, modelName, key, value):
+        return self.collection().findCards(key + u':' + value + u' note:' + modelName)
+    
+    
+    def getModelKey(self, modelName):
+        model = self.collection().models.byName(modelName)
+        if model is None:
+            return None
+        frstfld = model[u"flds"][0]
+        return frstfld[u"name"]
+        
 
     def startEditing(self):
         self.window().requireReset()

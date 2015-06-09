@@ -121,6 +121,7 @@ def markupVocabExp(definition):
         'glossary': definition['glossary'],
         'sentence': definition.get('sentence'),
         'line': definition.get('line'),
+        'filename': definition.get('filename'),
         'summary': summary
     }
 
@@ -133,6 +134,7 @@ def markupVocabReading(definition):
             'glossary': definition['glossary'],
             'sentence': definition.get('sentence'),
             'line': definition.get('line'),
+            'definition': definition.get('filename'),
             'summary': definition['reading']
         }
 
