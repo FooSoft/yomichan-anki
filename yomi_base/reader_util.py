@@ -196,15 +196,17 @@ def buildVocabDef(definition, index, query):
 
     links = '<a href="copyVocabDef:{0}"><img src="://img/img/icon_copy_definition.png" align="right"></a>'.format(index)
     if query is not None:
-        isq = query('vocab', markupVocabExp(definition))
-        if not isq:
-            links += '<a href="overwriteVocabExp:{0}"><img src="://img/img/icon_action_about.png" align="right"></a>'.format(index)
+        markupExp = markupVocabExp(definition)
+        markupReading = markupVocabReading(definition)
+        if not query('vocab', markupExp):
+            links += '<a href="overwriteVocabExp:{0}"><img src="://img/img/icon_overwrite_expression.png" align="right"></a>'.format(index)
         else:
             links += '<a href="addVocabExp:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
-        if query('vocab', markupVocabReading(definition)):
-            links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
-        else:
-            links += '<a href="overwriteVocabReading:{0}"><img src="://img/img/icon_action_about.png" align="right" width="16px" height="16px"></a>'.format(index)
+        if markupReading is not None:
+            if query('vocab', markupReading):
+                links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
+            elif markupExp is not None and markupReading['summary'] != markupExp['summary']:
+                links += '<a href="overwriteVocabReading:{0}"><img src="://img/img/icon_overwrite_reading.png" align="right"></a>'.format(index)
 
     html = u"""
         <span class="links">{0}</span>
