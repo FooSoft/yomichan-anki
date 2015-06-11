@@ -203,6 +203,8 @@ def buildVocabDef(definition, index, query):
             links += '<a href="addVocabExp:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
         if query('vocab', markupVocabReading(definition)):
             links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
+        else:
+            links += '<a href="overwriteVocabReading:{0}"><img src="://img/img/icon_action_about.png" align="right" width="16px" height="16px"></a>'.format(index)
 
     html = u"""
         <span class="links">{0}</span>

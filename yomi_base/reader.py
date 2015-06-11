@@ -26,6 +26,7 @@ import os
 import preferences
 import reader_util
 import updates
+import sys
 from anki.sched import Scheduler
 
 class EarlyScheduler(Scheduler):
@@ -42,10 +43,17 @@ class EarlyScheduler(Scheduler):
     
     def _updateRevIvl(self, card, ease):
         idealIvl = self._nextRevIvl(card, ease)
-        adjIv1 = self._adjRevIvl(card, idealIvl) 
-        smoothedIvl = (card.ivl - self._daysEarly(card)) * (adjIv1 - card.ivl) // card.ivl
-        card.ivl = card.ivl + min(smoothedIvl,1)
-        
+        adjIv1 = self._adjRevIvl(card, idealIvl)
+        if card.queue == 2:
+            card.ivl = card.ivl + int(max(0,self._smoothedIvl(card))*(adjIv1 - card.ivl))
+        else:
+            card.ivl = adjIvl
+    
+    def _smoothedIvl(self,card):
+        if card.ivl > 0 and card.queue == 2:
+            return (card.ivl - self._daysEarly(card))/card.ivl
+        else:
+            return 1
         
     def _daysEarly(self, card):
         "Number of days earlier than scheduled."
@@ -74,6 +82,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         self.wordsBad = dict()
         self.wordsAll = dict()
+        self.wordsNotFound = []
         self.facts = list()
         self.anki = anki
         self.closed = closed
@@ -261,15 +270,22 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                                             
           
     def onLearnVocabularyList(self):
-        correct, wrong = 0, 0
+        correct = 0
+        wrong = 0
+        exc = u''
         for word in self.wordsAll:
-            if word in self.wordsBad:
-                self.sched.earlyAnswerCard(self.wordsBad[word],1)
-                wrong += 1
-            else:
-                self.sched.earlyAnswerCard(self.wordsAll[word],3)
-                correct += 1
+            try:
+                if word in self.wordsBad:
+                    self.sched.earlyAnswerCard(self.wordsBad[word],1)
+                    wrong += 1
+                else:
+                    self.sched.earlyAnswerCard(self.wordsAll[word],3)
+                    correct += 1
+            except Exception as e:
+                exc += u'{0}: {1}'.format(word,str(e.args))
         QtGui.QMessageBox.information(self, 'Yomichan', '{0} correct and {1} wrong'.format(correct,wrong))
+        if exc!=u'':
+            QtGui.QMessageBox.information(self, 'Yomichan', u'Exception occured:\n{0}'.format(exc))
 
 
     def onActionPreferences(self):
@@ -416,8 +432,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if self.preferences['stripReadings']:
             content = reader_util.stripReadings(content)
         lines = content.splitlines()
+        self.listDefinitions.clear()
         self.wordsBad = dict()
         self.wordsAll = dict()
+        self.wordsNotFound = []
         foundSeparation = False
         if self.anki is None:
             return False
@@ -431,12 +449,19 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         for cid,value,nid in self.anki.getCards(profile["model"]): 
             allCards[value] = self.anki.collection().getCard(cid)
         content = u''
+        dueness = 0.0
+        foundvocabs = 0
         for line in lines:
             if foundSeparation:
                 if line in allCards:
-                    self.wordsAll[line] = allCards[line]
-                    self.facts.append(allCards[line].nid)
+                    card = allCards[line]
+                    dueness += self.sched._smoothedIvl(card)
+                    self.wordsAll[line] = card
+                    self.facts.append(card.nid)
                     self.listDefinitions.addItem(line)
+                    foundvocabs += 1
+                else:
+                    self.wordsNotFound.append(line)
             elif line == u'### VOCABULARY IN THIS TEXT ###':
                 foundSeparation = True
             else:
@@ -451,8 +476,12 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.textContent.centerCursor()
                           
 
-        self.setStatus(u'Loaded file {0}'.format(filename))
-        self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.basename(filename), encoding))
+        if foundvocabs>0:
+            self.setWindowTitle(u'Yomichan - {0} ({1}), due vocabulary: {2:.2f}'.format(os.path.basename(filename), encoding,dueness/foundvocabs))
+            self.setStatus(u'Loaded file {0}, due vocabulary: {1:.2f}'.format(filename,dueness/foundvocabs))
+        else:
+            self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.basename(filename), encoding))
+            self.setStatus(u'Loaded file {0}'.format(filename))
 
     def saveFile(self, filename):
         try:
@@ -461,6 +490,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                 content = self.textContent.toPlainText()
                 content+= u'### VOCABULARY IN THIS TEXT ###\n'
                 content+= u'\n'.join(self.wordsAll.keys()) 
+                content+= u'\n'.join(self.wordsNotFound) 
                 fp.write(content.encode('utf-8'))
                 fp.close()
         except IOError:
@@ -619,8 +649,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         
         key = self.anki.getModelKey(profile['model'])
         if key is not None and fields[key] in self.wordsAll:
-            self.wordsBad[fields[key]] = self.wordsAll[fields[key]]
-        
+            if len(fields[key])>self.longestMatch:
+                self.longestMatch = fields[key]
+                self.longestSize = len(fields[key])
+
         return self.anki.canAddNote(profile['deck'], profile['model'], fields)
 
 
@@ -635,9 +667,12 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         elif command == 'overwriteVocabExp':
             markup = reader_util.markupVocabExp(definition)
             self.ankiOverwriteFact('vocab', markup)            
-        if command == 'addVocabReading':
+        elif command == 'addVocabReading':
             markup = reader_util.markupVocabReading(definition)
             self.ankiAddFact('vocab', markup)
+        elif command == 'overwriteVocabReading':
+            markup = reader_util.markupVocabReading(definition)
+            self.ankiOverwriteFact('vocab', markup)
         elif command == 'copyVocabDef':
             reader_util.copyVocabDef(definition)
 
@@ -736,8 +771,13 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if options.get('trim', True):
             defs = defs[:self.preferences['maxResults']]
 
+        self.longestMatch = None
+        self.longestSize = 0
         html = builder(defs, self.ankiIsFactValid)
-
+        if self.longestMatch is not None:
+            self.wordsBad[self.longestMatch] = self.wordsAll[self.longestMatch]
+            self.setStatus(u'{0} has been put into the incorrectly answered set'.format(self.longestMatch))
+        
         scrollbar = control.verticalScrollBar()
         position = scrollbar.sliderPosition()
         control.setHtml(html)
