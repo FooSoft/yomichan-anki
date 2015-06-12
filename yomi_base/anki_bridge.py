@@ -19,6 +19,60 @@
 import anki
 import aqt
 
+from anki.sched import Scheduler
+import time
+
+class EarlyScheduler(Scheduler):
+    def __init__(self,col,filecache):
+        Scheduler.__init__(self,col)
+        self.filecache = filecache
+        self.reset()
+        
+    def earlyAnswerCard(self,card,ease,timeUsed=None):
+        if card.queue < 0:
+            card.queue = 0
+        if timeUsed is None:
+            card.startTimer()
+        else:
+            card.timerStarted = time.time() - timeUsed
+        self.answerCard(card,ease)
+        
+    
+    def _updateRevIvl(self, card, ease):
+        idealIvl = self._nextRevIvl(card, ease)
+        adjIv1 = self._adjRevIvl(card, idealIvl)
+        if card.queue == 2:
+            card.ivl = card.ivl + int(max(0,self._smoothedIvl(card))*(adjIv1 - card.ivl))
+        else:
+            card.ivl = adjIvl
+    
+    def _smoothedIvl(self,card):
+        if card.ivl > 0 and card.queue == 2:
+            return (card.ivl - self._daysEarly(card))/card.ivl
+        else:
+            return 1
+        
+    def _daysEarly(self, card):
+        "Number of days earlier than scheduled."
+        due = card.odue if card.odid else card.due
+        return max(0, due - self.today)
+        
+    def deckDueList(self):
+        filecache = self.filecache()
+        yomichanDeck = self.col.decks.byName(u'Yomichan')
+        data = Scheduler.deckDueList(self)
+        if yomichanDeck is not None:
+            for deck in filecache:
+                id = self.col.decks.id(deck)
+                if filecache[deck] is None:
+                    data.append([deck, id, 0, 0, 0])
+                else:
+                    data.append([deck, id, int(filecache[deck].dueness), 0, 0])
+            for name,id in self.col.decks.children(yomichanDeck['id']):
+                if name not in filecache and self.col.decks.get(id)['id']!=1:
+                    self.col.decks.rem(id)
+        return data
+
 
 class Anki:
     def addNote(self, deckName, modelName, fields, tags=list()):

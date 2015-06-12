@@ -20,20 +20,22 @@
 from PyQt4 import QtGui, QtCore
 from yomi_base import japanese
 from yomi_base.preference_data import Preferences
-from yomi_base.reader import MainWindowReader
+from yomi_base.reader import MainWindowReader, FileState
 import sys
+import os
 from aqt import mw
+from aqt.main import AnkiQt
 from aqt.reviewer import Reviewer
-from anki.hooks import wrap
-
-
+from anki.hooks import wrap, addHook
+import anki.collection
+import anki.sched
 
 class Yomichan:
     def __init__(self):
         self.language = japanese.initLanguage()
         self.preferences = Preferences()
         self.preferences.load()
-
+        self.patched = False
 
 class YomichanPlugin(Yomichan):
     def __init__(self):
@@ -42,6 +44,8 @@ class YomichanPlugin(Yomichan):
         self.toolIconVisible = False
         self.window = None
         self.anki = anki_bridge.Anki()
+        self.fileCache = dict()
+
         self.parent = self.anki.window()
 
         separator = QtGui.QAction(self.parent)
@@ -56,11 +60,13 @@ class YomichanPlugin(Yomichan):
 
 
     def onShowRequest(self):
+
         if self.window:
             self.window.setVisible(True)
             self.window.activateWindow()
         else:
             self.window = MainWindowReader(
+                self,
                 self.parent,
                 self.preferences,
                 self.language,
@@ -71,8 +77,44 @@ class YomichanPlugin(Yomichan):
             self.window.show()
 
 
+    def fetchAllCards(self):
+        if self.anki is None:
+            return None
+        profile = self.preferences['profiles'].get('vocab')
+        if profile is None:
+            return None
+            
+        allCards = dict()
+        
+        for cid,value,nid in self.anki.getCards(profile["model"]): 
+            allCards[value] = self.anki.collection().getCard(cid)
+        return allCards
+
+
+    def loadAllTexts(self):
+        allCards = self.fetchAllCards()
+        if allCards is not None:
+            mediadir = self.anki.collection().media.dir()
+            yomimedia = os.path.join(mediadir,'Yomichan')
+            for root,dirs,files in os.walk(yomimedia):
+                relDir = os.path.relpath(root,mediadir)
+                for file in files:
+                    path = os.path.join(relDir,file)
+                    fl = FileState(path,self.preferences['stripReadings'])
+                    fl.findVocabulary(self.anki.collection().sched,allCards,needContent=False)
+                    self.fileCache[u'::'.join(unicode(path).split(os.sep))] = fl
+                for dir in dirs:
+                    path = os.path.join(relDir,dir)
+                    self.fileCache[u'::'.join(unicode(path).split(os.sep))] = None
+    
+
+
     def onWindowClose(self):
         self.window = None
+        
+        
+    def getFileCache(self):
+        return self.fileCache
 
 
 class YomichanStandalone(Yomichan):
@@ -81,6 +123,7 @@ class YomichanStandalone(Yomichan):
 
         self.application = QtGui.QApplication(sys.argv)
         self.window = MainWindowReader(
+            self,
             None,
             self.preferences,
             self.language,
@@ -92,7 +135,27 @@ class YomichanStandalone(Yomichan):
 
 
 if __name__ == '__main__':
-    instance = YomichanStandalone()
+    yomichanInstance = YomichanStandalone()
 else:
     from yomi_base import anki_bridge
-    instance = YomichanPlugin()
+    yomichanInstance = YomichanPlugin()
+    def onBeforeStateChange(state, oldState, *args):
+        if state == 'overview':
+            did = mw.col.decks.selected()
+            name = mw.col.decks.nameOrNone(did)
+            path = name.split(u'::')
+            if path > 0 and path[0] == u'Yomichan':
+                yomichanInstance.onShowRequest()
+                completePath = mw.col.media.dir()
+                for i in path:
+                    completePath = os.path.join(completePath,i)
+                yomichanInstance.window.openFile(completePath)
+                yomichanInstance.window.showMaximized()
+        elif state == 'deckBrowser':
+            if not yomichanInstance.patched:
+                mw.col.sched = anki_bridge.EarlyScheduler(mw.col,yomichanInstance.getFileCache)
+                yomichanInstance.patched = True
+            yomichanInstance.fileCache = dict()
+            yomichanInstance.loadAllTexts()
+            
+    addHook('beforeStateChange',onBeforeStateChange)
