@@ -107,9 +107,9 @@ class Anki:
             return note
 
 
-    def browseNote(self, noteId):
+    def browse(self, query):
         browser = aqt.dialogs.open('Browser', self.window())
-        browser.form.searchEdit.lineEdit().setText('nid:{0}'.format(noteId))
+        browser.form.searchEdit.lineEdit().setText(u' '.join([u'{0}:{1}'.format(key,value) for key,value in query.items()]))
         browser.onSearch()
         
     

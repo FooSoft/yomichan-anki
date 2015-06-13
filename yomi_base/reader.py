@@ -64,8 +64,8 @@ class FileState:
     
     
     def addVocabulary(self,value,card):
-        self.wordsAll[fields[key]] = card
-        self.wordsBad[fields[key]] = card             
+        self.wordsAll[value] = card
+        self.wordsBad[value] = card             
 
         
     def findVocabulary(self,sched,allCards,needContent=True):
@@ -129,6 +129,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.preferences = preferences
         self.anki = anki
         self.facts = list()
+        self.listDefinitions.clear()
         self.closed = closed
         self.language = language
         self.state = self.State()
@@ -420,9 +421,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def onDefinitionDoubleClicked(self, item):
-        if self.anki is not None:
+        profile = self.preferences['profiles'].get('vocab')
+        if profile is not None and self.anki is not None:
+            key = self.anki.getModelKey(profile['model'])
             row = self.listDefinitions.row(item)
-            self.anki.browseNote(self.facts[row])
+            self.anki.browse({key:self.facts[row],u'note':profile['model']})
 
 
     def onVisibilityChanged(self, visible):
@@ -457,6 +460,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             QtGui.QMessageBox.critical(self, 'Yomichan', 'Cannot open file for read')
             return
         self.listDefinitions.clear()
+        self.facts = []
 
         self.updateRecentFile()
         self.updateRecentFiles()
@@ -466,7 +470,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if allCards is not None:
             self.currentFile.findVocabulary(self.anki.collection().sched,allCards)
             for word,card in self.currentFile.wordsAll.items():
-                self.facts.append(card.nid)
+                self.facts.append(word)
                 self.listDefinitions.addItem(word)
             self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
 
@@ -578,8 +582,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             return False
         self.currentFile.overwriteVocabulary(value,self.anki.getCollection().getCard(cids[0]))
 
-        self.facts.append(ids[0])
-        self.listDefinitions.addItem(markup['summary'])
+        self.facts.append(value)
+        self.listDefinitions.addItem(value)
         self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
         self.updateVocabDefs(scroll=True)
         self.updateKanjiDefs(scroll=True)
@@ -622,8 +626,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if self.preferences['unlockVocab']:
             self.anki.collection().sched.earlyAnswerCard(card,2)
 
-        self.facts.append(factId)
-        self.listDefinitions.addItem(markup['summary'])
+        self.facts.append(value)
+        self.listDefinitions.addItem(value)
         self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
         self.setStatus(u'Added fact {0}; {1} new fact(s) total'.format(markup['summary'], len(self.facts)))
 
