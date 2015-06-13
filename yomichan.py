@@ -157,5 +157,9 @@ else:
                 yomichanInstance.patched = True
             yomichanInstance.fileCache = dict()
             yomichanInstance.loadAllTexts()
+            yomichanDeck = mw.col.decks.byName(u'Yomichan')
+            for name,id in mw.col.decks.children(yomichanDeck['id']):
+                if name not in yomichanInstance.fileCache and mw.col.decks.get(id)['id']!=1:
+                    mw.col.decks.rem(id)
             
     addHook('beforeStateChange',onBeforeStateChange)

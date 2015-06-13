@@ -68,9 +68,6 @@ class EarlyScheduler(Scheduler):
                     data.append([deck, id, 0, 0, 0])
                 else:
                     data.append([deck, id, int(filecache[deck].dueness), 0, 0])
-            for name,id in self.col.decks.children(yomichanDeck['id']):
-                if name not in filecache and self.col.decks.get(id)['id']!=1:
-                    self.col.decks.rem(id)
         return data
 
 

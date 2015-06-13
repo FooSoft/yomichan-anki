@@ -140,7 +140,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.updateKanjiDefs()
 
         if filename is not None:
-            self.openFile(filename,cache=True)
+            self.openFile(filename)
         elif self.preferences['rememberTextContent']:
             self.textContent.setPlainText(self.preferences['textContent'])
         elif self.preferences['loadRecentFile']:
