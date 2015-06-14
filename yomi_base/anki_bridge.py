@@ -15,12 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import sys
+import os
+import time
+from PyQt4 import QtGui, QtCore
 import anki
 import aqt
-
+from anki.hooks import addHook
+import anki.collection
 from anki.sched import Scheduler
-import time
+from yomichan import Yomichan
+from yomi_base.reader import MainWindowReader, FileState
+
 
 class EarlyScheduler(Scheduler):
     def __init__(self,col,filecache):
@@ -181,3 +187,110 @@ class Anki:
 
     def deckNames(self):
         return self.decks().allNames()
+
+class YomichanPlugin(Yomichan):
+    def __init__(self):
+        Yomichan.__init__(self)
+
+        self.toolIconVisible = False
+        self.window = None
+        self.anki = Anki()
+        self.fileCache = dict()
+
+        self.parent = self.anki.window()
+
+        separator = QtGui.QAction(self.parent)
+        separator.setSeparator(True)
+        self.anki.addUiAction(separator)
+
+        action = QtGui.QAction(QtGui.QIcon(':/img/img/icon_logo_32.png'), '&Yomichan...', self.parent)
+        action.setIconVisibleInMenu(True)
+        action.setShortcut('Ctrl+Y')
+        action.triggered.connect(self.onShowRequest)
+        self.anki.addUiAction(action)
+
+
+    def onShowRequest(self):
+
+        if self.window:
+            self.window.setVisible(True)
+            self.window.activateWindow()
+        else:
+            self.window = MainWindowReader(
+                self,
+                self.parent,
+                self.preferences,
+                self.language,
+                None,
+                self.anki,
+                self.onWindowClose
+            )
+            self.window.show()
+
+
+    def fetchAllCards(self):
+        if self.anki is None:
+            return None
+        profile = self.preferences['profiles'].get('vocab')
+        if profile is None:
+            return None
+            
+        allCards = dict()
+        
+        for cid,value,nid in self.anki.getCards(profile["model"]): 
+            allCards[value] = self.anki.collection().getCard(cid)
+        return allCards
+
+
+    def loadAllTexts(self):
+        allCards = self.fetchAllCards()
+        if allCards is not None:
+            mediadir = self.anki.collection().media.dir()
+            yomimedia = os.path.join(mediadir,'Yomichan')
+            for root,dirs,files in os.walk(yomimedia):
+                relDir = os.path.relpath(root,mediadir)
+                for file in files:
+                    path = os.path.join(relDir,file)
+                    fl = FileState(path,self.preferences['stripReadings'])
+                    fl.findVocabulary(self.anki.collection().sched,allCards,needContent=False)
+                    self.fileCache[u'::'.join(unicode(path).split(os.sep))] = fl
+                for dir in dirs:
+                    path = os.path.join(relDir,dir)
+                    self.fileCache[u'::'.join(unicode(path).split(os.sep))] = None
+    
+
+
+    def onWindowClose(self):
+        self.window = None
+        
+        
+    def getFileCache(self):
+        return self.fileCache
+
+
+yomichanInstance = YomichanPlugin()        
+        
+def onBeforeStateChange(state, oldState, *args):
+    if state == 'overview':
+        did = aqt.mw.col.decks.selected()
+        name = aqt.mw.col.decks.nameOrNone(did)
+        path = name.split(u'::')
+        if path > 0 and path[0] == u'Yomichan':
+            yomichanInstance.onShowRequest()
+            completePath = aqt.mw.col.media.dir()
+            for i in path:
+                completePath = os.path.join(completePath,i)
+            yomichanInstance.window.openFile(completePath)
+            yomichanInstance.window.showMaximized()
+    elif state == 'deckBrowser':
+        if not yomichanInstance.patched:
+            aqt.mw.col.sched = EarlyScheduler(aqt.mw.col,yomichanInstance.getFileCache)
+            yomichanInstance.patched = True
+        yomichanInstance.fileCache = dict()
+        yomichanInstance.loadAllTexts()
+        yomichanDeck = aqt.mw.col.decks.byName(u'Yomichan')
+        for name,id in aqt.mw.col.decks.children(yomichanDeck['id']):
+            if name not in yomichanInstance.fileCache and aqt.mw.col.decks.get(id)['id']!=1:
+                aqt.mw.col.decks.rem(id)
+    
+addHook('beforeStateChange',onBeforeStateChange)
