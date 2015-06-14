@@ -184,7 +184,7 @@ def buildEmpty():
         <p>You can also also input terms in the search box below."""
 
 
-def buildVocabDef(definition, index, query):
+def buildVocabDef(definition, index, query, allowOverwrite):
     reading = unicode()
     if definition['reading']:
         reading = u'<span class="reading">[{0}]<br></span>'.format(definition['reading'])
@@ -198,15 +198,16 @@ def buildVocabDef(definition, index, query):
     if query is not None:
         markupExp = markupVocabExp(definition)
         markupReading = markupVocabReading(definition)
-        if not query('vocab', markupExp):
-            links += '<a href="overwriteVocabExp:{0}"><img src="://img/img/icon_overwrite_expression.png" align="right"></a>'.format(index)
-        else:
+        if query('vocab', markupExp):
             links += '<a href="addVocabExp:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
+        elif allowOverwrite:
+            links += '<a href="overwriteVocabExp:{0}"><img src="://img/img/icon_overwrite_expression.png" align="right"></a>'.format(index)
         if markupReading is not None:
             if query('vocab', markupReading):
                 links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
             elif markupExp is not None and markupReading['summary'] != markupExp['summary']:
-                links += '<a href="overwriteVocabReading:{0}"><img src="://img/img/icon_overwrite_reading.png" align="right"></a>'.format(index)
+                if allowOverwrite:
+                    links += '<a href="overwriteVocabReading:{0}"><img src="://img/img/icon_overwrite_reading.png" align="right"></a>'.format(index)
 
     html = u"""
         <span class="links">{0}</span>
@@ -219,18 +220,18 @@ def buildVocabDef(definition, index, query):
     return html
 
 
-def buildVocabDefs(definitions, query):
+def buildVocabDefs(definitions, query, allowOverwrite):
     html = buildDefHeader()
     if len(definitions) > 0:
         for i, definition in enumerate(definitions):
-            html += buildVocabDef(definition, i, query)
+            html += buildVocabDef(definition, i, query, allowOverwrite)
     else:
         html += buildEmpty()
 
     return html + buildDefFooter()
 
 
-def buildKanjiDef(definition, index, query):
+def buildKanjiDef(definition, index, query, allowOverwrite):
     links = '<a href="copyKanjiDef:{0}"><img src="://img/img/icon_copy_definition.png" align="right"></a>'.format(index)
     if query is not None and query('kanji', markupKanji(definition)):
         links += '<a href="addKanji:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
@@ -246,12 +247,12 @@ def buildKanjiDef(definition, index, query):
     return html
 
 
-def buildKanjiDefs(definitions, query):
+def buildKanjiDefs(definitions, query, allowOverwrite):
     html = buildDefHeader()
 
     if len(definitions) > 0:
         for i, definition in enumerate(definitions):
-            html += buildKanjiDef(definition, i, query)
+            html += buildKanjiDef(definition, i, query, allowOverwrite)
     else:
         html += buildEmpty()
 

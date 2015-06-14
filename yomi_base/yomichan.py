@@ -26,3 +26,7 @@ class Yomichan:
         self.preferences = Preferences()
         self.preferences.load()
         self.patched = False
+
+    def fetchAllCards(self):
+        return None
+        

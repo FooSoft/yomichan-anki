@@ -48,7 +48,7 @@ class FileState:
             if stripReadings:
                 self.content = reader_util.stripReadings(self.content)
     
-    
+
     def resetTimer(self):
         self.timerStarted = time.time()
     
@@ -775,7 +775,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         self.longestMatch = None
         self.longestSize = 0
-        html = builder(defs, self.ankiIsFactValid)
+        html = builder(defs, self.ankiIsFactValid, self.anki is not None)
         if self.longestMatch is not None:
             self.currentFile.wordsBad[self.longestMatch] = self.currentFile.wordsAll[self.longestMatch]
             self.setStatus(u'{0} has been put into the incorrectly answered set'.format(self.longestMatch))
