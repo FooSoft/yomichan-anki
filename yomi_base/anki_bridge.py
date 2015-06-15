@@ -33,6 +33,9 @@ class EarlyScheduler(Scheduler):
     def __init__(self,col,filecache):
         Scheduler.__init__(self,col)
         self.filecache = filecache
+        # Any occuring vocabulary's ivl will increase by at least 5%
+        self.minimumGain = 0.05
+        self.dueCache = dict()
         self.reset()
         
     def earlyAnswerCard(self,card,ease,timeUsed=None):
@@ -52,10 +55,10 @@ class EarlyScheduler(Scheduler):
             card.ivl = card.ivl + int(self._smoothedIvl(card))*(adjIv1 - card.ivl)
         else:
             card.ivl = adjIvl
-    
+            
     def _smoothedIvl(self,card):
         if card.ivl > 0 and card.queue == 2:
-            return max(0.2,float(card.ivl - self._daysEarly(card))/card.ivl)
+            return max(self.minimumGain,float(card.ivl - self._daysEarly(card))/card.ivl)
         else:
             return 1
         
@@ -72,9 +75,11 @@ class EarlyScheduler(Scheduler):
             for deck in filecache:
                 id = self.col.decks.id(deck)
                 if filecache[deck] is None:
-                    data.append([deck, id, 0, 0, 0])
+                    due = 0
                 else:
-                    data.append([deck, id, int(filecache[deck].dueness), 0, 0])
+                    due = int(filecache[deck].dueness - filecache[deck].foundvocabs * self.minimumGain)
+                data.append([deck, id, due, 0, 0])
+                self.dueCache[deck] = due
         return data
 
 
@@ -276,14 +281,28 @@ def onBeforeStateChange(state, oldState, *args):
         did = aqt.mw.col.decks.selected()
         name = aqt.mw.col.decks.nameOrNone(did)
         path = name.split(u'::')
-        if len(path) > 1 and path[0] == u'Yomichan':
+        if len(path) > 0 and path[0] == u'Yomichan':
             yomichanInstance.onShowRequest()
             completePath = aqt.mw.col.media.dir()
             for i in path:
                 completePath = os.path.join(completePath,i)
-            if not os.path.isdir(completePath):
-                yomichanInstance.window.openFile(completePath)
-                yomichanInstance.window.showMaximized()
+            if os.path.isdir(completePath):
+                maxDue = 0
+                maxDueDeck = None
+                for name, id in aqt.mw.col.decks.children(did):
+                    if aqt.mw.col.sched.dueCache[name] >= maxDue:
+                        maxDue = aqt.mw.col.sched.dueCache[name]
+                        maxDueDeck = name
+                if maxDueDeck is None:
+                    return
+                path = maxDueDeck.split(u'::')
+                completePath = aqt.mw.col.media.dir()
+                for i in path:
+                    completePath = os.path.join(completePath,i)
+                if os.path.isdir(completePath):
+                    return
+            yomichanInstance.window.openFile(completePath)
+            yomichanInstance.window.showMaximized()
     elif state == 'deckBrowser':
         if not yomichanInstance.patched:
             aqt.mw.col.sched = EarlyScheduler(aqt.mw.col,yomichanInstance.getFileCache)
