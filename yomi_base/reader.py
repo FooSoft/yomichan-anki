@@ -125,6 +125,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.textContent.mouseMoveEvent = self.onContentMouseMove
         self.textContent.mousePressEvent = self.onContentMousePress
         self.dockAnki.setEnabled(anki is not None)
+        self.currentFile = None
         self.plugin = plugin
         self.preferences = preferences
         self.anki = anki
@@ -148,7 +149,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             filenames = self.preferences.recentFiles()
             if len(filenames) > 0 and os.path.isfile(filenames[0]):
                 self.openFile(filenames[0])
-        else:
+        elif self.anki is not None:
             self.currentFile = FileState(filename, self.anki.collection().sched)
 
         self.actionAbout.triggered.connect(self.onActionAbout)
@@ -168,7 +169,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.dockAnki.visibilityChanged.connect(self.onVisibilityChanged)
         self.dockKanji.visibilityChanged.connect(self.onVisibilityChanged)
         self.dockVocab.visibilityChanged.connect(self.onVisibilityChanged)
-        self.learnVocabulary.clicked.connect(self.onLearnVocabularyList)
+        if self.anki is not None:
+            self.learnVocabulary.clicked.connect(self.onLearnVocabularyList)
         self.listDefinitions.itemDoubleClicked.connect(self.onDefinitionDoubleClicked)
         self.textKanjiDefs.anchorClicked.connect(self.onKanjiDefsAnchorClicked)
         self.textKanjiSearch.returnPressed.connect(self.onKanjiDefSearchReturn)
@@ -181,6 +183,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
     
     def onLearnVocabularyList(self):
+        if self.anki is None:
+            return
         self.currentFile.onLearnVocabularyList(self.anki.collection().sched)
         totalSeconds = int(self.currentFile.timeTotal) %  60
         totalMinutes = int(self.currentFile.timeTotal) // 60
@@ -248,7 +252,14 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Shift:
             self.updateSampleFromPosition()
-        elif ord('0') <= event.key() <= ord('9'):
+        elif self.anki is not None and event.key() == QtCore.Qt.Key_D:
+            if event.modifiers() & QtCore.Qt.ControlModifier:
+                if self.longestMatch is not None:
+                    self.executeVocabCommand('overwriteVocabExp',self.longestMatch)
+        elif self.anki is not None and event.key() == QtCore.Qt.Key_F2:
+            if self.longestMatch is not None:
+                self.executeVocabCommand('overwriteVocabExp',self.longestMatch)
+        elif ord('0') <= event.key() <= ord('9') and self.anki is not None:
             index = event.key() - ord('0') - 1
             if index < 0:
                 index = 9
@@ -278,7 +289,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         url = event.mimeData().urls()[0]
         self.openFile(url.toLocalFile())
 
-
+        
     def moveEvent(self, event):
         self.preferences['windowPosition'] = event.pos().x(), event.pos().y()
 
@@ -291,6 +302,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         filename = QtGui.QFileDialog.getOpenFileName(
             parent=self,
             caption='Select a file to open',
+            directory=self.state.filename,
             filter='Text files (*.txt);;All files (*.*)'
         )
         if filename:
@@ -300,6 +312,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         filename = QtGui.QFileDialog.getSaveFileName(
             parent=self,
             caption='Select a file to save',
+            directory=self.state.filename,
             filter='Text files (*.txt);;All files (*.*)'
         )
         if filename:
@@ -580,7 +593,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         cids = self.anki.getCardsByNote(profile['model'],key,value)
         if len(cids) == 0:
             return False
-        self.currentFile.overwriteVocabulary(value,self.anki.getCollection().getCard(cids[0]))
+        self.currentFile.overwriteVocabulary(value,self.anki.collection().getCard(cids[0]))
 
         self.facts.append(value)
         self.listDefinitions.addItem(value)
@@ -636,24 +649,27 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         return True
 
 
-    def ankiIsFactValid(self, profile, markup):
+    def ankiIsFactValid(self, prfl, markup, index):
         if markup is None:
             return False
 
         if self.anki is None:
             return False
 
-        profile = self.preferences['profiles'].get(profile)
+        profile = self.preferences['profiles'].get(prfl)
         if profile is None:
             return False
 
         fields = reader_util.formatFields(profile['fields'], markup)
-        
-        key = self.anki.getModelKey(profile['model'])
-        if key is not None and fields[key] in self.currentFile.wordsAll:
-            if len(fields[key])>self.longestMatch:
-                self.longestMatch = fields[key]
-                self.longestSize = len(fields[key])
+        if prfl == 'vocab':
+            key = self.anki.getModelKey(profile['model'])
+            if self.longestMatch is None:
+                self.longestMatch = index
+            if key is not None and fields[key] in self.currentFile.wordsAll:
+                if len(fields[key]) > len(self.longestMatchKey):
+                    self.longestMatch = index
+                    self.longestMatchKey = fields[key]
+                    self.setStatus(u'Longest match is {0} with index {1}'.format(fields[key],index))
 
         return self.anki.canAddNote(profile['deck'], profile['model'], fields)
 
@@ -773,12 +789,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if options.get('trim', True):
             defs = defs[:self.preferences['maxResults']]
 
-        self.longestMatch = None
-        self.longestSize = 0
         html = builder(defs, self.ankiIsFactValid, self.anki is not None)
-        if self.longestMatch is not None:
-            self.currentFile.wordsBad[self.longestMatch] = self.currentFile.wordsAll[self.longestMatch]
-            self.setStatus(u'{0} has been put into the incorrectly answered set'.format(self.longestMatch))
         
         scrollbar = control.verticalScrollBar()
         position = scrollbar.sliderPosition()
@@ -789,12 +800,19 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def updateVocabDefs(self, **options):
+        self.longestMatch = None
+        self.longestMatchKey = u''
         self.updateDefs(
             self.state.vocabDefs,
             reader_util.buildVocabDefs,
             self.textVocabDefs,
             **options
         )
+        if self.currentFile is not None:
+            # User had to look up the word, put it into the wrong list
+            if self.longestMatchKey in self.currentFile.wordsAll:
+                self.currentFile.wordsBad[self.longestMatchKey] = self.currentFile.wordsAll[self.longestMatchKey]
+                self.setStatus(u'{0} has been put into the incorrectly answered set'.format(self.longestMatchKey))
 
 
     def updateKanjiDefs(self, **options):

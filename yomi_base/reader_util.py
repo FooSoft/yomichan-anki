@@ -198,12 +198,12 @@ def buildVocabDef(definition, index, query, allowOverwrite):
     if query is not None:
         markupExp = markupVocabExp(definition)
         markupReading = markupVocabReading(definition)
-        if query('vocab', markupExp):
+        if query('vocab', markupExp, index):
             links += '<a href="addVocabExp:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
         elif allowOverwrite:
             links += '<a href="overwriteVocabExp:{0}"><img src="://img/img/icon_overwrite_expression.png" align="right"></a>'.format(index)
         if markupReading is not None:
-            if query('vocab', markupReading):
+            if query('vocab', markupReading, index):
                 links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
             elif markupExp is not None and markupReading['summary'] != markupExp['summary']:
                 if allowOverwrite:
@@ -233,7 +233,7 @@ def buildVocabDefs(definitions, query, allowOverwrite):
 
 def buildKanjiDef(definition, index, query, allowOverwrite):
     links = '<a href="copyKanjiDef:{0}"><img src="://img/img/icon_copy_definition.png" align="right"></a>'.format(index)
-    if query is not None and query('kanji', markupKanji(definition)):
+    if query is not None and query('kanji', markupKanji(definition), index):
         links += '<a href="addKanji:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
 
     readings = ', '.join([definition['kunyomi'], definition['onyomi']])

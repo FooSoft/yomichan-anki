@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Sat Jun  6 14:55:58 2015
+# Created: Mon Jun 15 11:28:06 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_DialogPreferences(object):
     def setupUi(self, DialogPreferences):
         DialogPreferences.setObjectName(_fromUtf8("DialogPreferences"))
-        DialogPreferences.resize(600, 300)
+        DialogPreferences.resize(600, 313)
         self.verticalLayout = QtGui.QVBoxLayout(DialogPreferences)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.tabWidget = QtGui.QTabWidget(DialogPreferences)
@@ -171,26 +171,17 @@ class Ui_DialogPreferences(object):
         item = QtGui.QTableWidgetItem()
         self.tableFields.setHorizontalHeaderItem(1, item)
         self.verticalLayout_2.addWidget(self.tableFields)
+        self.horizontalLayout_4 = QtGui.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
+        self.checkUnlockVocab = QtGui.QCheckBox(self.tabAnki)
+        self.checkUnlockVocab.setObjectName(_fromUtf8("checkUnlockVocab"))
+        self.verticalLayout_2.addWidget(self.checkUnlockVocab)
         self.labelTags = QtGui.QLabel(self.tabAnki)
         self.labelTags.setText(_fromUtf8(""))
         self.labelTags.setObjectName(_fromUtf8("labelTags"))
         self.verticalLayout_2.addWidget(self.labelTags)
         self.tabWidget.addTab(self.tabAnki, _fromUtf8(""))
-        self.tabSubs = QtGui.QWidget()
-        self.tabSubs.setObjectName(_fromUtf8("tabSubs"))
-        self.horizontalLayoutWidget_2 = QtGui.QWidget(self.tabSubs)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(10, 80, 209, 21))
-        self.horizontalLayoutWidget_2.setObjectName(_fromUtf8("horizontalLayoutWidget_2"))
-        self.horizontalLayout_6 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
-        self.horizontalLayout_6.setMargin(0)
-        self.horizontalLayout_6.setObjectName(_fromUtf8("horizontalLayout_6"))
-        self.label_5 = QtGui.QLabel(self.tabSubs)
-        self.label_5.setGeometry(QtCore.QRect(10, 10, 141, 16))
-        self.label_5.setObjectName(_fromUtf8("label_5"))
-        self.checkUnlockVocab = QtGui.QCheckBox(self.tabSubs)
-        self.checkUnlockVocab.setGeometry(QtCore.QRect(10, 30, 207, 17))
-        self.checkUnlockVocab.setObjectName(_fromUtf8("checkUnlockVocab"))
-        self.tabWidget.addTab(self.tabSubs, _fromUtf8(""))
         self.verticalLayout.addWidget(self.tabWidget)
         self.buttonBox = QtGui.QDialogButtonBox(DialogPreferences)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
@@ -199,7 +190,7 @@ class Ui_DialogPreferences(object):
         self.verticalLayout.addWidget(self.buttonBox)
 
         self.retranslateUi(DialogPreferences)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), DialogPreferences.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), DialogPreferences.reject)
         QtCore.QMetaObject.connectSlotsByName(DialogPreferences)
@@ -228,9 +219,7 @@ class Ui_DialogPreferences(object):
         item.setText(_translate("DialogPreferences", "Field", None))
         item = self.tableFields.horizontalHeaderItem(1)
         item.setText(_translate("DialogPreferences", "Value", None))
+        self.checkUnlockVocab.setText(_translate("DialogPreferences", "Put new/overwritten cards into the learning queue", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAnki), _translate("DialogPreferences", "Anki", None))
-        self.label_5.setText(_translate("DialogPreferences", "Target deck", None))
-        self.checkUnlockVocab.setText(_translate("DialogPreferences", "Immediately unlock modified cards", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSubs), _translate("DialogPreferences", "Other", None))
 
 import resources_rc

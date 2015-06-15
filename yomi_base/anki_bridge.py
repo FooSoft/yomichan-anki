@@ -18,6 +18,7 @@
 import sys
 import os
 import time
+import math
 from PyQt4 import QtGui, QtCore
 import anki
 import aqt
@@ -48,13 +49,13 @@ class EarlyScheduler(Scheduler):
         idealIvl = self._nextRevIvl(card, ease)
         adjIv1 = self._adjRevIvl(card, idealIvl)
         if card.queue == 2:
-            card.ivl = card.ivl + int(max(0,self._smoothedIvl(card))*(adjIv1 - card.ivl))
+            card.ivl = card.ivl + int(self._smoothedIvl(card))*(adjIv1 - card.ivl)
         else:
             card.ivl = adjIvl
     
     def _smoothedIvl(self,card):
         if card.ivl > 0 and card.queue == 2:
-            return (card.ivl - self._daysEarly(card))/card.ivl
+            return max(0.2,float(card.ivl - self._daysEarly(card))/card.ivl)
         else:
             return 1
         
@@ -275,13 +276,14 @@ def onBeforeStateChange(state, oldState, *args):
         did = aqt.mw.col.decks.selected()
         name = aqt.mw.col.decks.nameOrNone(did)
         path = name.split(u'::')
-        if path > 0 and path[0] == u'Yomichan':
+        if len(path) > 1 and path[0] == u'Yomichan':
             yomichanInstance.onShowRequest()
             completePath = aqt.mw.col.media.dir()
             for i in path:
                 completePath = os.path.join(completePath,i)
-            yomichanInstance.window.openFile(completePath)
-            yomichanInstance.window.showMaximized()
+            if not os.path.isdir(completePath):
+                yomichanInstance.window.openFile(completePath)
+                yomichanInstance.window.showMaximized()
     elif state == 'deckBrowser':
         if not yomichanInstance.patched:
             aqt.mw.col.sched = EarlyScheduler(aqt.mw.col,yomichanInstance.getFileCache)

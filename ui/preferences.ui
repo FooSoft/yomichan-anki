@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>300</height>
+    <height>313</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -275,6 +275,16 @@
         </widget>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4"/>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkUnlockVocab">
+         <property name="text">
+          <string>Put new/overwritten cards into the learning queue</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="labelTags">
          <property name="text">
           <string/>
@@ -282,37 +292,6 @@
         </widget>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="tabSubs">
-      <attribute name="title">
-       <string>Other</string>
-      </attribute>
-      <widget class="QLabel" name="label_5">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>141</width>
-         <height>16</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Target deck</string>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="checkUnlockVocab">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>207</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Immediately unlock modified cards</string>
-       </property>
-      </widget>
      </widget>
     </widget>
    </item>
