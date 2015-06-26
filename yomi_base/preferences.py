@@ -20,6 +20,10 @@ from PyQt4 import QtGui, QtCore
 import copy
 import gen.preferences_ui
 
+exportAllowedTags = {
+            'vocab': ['expression', 'reading', 'glossary', 'sentence','line','filename','summary'],
+            'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
+        }
 
 class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
     def __init__(self, parent, preferences, anki):
@@ -106,10 +110,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.comboBoxModel.setCurrentIndex(self.comboBoxModel.findText(model))
         self.comboBoxModel.blockSignals(False)
 
-        allowedTags = {
-            'vocab': ['expression', 'reading', 'glossary', 'sentence','line','filename'],
-            'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
-        }[name]
+        allowedTags = exportAllowedTags[name]
 
         allowedTags = map(lambda t: '<strong>{' + t + '}<strong>', allowedTags)
         self.labelTags.setText('Allowed tags are {0}'.format(', '.join(allowedTags)))

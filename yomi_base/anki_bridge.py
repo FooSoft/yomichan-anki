@@ -27,14 +27,17 @@ import anki.collection
 from anki.sched import Scheduler
 from yomichan import Yomichan
 from yomi_base.reader import MainWindowReader, FileState
+from anki.models import defaultModel,defaultField,defaultTemplate
+
 
 
 class EarlyScheduler(Scheduler):
-    def __init__(self,col,filecache):
+    def __init__(self,col,filecache,minimumGain = 0.05,hideMinimumGain = False):
         Scheduler.__init__(self,col)
         self.filecache = filecache
         # Any occuring vocabulary's ivl will increase by at least 5%
-        self.minimumGain = 0.05
+        self.minimumGain = minimumGain
+        self.hideMinimumGain = hideMinimumGain
         self.dueCache = dict()
         self.reset()
         
@@ -52,7 +55,7 @@ class EarlyScheduler(Scheduler):
         idealIvl = self._nextRevIvl(card, ease)
         adjIv1 = self._adjRevIvl(card, idealIvl)
         if card.queue == 2:
-            card.ivl = card.ivl + int(self._smoothedIvl(card))*(adjIv1 - card.ivl)
+            card.ivl = card.ivl + math.ceil(self._smoothedIvl(card)*(adjIv1 - card.ivl))
         else:
             card.ivl = adjIvl
             
@@ -76,14 +79,68 @@ class EarlyScheduler(Scheduler):
                 id = self.col.decks.id(deck)
                 if filecache[deck] is None:
                     due = 0
-                else:
+                elif self.hideMinimumGain:
                     due = int(filecache[deck].dueness - filecache[deck].foundvocabs * self.minimumGain)
+                else:
+                    due = int(filecache[deck].dueness)
                 data.append([deck, id, due, 0, 0])
                 self.dueCache[deck] = due
         return data
 
 
 class Anki:
+    def createYomichanModel(self):
+        models = self.collection().models
+        if u'YomichanKanji' not in models.allNames():
+            model = models.new(u'YomichanKanji')
+            model['css'] = """\
+.card {
+ font-family: arial;
+ font-size: 22px;
+ text-align: center;
+ color: black;
+ background-color: white;
+}
+
+.card1 { background-color: #ffff7f; }
+.card2 { background-color: #efff7f; }
+            """
+            for field in [u'Kanji',u'Onyomi',u'Kunyomi',u'Glossary']:
+                models.addField(model,models.newField(field))
+            template = models.newTemplate(u'Recognition')
+            template['qfmt'] = u'{{Kanji}}'
+            template['afmt'] = u'{{FrontSide}}<hr>{{Glossary}}'
+            models.addTemplate(model,template)
+            models.add(model)
+            models.flush()
+        if u'Yomichan' not in models.allNames():
+            model = models.new(u'Yomichan')
+            model['css'] = """\
+.card {
+ font-family: arial;
+ font-size: 22px;
+ text-align: center;
+ color: black;
+ background-color: white;
+}
+
+.card1 { background-color: #ffff7f; }
+.card2 { background-color: #efff7f; }
+            """
+            for field in [u'Vocabulary-Furigana',u'v',u'Vocabulary-English',u'Expression',u'Reading',u'Sentence-English',u'Video',u'Examples+']:
+                models.addField(model,models.newField(field))
+            template = models.newTemplate(u'Recognition')
+            template['qfmt'] = u'<span style="font-size: 60px">{{v}}</span><br><br><br>\n<span style="font-size: 20px; font-family: \uff2d\uff33 \u30b4\u30b7\u30c3\u30af;">{{kanji:Reading}}</span>\n{{^Reading}}\n<span style="font-size: 20px;">{{kanji:Expression}}</span>\n{{/Reading}}'
+            template['afmt'] = u'<span style="font-size: 50px; font-family: \uff2d\uff33 \u30b4\u30b7\u30c3\u30af;">{{furigana:Vocabulary-Furigana}}</span><br>\n{{^Vocabulary-Furigana}}\n<span style="font-size: 30px"></span><br>\n<span style="font-size: 60px">{{v}}</span><br><br>\n{{/Vocabulary-Furigana}}\n<span style="font-size: 20px; font-family: \uff2d\uff33 \u30b4\u30b7\u30c3\u30af;">{{furigana:Reading}}</span><br>\n{{^Reading}}\n<span style="font-size: 20px;">{{furigana:Expression}}</span>\n{{/Reading}}\n<hr id=answer>\n<img src="{{Video}}"/><br>\n<span style="font-size: 12px; ">{{Vocabulary-English}}</span> <span style="font-size: 15px; color: #5555ff"></span><br>\n<br>\n<span style="font-size: 15px; ">{{Sentence-English}}</span>\n'
+            models.addTemplate(model,template)
+            models.add(model)
+            models.flush()
+        decks = self.collection().decks
+        if u'Yomichan' not in decks.allNames():
+            decks.id(u'Yomichan')
+            decks.id(u'YomichanCards')
+            
+            
     def addNote(self, deckName, modelName, fields, tags=list()):
         note = self.createNote(deckName, modelName, fields, tags)
         if note is not None:
@@ -131,7 +188,7 @@ class Anki:
         
     def getCards(self, modelName, onlyFirst = False):
         model = self.models().byName(modelName)
-        modelid = model[u"id"]
+        modelid = int(model[u"id"])
         query = "select " + ("min(c.id)" if onlyFirst else "c.id")
         query+= ",n.sfld,n.id from cards c "
         query+= "join notes n on (c.nid = n.id) " 
@@ -249,6 +306,8 @@ class YomichanPlugin(Yomichan):
 
 
     def loadAllTexts(self):
+        oldCache = self.fileCache
+        self.fileCache = dict()
         allCards = self.fetchAllCards()
         if allCards is not None:
             mediadir = self.anki.collection().media.dir()
@@ -256,10 +315,16 @@ class YomichanPlugin(Yomichan):
             for root,dirs,files in os.walk(yomimedia):
                 relDir = os.path.relpath(root,mediadir)
                 for file in files:
-                    path = os.path.join(relDir,file)
-                    fl = FileState(path,self.preferences['stripReadings'])
-                    fl.findVocabulary(self.anki.collection().sched,allCards,needContent=False)
-                    self.fileCache[u'::'.join(unicode(path).split(os.sep))] = fl
+                    if file[-4:] == '.txt':
+                        path = os.path.join(relDir,file)
+                        fullPath = u'::'.join(unicode(path).split(os.sep))
+                        if fullPath in oldCache:
+                            fileState = oldCache[fullPath]
+                            fileState.load()
+                        else:
+                            fileState = FileState(path,self.preferences['stripReadings'])
+                        self.fileCache[fullPath] = fileState
+                        fileState.findVocabulary(self.anki.collection().sched,allCards,needContent=False)
                 for dir in dirs:
                     path = os.path.join(relDir,dir)
                     self.fileCache[u'::'.join(unicode(path).split(os.sep))] = None
@@ -277,6 +342,7 @@ class YomichanPlugin(Yomichan):
 yomichanInstance = YomichanPlugin()        
         
 def onBeforeStateChange(state, oldState, *args):
+    yomichanInstance.anki.createYomichanModel()
     if state == 'overview':
         did = aqt.mw.col.decks.selected()
         name = aqt.mw.col.decks.nameOrNone(did)
@@ -301,13 +367,25 @@ def onBeforeStateChange(state, oldState, *args):
                     completePath = os.path.join(completePath,i)
                 if os.path.isdir(completePath):
                     return
-            yomichanInstance.window.openFile(completePath)
-            yomichanInstance.window.showMaximized()
+            if yomichanInstance.window.state.filename != completePath:
+                yomichanInstance.window.openFile(completePath)
+                dirName = os.path.dirname(os.path.realpath(completePath))
+                fileName = os.path.basename(os.path.splitext(completePath)[0])
+                try:
+                    for file in os.listdir(dirName):
+                        if not file.endswith(".txt") and fileName == os.path.basename(os.path.splitext(file)[0]):
+                            openFile = os.path.join(dirName,file)
+                            if sys.platform == 'linux2':
+                                subprocess.call(["xdg-open", openFile])
+                            else:
+                                os.startfile(openFile)
+                except:
+                    fileName = fileName #do nothing
+                yomichanInstance.window.showMaximized()
     elif state == 'deckBrowser':
         if not yomichanInstance.patched:
             aqt.mw.col.sched = EarlyScheduler(aqt.mw.col,yomichanInstance.getFileCache)
             yomichanInstance.patched = True
-        yomichanInstance.fileCache = dict()
         yomichanInstance.loadAllTexts()
         yomichanDeck = aqt.mw.col.decks.byName(u'Yomichan')
         for name,id in aqt.mw.col.decks.children(yomichanDeck['id']):

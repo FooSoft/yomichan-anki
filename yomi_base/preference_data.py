@@ -45,6 +45,9 @@ class Preferences(object):
             if os.path.exists(self.filename):
                 with codecs.open(self.filename, 'rb', 'utf-8') as fp:
                     self.settings.update(json.load(fp))
+            else:
+                with codecs.open(self.defaults, 'rb', 'utf-8') as fp:
+                    self.settings.update(json.load(fp))
         except ValueError:
             pass
 

@@ -203,7 +203,7 @@ def buildVocabDef(definition, index, query, allowOverwrite):
         elif allowOverwrite:
             links += '<a href="overwriteVocabExp:{0}"><img src="://img/img/icon_overwrite_expression.png" align="right"></a>'.format(index)
         if markupReading is not None:
-            if query('vocab', markupReading, index):
+            if query('vocabReading', markupReading, index):
                 links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
             elif markupExp is not None and markupReading['summary'] != markupExp['summary']:
                 if allowOverwrite:
