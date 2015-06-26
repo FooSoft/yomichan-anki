@@ -20,6 +20,10 @@ from PyQt4 import QtGui, QtCore
 import copy
 import gen.preferences_ui
 
+exportAllowedTags = {
+            'vocab': ['expression', 'reading', 'glossary', 'sentence','line','filename','summary'],
+            'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
+        }
 
 class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
     def __init__(self, parent, preferences, anki):
@@ -35,7 +39,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.radioButtonKanji.toggled.connect(self.onProfileChanged)
         self.radioButtonVocab.toggled.connect(self.onProfileChanged)
         self.spinFontSize.valueChanged.connect(self.onFontSizeChanged)
-        self.tableFields.itemChanged.connect(self.onFieldsChanged)
+        self.tableFields.itemChanged.connect(self.onFieldsChanged)       
 
         self.preferences = preferences
         self.anki = anki
@@ -51,7 +55,8 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.checkStripReadings.setChecked(self.preferences['stripReadings'])
         self.spinMaxResults.setValue(self.preferences['maxResults'])
         self.spinScanLength.setValue(self.preferences['scanLength'])
-
+        self.checkUnlockVocab.setChecked(self.preferences['unlockVocab'])
+        
         self.updateSampleText()
         font = self.textSample.font()
         self.comboFontFamily.setCurrentFont(font)
@@ -70,6 +75,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.preferences['loadRecentFile'] = self.checkLoadRecentFile.isChecked()
         self.preferences['maxResults'] = self.spinMaxResults.value()
         self.preferences['scanLength'] = self.spinScanLength.value()
+        self.preferences['unlockVocab'] = self.checkUnlockVocab.isChecked()
         self.preferences['stripReadings'] = self.checkStripReadings.isChecked()
         self.preferences['firstRun'] = False
 
@@ -104,10 +110,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.comboBoxModel.setCurrentIndex(self.comboBoxModel.findText(model))
         self.comboBoxModel.blockSignals(False)
 
-        allowedTags = {
-            'vocab': ['expression', 'reading', 'glossary', 'sentence', 'translation'],
-            'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
-        }[name]
+        allowedTags = exportAllowedTags[name]
 
         allowedTags = map(lambda t: '<strong>{' + t + '}<strong>', allowedTags)
         self.labelTags.setText('Allowed tags are {0}'.format(', '.join(allowedTags)))
@@ -200,7 +203,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
     def onFieldsChanged(self, item):
         self.dialogToProfile()
-
+        
 
     def onProfileChanged(self, data):
         self.profileToDialog()

@@ -25,9 +25,128 @@ import os
 import preferences
 import reader_util
 import updates
+import sys
+import time
+
+class FileState:
+    def __init__(self,fn,stripReadings=False):
+        self.wordsAll = dict()
+        self.wordsBad = dict()
+        self.wordsMarkup = dict()
+        self.sep = u"\U00012000"
+        self.lineBreak = u"\U00012001"
+        self.wordsNotFound = []
+        self.dueness = 0.0
+        self.wrong = 0
+        self.correct = 0
+        self.resetTimer()
+        self.stripReadings = stripReadings
+        if fn is None:
+            self.filename = u''
+        else:
+            self.filename = unicode(fn)
+            self.load()
+    
+    def load(self):
+        with open(self.filename) as fp:
+            self.content = fp.read()
+
+        self.content, self.encoding = reader_util.decodeContent(self.content)
+        if self.stripReadings:
+            self.content = reader_util.stripReadings(self.content)
+    
+
+    def resetTimer(self):
+        self.timerStarted = time.time()
+    
+            
+    def getPlainVocabularyList(self):
+        return  u'### VOCABULARY IN THIS TEXT ###\n'+u'\n'.join(self.wordsAll.keys())+u'\n'.join(self.wordsNotFound) 
+
+    def getExportVocabularyList(self,allowedTags):
+        def access(x,y):
+            if y not in x:
+                return u''
+            else:
+                return x[y]
+        #don't export filename, because it's unnecessary for importing
+        if 'filename' in allowedTags:
+            allowedTags.remove('filename')
+        vocabularyDefinitions = [self.sep.join([x]+([access(self.wordsMarkup[x],y).replace(u'\n',self.lineBreak) for y in allowedTags])) for x in self.wordsAll.keys()]
+        return  u'### VOCABULARY IN THIS TEXT (EXPORT)###\n'+ self.sep.join(allowedTags) +u'\n'+ u'\n'.join(vocabularyDefinitions)+u'\n'.join(self.wordsNotFound) 
+	
+    
+    def overwriteVocabulary(self,value,card):
+        self.wordsAll[value] = card
+        if value in self.wordsBad:
+            self.wordsBad[value] = card
+    
+    
+    def addVocabulary(self,value,card,addToBadListToo = True):
+        self.wordsAll[value] = card
+        if addToBadListToo:
+            self.wordsBad[value] = card             
+    
+    def addMarkup(self,value,markup):
+        self.wordsMarkup[value] = markup
+        
+    def findVocabulary(self,sched,allCards,needContent=True):
+        lines = self.content.splitlines()
+        foundSeparation = False
+        self.exportedVocab = False
+        exportedTags = None
+        self.content = u''
+        self.dueness = 0.0
+        self.foundvocabs = 0
+        self.wordsNotFound = []
+        for line in lines:
+            if self.exportedVocab and not exportedTags:
+                exportedTags = line.split(self.sep)
+            elif foundSeparation:
+                if self.exportedVocab:
+                    definitions = line.split(self.sep)
+                    line = definitions.pop(0)
+                    markup = dict()
+                    for i, field in enumerate(definitions):
+                        if i>= len(exportedTags):
+                            break
+                        markup[exportedTags[i]] = field.replace(self.lineBreak,u'\n')
+                    markup['filename'] = self.filename
+                    self.wordsMarkup[line] = markup
+                if line in allCards:
+                    card = allCards[line]
+                    self.dueness += sched._smoothedIvl(card)
+                    self.wordsAll[line] = card
+                    self.foundvocabs += 1
+                else:
+                    self.wordsNotFound.append(line)
+            elif line == u'### VOCABULARY IN THIS TEXT ###':
+                foundSeparation = True
+            elif line == u'### VOCABULARY IN THIS TEXT (EXPORT)###':
+                foundSeparation = True
+                self.exportedVocab = True
+            elif needContent:
+                self.content += line + u'\n'
+        
+        
+    def onLearnVocabularyList(self,sched):
+        self.correct = 0
+        self.wrong = 0
+        self.timeTotal = time.time() - self.timerStarted
+        self.timePerWord = self.timeTotal / len(self.wordsAll)
+        for word in self.wordsAll:
+            if word in self.wordsBad:
+                sched.earlyAnswerCard(self.wordsBad[word],1,self.timePerWord)
+                self.wrong += 1
+            else:
+                sched.earlyAnswerCard(self.wordsAll[word],3,self.timePerWord)
+                self.correct += 1
+
 
 
 class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
+            
+                
     class State:
         def __init__(self):
             self.filename = unicode()
@@ -38,23 +157,27 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.vocabDefs = list()
 
 
-    def __init__(self, parent, preferences, language, filename=None, anki=None, closed=None):
+    def __init__(self, plugin, parent, preferences, language, filename=None, anki=None, closed=None):
         QtGui.QMainWindow.__init__(self, parent)
         self.setupUi(self)
 
         self.textContent.mouseMoveEvent = self.onContentMouseMove
         self.textContent.mousePressEvent = self.onContentMousePress
         self.dockAnki.setEnabled(anki is not None)
-
-        self.facts = list()
+        self.currentFile = None
+        self.plugin = plugin
+        self.preferences = preferences
         self.anki = anki
+        self.facts = list()
+        self.overwritable = [False] * 10
+        self.overwritableReading = [False] * 10
+        self.freshlyAdded = []
+        self.listDefinitions.clear()
         self.closed = closed
         self.language = language
-        self.preferences = preferences
         self.state = self.State()
         self.updates = updates.UpdateFinder()
         self.zoom = 0
-
         self.applyPreferences()
         self.updateRecentFiles()
         self.updateVocabDefs()
@@ -68,6 +191,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             filenames = self.preferences.recentFiles()
             if len(filenames) > 0 and os.path.isfile(filenames[0]):
                 self.openFile(filenames[0])
+        elif self.anki is not None:
+            self.currentFile = FileState(filename, self.anki.collection().sched)
 
         self.actionAbout.triggered.connect(self.onActionAbout)
         self.actionFeedback.triggered.connect(self.onActionFeedback)
@@ -77,6 +202,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.actionKindleDeck.triggered.connect(self.onActionKindleDeck)
         self.actionWordList.triggered.connect(self.onActionWordList)
         self.actionOpen.triggered.connect(self.onActionOpen)
+        self.actionSave.triggered.connect(self.onActionSave)
         self.actionPreferences.triggered.connect(self.onActionPreferences)
         self.actionToggleWrap.toggled.connect(self.onActionToggleWrap)
         self.actionZoomIn.triggered.connect(self.onActionZoomIn)
@@ -85,6 +211,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.dockAnki.visibilityChanged.connect(self.onVisibilityChanged)
         self.dockKanji.visibilityChanged.connect(self.onVisibilityChanged)
         self.dockVocab.visibilityChanged.connect(self.onVisibilityChanged)
+        if self.anki is not None:
+            self.learnVocabulary.clicked.connect(self.onLearnVocabularyList)
         self.listDefinitions.itemDoubleClicked.connect(self.onDefinitionDoubleClicked)
         self.textKanjiDefs.anchorClicked.connect(self.onKanjiDefsAnchorClicked)
         self.textKanjiSearch.returnPressed.connect(self.onKanjiDefSearchReturn)
@@ -94,6 +222,23 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         if self.preferences['checkForUpdates']:
             self.updates.start()
+
+    
+    def onLearnVocabularyList(self):
+        if self.anki is None:
+            return
+        self.currentFile.onLearnVocabularyList(self.anki.collection().sched)
+        totalSeconds = int(self.currentFile.timeTotal) %  60
+        totalMinutes = int(self.currentFile.timeTotal) // 60
+        perCardSeconds = int(self.currentFile.timePerWord) %  60
+        perCardMinutes = int(self.currentFile.timePerWord) // 60
+        QtGui.QMessageBox.information(
+            self,
+            'Yomichan', '{0} correct and {1} wrong\n{2} minutes {3} seconds for all\n{4} minutes {5} seconds per card'
+            .format(self.currentFile.correct,self.currentFile.wrong,
+                totalMinutes,totalSeconds,
+                perCardMinutes,perCardSeconds)
+        )
 
 
     def applyPreferences(self):
@@ -149,24 +294,32 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Shift:
             self.updateSampleFromPosition()
-        elif ord('0') <= event.key() <= ord('9'):
-            index = event.key() - ord('0') - 1
-            if index < 0:
-                index = 9
+        elif (ord('0') <= event.key() <= ord('9') or (QtCore.Qt.Key_F1 <= event.key() <= QtCore.Qt.Key_F10)) and self.anki is not None:
+            if ord('0') <= event.key() <= ord('9'):
+                index = (event.key() - ord('0') - 1) % 10
+            else:
+                index = (event.key() - QtCore.Qt.Key_F1) % 10
             if event.modifiers() & QtCore.Qt.ShiftModifier:
                 if event.modifiers() & QtCore.Qt.ControlModifier:
                     self.executeKanjiCommand('addKanji', index)
             else:
                 if event.modifiers() & QtCore.Qt.ControlModifier:
-                    self.executeVocabCommand('addVocabExp', index)
+                    if self.overwritable[index]:
+                        self.executeVocabCommand('overwriteVocabExp', index)
+                    else:
+                        self.executeVocabCommand('addVocabExp', index)
                 if event.modifiers() & QtCore.Qt.AltModifier:
-                    self.executeVocabCommand('addVocabReading', index)
+                    if self.overwritableReading[index]:
+                        self.executeVocabCommand('overwriteVocabReading', index)
+                    else:
+                        self.executeVocabCommand('addVocabReading', index)
         elif event.key() == ord('[') and self.state.scanPosition > 0:
             self.state.scanPosition -= 1
             self.updateSampleFromPosition()
         elif event.key() == ord(']') and self.state.scanPosition < len(self.textContent.toPlainText()) - 1:
             self.state.scanPosition += 1
             self.updateSampleFromPosition()
+            
 
 
     def dragEnterEvent(self, event):
@@ -178,7 +331,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         url = event.mimeData().urls()[0]
         self.openFile(url.toLocalFile())
 
-
+        
     def moveEvent(self, event):
         self.preferences['windowPosition'] = event.pos().x(), event.pos().y()
 
@@ -191,11 +344,22 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         filename = QtGui.QFileDialog.getOpenFileName(
             parent=self,
             caption='Select a file to open',
+            directory=self.state.filename,
             filter='Text files (*.txt);;All files (*.*)'
         )
         if filename:
             self.openFile(filename)
-
+    
+    def onActionSave(self):
+        filename = QtGui.QFileDialog.getSaveFileName(
+            parent=self,
+            caption='Select a file to save',
+            directory=self.state.filename,
+            filter='Text files (*.txt);;All files (*.*)'
+        )
+        if filename:
+            self.saveFile(filename)
+    
 
     def onActionKindleDeck(self):
         filename = QtGui.QFileDialog.getOpenFileName(
@@ -217,8 +381,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if filename:
             words = reader_util.extractWordList(filename)
             self.importWordList(words)
-
-
+                                            
+          
     def onActionPreferences(self):
         dialog = preferences.DialogPreferences(self, self.preferences, self.anki)
         if dialog.exec_() == QtGui.QDialog.Accepted:
@@ -312,9 +476,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def onDefinitionDoubleClicked(self, item):
-        if self.anki is not None:
+        profile = self.preferences['profiles'].get('vocab')
+        if profile is not None and self.anki is not None:
+            key = self.anki.getModelKey(profile['model'])
             row = self.listDefinitions.row(item)
-            self.anki.browseNote(self.facts[row])
+            self.anki.browse({key:self.facts[row],u'note':profile['model']})
 
 
     def onVisibilityChanged(self, visible):
@@ -340,39 +506,65 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def openFile(self, filename):
+        filename = unicode(filename)
+        self.closeFile()
         try:
-            filename = unicode(filename)
-            with open(filename) as fp:
-                content = fp.read()
+            self.currentFile = FileState(filename, self.preferences['stripReadings'])
         except IOError:
             self.setStatus(u'Failed to load file {0}'.format(filename))
             QtGui.QMessageBox.critical(self, 'Yomichan', 'Cannot open file for read')
             return
-
-        self.closeFile()
-
-        self.state.filename = filename
-        self.state.scanPosition = self.preferences.filePosition(filename)
-        if self.state.scanPosition > len(content):
-            self.state.scanPosition = 0
+        self.listDefinitions.clear()
+        self.facts = []
 
         self.updateRecentFile()
         self.updateRecentFiles()
 
-        content, encoding = reader_util.decodeContent(content)
-        if self.preferences['stripReadings']:
-            content = reader_util.stripReadings(content)
+        allCards = self.plugin.fetchAllCards()
+        if allCards is not None:
+            self.currentFile.findVocabulary(self.anki.collection().sched,allCards)
+            # if file contains exported vocabs, create the cards
+            if self.currentFile.exportedVocab:
+                for notFound in self.currentFile.wordsNotFound:
+                    self.ankiAddFact('vocab',self.currentFile.wordsMarkup[notFound],addToList=False)
+            for word,card in self.currentFile.wordsAll.items():
+                self.facts.append(word)
+                self.listDefinitions.addItem(word)
+            self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
 
+        content = self.currentFile.content
+        self.state.filename = filename
+        self.state.scanPosition = self.preferences.filePosition(filename)
+        if self.state.scanPosition > len(content):
+            self.state.scanPosition = 0
         self.textContent.setPlainText(content)
         if self.state.scanPosition > 0:
             cursor = self.textContent.textCursor()
             cursor.setPosition(self.state.scanPosition)
             self.textContent.setTextCursor(cursor)
             self.textContent.centerCursor()
+                          
 
+        self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.basename(filename), self.currentFile.encoding))
         self.setStatus(u'Loaded file {0}'.format(filename))
-        self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.basename(filename), encoding))
 
+    def saveFile(self, filename):
+        try:
+            filename = unicode(filename)
+            with open(filename,'w') as fp:
+                content = self.textContent.toPlainText()
+                content+= self.currentFile.getExportVocabularyList(preferences.exportAllowedTags['vocab'])
+                fp.write(content.encode('utf-8'))
+                fp.close()
+        except IOError:
+            self.setStatus(u'Failed to save file {0}'.format(filename))
+            QtGui.QMessageBox.critical(self, 'Yomichan', 'Cannot open file for write')
+            return
+        self.state.filename = filename
+        self.currentFile.filename = filename
+        self.updateRecentFile()
+        self.updateRecentFiles()
+        self.setWindowTitle(u'Yomichan - {0} ({1})'.format(os.path.basename(filename), 'utf-8'))
 
     def closeFile(self):
         if self.preferences['rememberTextContent']:
@@ -404,8 +596,59 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         self.state.searchText = text
 
+    def ankiOverwriteFact(self, profile, markup):
+        if markup is None:
+            return False
 
-    def ankiAddFact(self, profile, markup):
+        if self.anki is None:
+            return False
+
+        profile = self.preferences['profiles'].get(profile)
+        if profile is None:
+            return False
+        
+        fields = reader_util.formatFields(profile['fields'], markup)
+        tagsSplit = reader_util.splitTags(unicode(self.comboTags.currentText()))
+        tagsJoined = ' '.join(tagsSplit)
+
+        tagIndex = self.comboTags.findText(tagsJoined)
+        if tagIndex > 0:
+            self.comboTags.removeItem(tagIndex)
+        if tagIndex != 0:
+            self.comboTags.insertItem(0, tagsJoined)
+        self.preferences.updateFactTags(tagsJoined)
+
+        key = self.anki.getModelKey(profile['model'])                                                  
+        value = fields[key]
+        ids = self.anki.getNotes(profile['model'],key,value)
+        if len(ids) == 0:
+            return False
+        
+        # Overwrite the fields in the note
+        # or add a line, if a + is at the end of field name
+        note = self.anki.collection().getNote(ids[0])   
+        for name, v in fields.items():
+            if name in note:
+                if unicode(name[-1]) == u'+' and len(note[name])>0:
+                    note[name]+= u'<br>' + v
+                else:
+                    note[name] = v 
+        note.flush()
+        
+        self.freshlyAdded.append(value)
+        cids = self.anki.getCardsByNote(profile['model'],key,value)
+        if len(cids) == 0:
+            return False
+        self.currentFile.overwriteVocabulary(value,self.anki.collection().getCard(cids[0]))
+        self.currentFile.addMarkup(value,markup)
+        self.facts.append(value)
+        self.listDefinitions.addItem(value)
+        self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
+        self.updateVocabDefs(scroll=True)
+        self.updateKanjiDefs(scroll=True)
+        return True
+
+    def ankiAddFact(self, profile, markup, addToList = True):
         if markup is None:
             return False
 
@@ -417,6 +660,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             return False
 
         fields = reader_util.formatFields(profile['fields'], markup)
+        fld = [(x,y) for x,y in fields.items() if x in ['v','Vocabulary-Furigana']]
         tagsSplit = reader_util.splitTags(unicode(self.comboTags.currentText()))
         tagsJoined = ' '.join(tagsSplit)
 
@@ -430,10 +674,23 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         factId = self.anki.addNote(profile['deck'], profile['model'], fields, tagsSplit)
         if factId is None:
             return False
-
-        self.facts.append(factId)
-        self.listDefinitions.addItem(markup['summary'])
-        self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
+            
+        key = self.anki.getModelKey(profile['model'])
+        value = fields[key]
+        # Put the vocabulary out of 'new' state and add it to the vocabulary list
+        ids = self.anki.getCardsByNote(profile['model'],key,value)
+        if len(ids) == 0:
+            return False
+        card = self.anki.collection().getCard(ids[0])
+        self.freshlyAdded.append(value)
+        self.currentFile.addVocabulary(value,card,addToBadListToo = False)
+        self.currentFile.addMarkup(value,markup)
+        if self.preferences['unlockVocab']:
+            self.anki.collection().sched.earlyAnswerCard(card,2)
+        if addToList:
+            self.facts.append(value)
+            self.listDefinitions.addItem(value)
+            self.listDefinitions.setCurrentRow(self.listDefinitions.count() - 1)
         self.setStatus(u'Added fact {0}; {1} new fact(s) total'.format(markup['summary'], len(self.facts)))
 
         self.updateVocabDefs(scroll=True)
@@ -441,19 +698,36 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         return True
 
 
-    def ankiIsFactValid(self, profile, markup):
+    def ankiIsFactValid(self, prfl, markup, index):
         if markup is None:
             return False
 
         if self.anki is None:
             return False
 
-        profile = self.preferences['profiles'].get(profile)
+        profile = self.preferences['profiles'].get('vocab' if prfl[:5] == 'vocab' else prfl)
         if profile is None:
             return False
 
         fields = reader_util.formatFields(profile['fields'], markup)
-        return self.anki.canAddNote(profile['deck'], profile['model'], fields)
+        if prfl[:5] == 'vocab':
+            key = self.anki.getModelKey(profile['model'])
+            if self.longestMatch is None:
+                self.longestMatch = index
+            if key is not None and fields[key] in self.currentFile.wordsAll:
+                if len(fields[key]) > len(self.longestMatchKey):
+                    self.longestMatch = index
+                    self.longestMatchKey = fields[key]
+
+        result = self.anki.canAddNote(profile['deck'], profile['model'], fields)
+        
+        if 0 <= index < 10:
+            if prfl == 'vocab':
+                self.overwritable[index] = not result
+            elif prfl == 'vocabReading':
+                self.overwritableReading[index] = not result
+                
+        return result
 
 
     def executeVocabCommand(self, command, index):
@@ -464,9 +738,15 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if command == 'addVocabExp':
             markup = reader_util.markupVocabExp(definition)
             self.ankiAddFact('vocab', markup)
-        if command == 'addVocabReading':
+        elif command == 'overwriteVocabExp':
+            markup = reader_util.markupVocabExp(definition)
+            self.ankiOverwriteFact('vocab', markup)            
+        elif command == 'addVocabReading':
             markup = reader_util.markupVocabReading(definition)
             self.ankiAddFact('vocab', markup)
+        elif command == 'overwriteVocabReading':
+            markup = reader_util.markupVocabReading(definition)
+            self.ankiOverwriteFact('vocab', markup)
         elif command == 'copyVocabDef':
             reader_util.copyVocabDef(definition)
 
@@ -507,10 +787,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         lengthMatched = 0
         if self.dockVocab.isVisible():
             self.state.vocabDefs, lengthMatched = self.language.findTerm(contentSampleFlat)
-            sentence, translation = reader_util.findSentence(content, samplePosStart)
+            sentence, line = reader_util.findSentence(content, samplePosStart)
             for definition in self.state.vocabDefs:
                 definition['sentence'] = sentence
-                definition['translation'] = translation
+                definition['line'] = line
+                definition['filename'] = self.state.filename
             self.updateVocabDefs()
 
         if self.dockKanji.isVisible():
@@ -564,8 +845,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if options.get('trim', True):
             defs = defs[:self.preferences['maxResults']]
 
-        html = builder(defs, self.ankiIsFactValid)
-
+        html = builder(defs, self.ankiIsFactValid, self.anki is not None)
+        
         scrollbar = control.verticalScrollBar()
         position = scrollbar.sliderPosition()
         control.setHtml(html)
@@ -575,12 +856,22 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def updateVocabDefs(self, **options):
+        self.longestMatch = None
+        self.longestMatchKey = u''
         self.updateDefs(
             self.state.vocabDefs,
             reader_util.buildVocabDefs,
             self.textVocabDefs,
             **options
         )
+        if self.currentFile is not None:
+            # User had to look up the word, put it into the wrong list
+            if self.longestMatchKey in self.currentFile.wordsAll:
+                if self.longestMatchKey in self.freshlyAdded:
+                    self.freshlyAdded.remove(self.longestMatchKey)
+                else:
+                    self.currentFile.wordsBad[self.longestMatchKey] = self.currentFile.wordsAll[self.longestMatchKey]
+                    self.setStatus(u'{0} has been put into the incorrectly answered set'.format(self.longestMatchKey))
 
 
     def updateKanjiDefs(self, **options):

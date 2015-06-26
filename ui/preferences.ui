@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>300</height>
+    <height>313</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -272,6 +272,16 @@
            <string>Value</string>
           </property>
          </column>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4"/>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkUnlockVocab">
+         <property name="text">
+          <string>Put new/overwritten cards into the learning queue</string>
+         </property>
         </widget>
        </item>
        <item>

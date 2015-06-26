@@ -40,11 +40,19 @@ def isJapanese(c):
     return isKana(c) or isKanji(c)
 
 
-def sanitize(text, kana=True, wildcards=False):
+def sanitize(ntext, kana=True, wildcards=False):
     if kana:
         checker = isJapanese
     else:
         checker = isKanji
+    
+    text = u''    
+    lastchar = u'々'
+    for i in ntext:
+        if i != u'々':
+            lastchar = i
+        text += lastchar
+        
 
     if wildcards:
         text = re.sub(u'[\*＊]', u'%', text)

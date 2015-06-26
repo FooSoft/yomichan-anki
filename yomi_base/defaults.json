@@ -7,7 +7,32 @@
     "rememberTextContent": false,
     "loadRecentFile": false,
     "maxResults": 20,
-    "profiles": {},
+    "profiles": {
+        "kanji": {
+            "deck": "YomichanCards", 
+            "fields": {
+                "Kanji": "{character}", 
+                "Onyomi": "{onyomi}", 
+                "Kunyomi": "{kunyomi}", 
+                "Glossary": "{glossary}"
+            }, 
+            "model": "YomichanKanji"
+        },
+        "vocab": {
+            "deck": "YomichanCards", 
+            "fields": {
+                "Examples+": "{line} (<a href=\"file:///{filename}\">File</a>)", 
+                "Expression": "{line}", 
+                "Reading": "", 
+                "Sentence-English": "", 
+                "Video": "", 
+                "Vocabulary-English": "{glossary}", 
+                "Vocabulary-Furigana": "{summary}", 
+                "v": "{expression}"
+            }, 
+            "model": "Yomichan"
+        }
+    },    
     "recentFiles": [],
     "textContent": "",
     "scanLength": 16,
@@ -15,5 +40,6 @@
     "tags": [],
     "wordWrap": false,
     "allowEditing": true,
-    "firstRun": true
+    "firstRun": true,
+    "unlockVocab":true
 }

@@ -17,30 +17,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4 import QtGui, QtCore
-from yomi_base.reader import MainWindowReader
-from yomi_base.yomichan import Yomichan
-import sys
+from yomi_base import japanese
+from yomi_base.preference_data import Preferences
 
-
-class YomichanStandalone(Yomichan):
+class Yomichan:
     def __init__(self):
-        Yomichan.__init__(self)
+        self.language = japanese.initLanguage()
+        self.preferences = Preferences()
+        self.preferences.load()
+        self.patched = False
 
-        self.application = QtGui.QApplication(sys.argv)
-        self.window = MainWindowReader(
-            self,
-            None,
-            self.preferences,
-            self.language,
-            filename=sys.argv[1] if len(sys.argv) >= 2 else None
-        )
-
-        self.window.show()
-        self.application.exec_()
-
-
-if __name__ == '__main__':
-    yomichanInstance = YomichanStandalone()
-else:
-    from yomi_base.anki_bridge import yomichanInstance
+    def fetchAllCards(self):
+        return None
+        
