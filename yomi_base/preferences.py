@@ -21,7 +21,7 @@ import copy
 import gen.preferences_ui
 
 exportAllowedTags = {
-            'vocab': ['expression', 'reading', 'glossary', 'sentence','line','filename','summary'],
+            'vocab': ['expression', 'hanja', 'reading', 'glossary', 'sentence','line','filename','summary'],
             'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
         }
 

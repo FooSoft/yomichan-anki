@@ -157,7 +157,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.vocabDefs = list()
 
 
-    def __init__(self, plugin, parent, preferences, language, filename=None, anki=None, closed=None):
+    def __init__(self, plugin, parent, preferences, languages, filename=None, anki=None, closed=None):
         QtGui.QMainWindow.__init__(self, parent)
         self.setupUi(self)
 
@@ -174,7 +174,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.freshlyAdded = []
         self.listDefinitions.clear()
         self.closed = closed
-        self.language = language
+        self.languages = languages
         self.state = self.State()
         self.updates = updates.UpdateFinder()
         self.zoom = 0
@@ -462,8 +462,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
     def onVocabDefSearchReturn(self):
         text = unicode(self.textVocabSearch.text())
-        self.state.vocabDefs, length = self.language.findTerm(text, True)
-        self.updateVocabDefs()
+        length = self.findTerm(text, True)
         if self.dockKanji.isVisible():
             self.state.kanjiDefs = self.language.findCharacters(text)
             self.updateKanjiDefs()
@@ -503,6 +502,17 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def onContentMousePress(self, event):
         QtGui.QPlainTextEdit.mousePressEvent(self.textContent, event)
         self.updateSampleMouseEvent(event)
+
+    def findTerm(self, text, wildcards=False):
+        maxLength = 0
+        self.state.vocabDefs = []
+        for language in self.languages:
+            vocabDefs, length = language.findTerm(text, wildcards)
+            self.state.vocabDefs += vocabDefs
+            if length > maxLength:
+                maxLength = length
+        self.updateVocabDefs()
+        return maxLength
 
 
     def openFile(self, filename):
@@ -779,15 +789,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         contentSample = content[samplePosStart:samplePosEnd]
         contentSampleFlat = contentSample.replace(u'\n', unicode())
 
-        if len(contentSampleFlat) == 0 or not japanese.util.isJapanese(contentSampleFlat[0]):
-            cursor.clearSelection()
-            self.textContent.setTextCursor(cursor)
-            return
-
         lengthMatched = 0
         if self.dockVocab.isVisible():
-            self.state.vocabDefs, lengthMatched = self.language.findTerm(contentSampleFlat)
-            sentence, line = reader_util.findSentence(content, samplePosStart)
+            lengthMatched = self.findTerm(contentSampleFlat)
+            sentence = reader_util.findSentence(content, samplePosStart)
+            line = reader_util.findLine(content, samplePosStart)
             for definition in self.state.vocabDefs:
                 definition['sentence'] = sentence
                 definition['line'] = line
@@ -796,11 +802,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         if self.dockKanji.isVisible():
             if lengthMatched == 0:
-                self.state.kanjiDefs = self.language.findCharacters(contentSampleFlat[0])
+                self.state.kanjiDefs = self.languages[0].findCharacters(contentSampleFlat[0])
                 if len(self.state.kanjiDefs) > 0:
                     lengthMatched = 1
             else:
-                self.state.kanjiDefs = self.language.findCharacters(contentSampleFlat[:lengthMatched])
+                self.state.kanjiDefs = self.languages[0].findCharacters(contentSampleFlat[:lengthMatched])
             self.updateKanjiDefs()
 
         lengthSelect = 0
@@ -889,10 +895,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         for word in words:
             if self.dockVocab.isVisible():
-                self.state.vocabDefs += self.language.dictionary.findTerm(word)
+                for language in self.languages:
+                    self.state.vocabDefs += language.dictionary.findTerm(word)
 
             if self.dockKanji.isVisible():
-                self.state.kanjiDefs += self.language.findCharacters(word)
+                self.state.kanjiDefs += self.languages[0].findCharacters(word)
 
         self.updateVocabDefs(trim=False, scroll=True)
         self.updateKanjiDefs(trim=False, scroll=True)

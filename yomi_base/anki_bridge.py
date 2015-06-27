@@ -283,7 +283,7 @@ class YomichanPlugin(Yomichan):
                 self,
                 self.parent,
                 self.preferences,
-                self.language,
+                self.languages,
                 None,
                 self.anki,
                 self.onWindowClose

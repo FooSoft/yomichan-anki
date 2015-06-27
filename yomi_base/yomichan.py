@@ -18,15 +18,17 @@
 
 
 from yomi_base import japanese
+from yomi_base import korean
 from yomi_base.preference_data import Preferences
 
 class Yomichan:
     def __init__(self):
-        self.language = japanese.initLanguage()
+        self.languages = [japanese.initLanguage(),korean.initLanguage()]
         self.preferences = Preferences()
         self.preferences.load()
         self.patched = False
-
+        
+        
     def fetchAllCards(self):
         return None
         

@@ -39,6 +39,16 @@ def decodeContent(content):
 def stripReadings(content):
     return re.sub(u'《[^》]+》', unicode(), content)
 
+    
+def findLine(content, position):
+    startLine = content[0:position-1].rfind('\n')
+    endLine = content.find('\n',position)
+    if endLine==-1:
+      line = content[startLine+1:]
+    else:
+      line = content[startLine+1:endLine-1]
+    return line  
+    
 
 def findSentence(content, position):
     quotesFwd = {u'「': u'」', u'『': u'』', u"'": u"'", u'"': u'"'}
@@ -81,18 +91,12 @@ def findSentence(content, position):
             quoteStack.pop()
         elif c in quotesFwd:
             quoteStack.insert(0, quotesFwd[c])   
-    startLine = content[0:start].rfind('\n')
-    endLine = content.find('\n',end)
-    if endLine==-1:
-      line = content[startLine+1:]
-    else:
-      line = content[startLine+1:endLine-1]
-    return content[start:end].strip(),line  
+    return content[start:end].strip()
 
 
 def formatFields(fields, markup):
     result = dict()               
-    if 'line' in markup:
+    if markup.get('line'):
       tabs = markup['line'].split('\t')
       for i,tab in enumerate(tabs):
         markup['t'+str(i)] = tab 
@@ -110,14 +114,15 @@ def splitTags(tags):
 
 
 def markupVocabExp(definition):
-    if definition['reading']:
+    if definition.get('reading'):
         summary = u'{expression}[{reading}]'.format(**definition)
     else:
         summary = u'{expression}'.format(**definition)
 
     return {
         'expression': definition['expression'],
-        'reading': definition['reading'] or unicode(),
+        'reading': definition.get('reading') or unicode(),
+        'hanja': definition.get('hanja') or unicode(),
         'glossary': definition['glossary'],
         'sentence': definition.get('sentence'),
         'line': definition.get('line'),
@@ -127,10 +132,11 @@ def markupVocabExp(definition):
 
 
 def markupVocabReading(definition):
-    if definition['reading']:
+    if definition.get('reading'):
         return {
             'expression': definition['reading'],
             'reading': unicode(),
+            'hanja': unicode(),
             'glossary': definition['glossary'],
             'sentence': definition.get('sentence'),
             'line': definition.get('line'),
@@ -186,7 +192,7 @@ def buildEmpty():
 
 def buildVocabDef(definition, index, query, allowOverwrite):
     reading = unicode()
-    if definition['reading']:
+    if definition.get('reading'):
         reading = u'<span class="reading">[{0}]<br></span>'.format(definition['reading'])
 
     rules = unicode()
