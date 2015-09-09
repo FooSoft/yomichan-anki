@@ -41,16 +41,20 @@ def stripReadings(content):
 
     
 def findLine(content, position):
-    startLine = content[0:position-1].rfind('\n')
-    endLine = content.find('\n',position)
+    startLine = content[0:position-1].rfind(u'\n')
+    endLine = content.find(u'\n',position)
     if endLine==-1:
       line = content[startLine+1:]
-    else:
+    elif content[endLine] == u'\n':
       line = content[startLine+1:endLine-1]
+    else:
+      line = content[startLine+1:endLine]
     return line  
     
 
 def findSentence(content, position):
+    if len(content) == 0:
+        return u''
     quotesFwd = {u'「': u'」', u'『': u'』', u"'": u"'", u'"': u'"'}
     quotesBwd = {u'」': u'「', u'』': u'『', u"'": u"'", u'"': u'"'}
     terminators = u'。．.？?！!'
@@ -217,7 +221,7 @@ def buildVocabDef(definition, index, query, allowOverwrite):
 
     html = u"""
         <span class="links">{0}</span>
-        <span class="expression">{1}<br></span>
+        <span class="expression"><a href="jisho:{1}">{1}</a><br></span>
         {2}
         <span class="glossary">{3}<br></span>
         {4}
@@ -245,7 +249,7 @@ def buildKanjiDef(definition, index, query, allowOverwrite):
     readings = ', '.join([definition['kunyomi'], definition['onyomi']])
     html = u"""
         <span class="links">{0}</span>
-        <span class="expression">{1}<br></span>
+        <span class="expression"><a href="jisho:{1}">{1}</a><br></span>
         <span class="reading">[{2}]<br></span>
         <span class="glossary">{3}<br></span>
         <br clear="all">""".format(links, definition['character'], readings, definition['glossary'])

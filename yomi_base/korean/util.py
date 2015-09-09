@@ -51,5 +51,6 @@ def sanitize(text, noHanja=True, wildcards=False):
     for c in text:
         if checker(c) or c in overrides:
             result += c
-
+    for c in u' .,،、…‒–':
+        result = (result+c)[:result.find(c)]
     return result

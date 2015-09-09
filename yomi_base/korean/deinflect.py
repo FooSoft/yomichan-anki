@@ -16,31 +16,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # needed to import javascript
-from PyQt4.QtWebKit import QWebView
-from time import time
+import execjs
+import os
+os.environ["EXECJS_RUNTIME"] = 'PyV8'
 #
 # Deinflector
 #
 
 class Deinflector:
     def __init__(self,path):
-        self.iterations = 0
-        self.totalTime = 0
-        #app = QApplication(sys.argv) - not needed because we have a QApp already
-        self.view = QWebView()
-        with open(path) as fp:
-            js = fp.read()
-        self.view.page().mainFrame().evaluateJavaScript(js)    
+        try:
+            self.javascript = execjs.compile(open(path).read())
+        except Exception as e:
+            self.pyv8 = False
+        else:
+            self.pyv8 = True
         
     def deinflect(self, term, validator):
-        start = time()
         results = list()
-        jsQuery = u"stemmer.getStem('{0}')".format(term)
-        jsResult = self.view.page().mainFrame().evaluateJavaScript(jsQuery)
-        print jsResult
+        jsQuery = u"stemmer.stem('{0}')".format(term)
         results.append({'source': term, 'rules': list()})
-        if jsResult is not None:
-            results.append({'source': u''.join(map(unichr,map(int,jsResult))), 'rules':list()})
-        self.iterations += 1
-        self.totalTime += (time()-start)
+        if self.pyv8:
+            try:
+                jsResult = self.javascript.eval(jsQuery)
+                if jsResult is not None:
+                    results.append({'source': jsResult, 'rules':list()})
+            except Exception as e:
+                print e
         return results

@@ -342,6 +342,7 @@ class YomichanPlugin(Yomichan):
 yomichanInstance = YomichanPlugin()        
         
 def onBeforeStateChange(state, oldState, *args):
+    yomichanInstance.newestState = state
     yomichanInstance.anki.createYomichanModel()
     if state == 'overview':
         did = aqt.mw.col.decks.selected()
@@ -383,9 +384,8 @@ def onBeforeStateChange(state, oldState, *args):
                     fileName = fileName #do nothing
                 yomichanInstance.window.showMaximized()
     elif state == 'deckBrowser':
-        if not yomichanInstance.patched:
+        if not getattr(aqt.mw.col.sched,"earlyAnswerCard",None):
             aqt.mw.col.sched = EarlyScheduler(aqt.mw.col,yomichanInstance.getFileCache)
-            yomichanInstance.patched = True
         yomichanInstance.loadAllTexts()
         yomichanDeck = aqt.mw.col.decks.byName(u'Yomichan')
         for name,id in aqt.mw.col.decks.children(yomichanDeck['id']):

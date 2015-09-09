@@ -26,7 +26,6 @@ class Yomichan:
         self.languages = [japanese.initLanguage(),korean.initLanguage()]
         self.preferences = Preferences()
         self.preferences.load()
-        self.patched = False
         
         
     def fetchAllCards(self):
