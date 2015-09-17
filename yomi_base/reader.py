@@ -28,6 +28,8 @@ import updates
 import sys
 import time
 import random
+from yomi_base import japanese
+from yomi_base import korean
 
 class FileState:
     def __init__(self,fn,stripReadings=False):
@@ -266,6 +268,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.actionSave.triggered.connect(self.onActionSave)
         self.actionPreferences.triggered.connect(self.onActionPreferences)
         self.actionToggleWrap.toggled.connect(self.onActionToggleWrap)
+        self.actionToggleJapanese.toggled.connect(self.onActionToggleJapanese)
+        self.actionToggleKorean.toggled.connect(self.onActionToggleKorean)
         self.actionZoomIn.triggered.connect(self.onActionZoomIn)
         self.actionZoomOut.triggered.connect(self.onActionZoomOut)
         self.actionZoomReset.triggered.connect(self.onActionZoomReset)
@@ -480,9 +484,13 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
     def onActionToggleJapanese(self, jpn):
         self.preferences['japanese'] = jpn
+        if 'japanese' not in self.languages:
+            self.languages['japanese'] = japanese.initLanguage()
     
     def onActionToggleKorean(self, krn):
         self.preferences['korean'] = krn
+        if 'korean' not in self.languages:
+            self.languages['korean'] = korean.initLanguage()
 
     def onActionHomepage(self):
         url = QtCore.QUrl('http://foosoft.net/projects/yomichan')

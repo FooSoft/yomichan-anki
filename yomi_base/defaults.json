@@ -33,6 +33,11 @@
             "model": "Yomichan"
         }
     },    
+    "sources": [
+        {
+            "link": "http://dictionary.goo.ne.jp/freewordsearcher.html?MT={expression}&mode=1&id=top&kind=jn"
+        }
+    ],
     "recentFiles": [],
     "textContent": "",
     "scanLength": 16,
@@ -41,5 +46,7 @@
     "wordWrap": false,
     "allowEditing": true,
     "firstRun": true,
-    "unlockVocab":true
+    "unlockVocab":true,
+    "japanese":true,
+    "korean":false
 }

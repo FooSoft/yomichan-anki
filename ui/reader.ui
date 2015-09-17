@@ -107,8 +107,10 @@
     <addaction name="actionToggleAnki"/>
     <addaction name="actionToggleVocab"/>
     <addaction name="actionToggleKanji"/>
-    <addaction name="separator"/>
     <addaction name="actionToggleWrap"/>
+    <addaction name="separator"/>
+    <addaction name="actionToggleJapanese"/>
+    <addaction name="actionToggleKorean"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -495,6 +497,28 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionToggleJapanese">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Japanese</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable Japanese dictionary</string>
+   </property>
+  </action>
+  <action name="actionToggleKorean">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Korean</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable Korean dictionary</string>
    </property>
   </action>
  </widget>
