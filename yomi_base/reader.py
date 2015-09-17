@@ -343,6 +343,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.textContent.setFont(font)
 
         self.actionToggleWrap.setChecked(self.preferences['wordWrap'])
+        self.actionToggleJapanese.setChecked(self.preferences['japanese'])
+        self.actionToggleKorean.setChecked(self.preferences['korean'])
 
 
     def closeEvent(self, event):
@@ -476,6 +478,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.preferences['wordWrap'] = wrap
         self.textContent.setLineWrapMode(QtGui.QPlainTextEdit.WidgetWidth if self.preferences['wordWrap'] else QtGui.QPlainTextEdit.NoWrap)
 
+    def onActionToggleJapanese(self, jpn):
+        self.preferences['japanese'] = jpn
+    
+    def onActionToggleKorean(self, krn):
+        self.preferences['korean'] = krn
 
     def onActionHomepage(self):
         url = QtCore.QUrl('http://foosoft.net/projects/yomichan')
@@ -490,7 +497,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def onVocabDefsAnchorClicked(self, url):
         command, index = unicode(url.toString()).split(':')
         if command == "jisho":
-            url = QtCore.QUrl(u"http://jisho.org/search/{0}".format(index))
+            url = QtCore.QUrl(u"http://dictionary.goo.ne.jp/srch/jn2/{0}/m0u/".format(index))
             QtGui.QDesktopServices().openUrl(url)
         else:
             index = int(index)
@@ -553,11 +560,12 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def findTerm(self, text, wildcards=False):
         maxLength = 0
         self.state.vocabDefs = []
-        for language in self.languages:
-            vocabDefs, length = language.findTerm(text, wildcards)
-            self.state.vocabDefs += vocabDefs
-            if length > maxLength:
-                maxLength = length
+        for key, language in self.languages.items():
+            if self.preferences[key]:
+                vocabDefs, length = language.findTerm(text, wildcards)
+                self.state.vocabDefs += vocabDefs
+                if length > maxLength:
+                    maxLength = length
         self.updateVocabDefs()
         return maxLength
 
@@ -874,11 +882,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         if self.dockKanji.isVisible():
             if lengthMatched == 0:
-                self.state.kanjiDefs = self.languages[0].findCharacters(contentSampleFlat[0])
+                self.state.kanjiDefs = self.languages['japanese'].findCharacters(contentSampleFlat[0])
                 if len(self.state.kanjiDefs) > 0:
                     lengthMatched = 1
             else:
-                self.state.kanjiDefs = self.languages[0].findCharacters(contentSampleFlat[:lengthMatched])
+                self.state.kanjiDefs = self.languages['japanese'].findCharacters(contentSampleFlat[:lengthMatched])
             self.updateKanjiDefs()
 
         lengthSelect = 0
@@ -976,11 +984,12 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         for word in words:
             if self.dockVocab.isVisible():
-                for language in self.languages:
-                    self.state.vocabDefs += language.dictionary.findTerm(word)
+                for key, language in self.languages.items():
+                    if self.preferences[key]:
+                        self.state.vocabDefs += language.dictionary.findTerm(word)
 
             if self.dockKanji.isVisible():
-                self.state.kanjiDefs += self.languages[0].findCharacters(word)
+                self.state.kanjiDefs += self.languages['japanese'].findCharacters(word)
 
         self.updateVocabDefs(trim=False, scroll=True)
         self.updateKanjiDefs(trim=False, scroll=True)

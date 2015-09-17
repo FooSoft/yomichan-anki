@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Mon Jun  8 10:10:27 2015
-#      by: PyQt4 UI code generator 4.11.3
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -223,6 +222,12 @@ class Ui_MainWindowReader(object):
         self.actionSave.setIcon(icon11)
         self.actionSave.setIconVisibleInMenu(True)
         self.actionSave.setObjectName(_fromUtf8("actionSave"))
+        self.actionToggleJapanese = QtGui.QAction(MainWindowReader)
+        self.actionToggleJapanese.setCheckable(True)
+        self.actionToggleJapanese.setObjectName(_fromUtf8("actionToggleJapanese"))
+        self.actionToggleKorean = QtGui.QAction(MainWindowReader)
+        self.actionToggleKorean.setCheckable(True)
+        self.actionToggleKorean.setObjectName(_fromUtf8("actionToggleKorean"))
         self.menuImport.addAction(self.actionKindleDeck)
         self.menuImport.addAction(self.actionWordList)
         self.menuFile.addAction(self.actionOpen)
@@ -250,8 +255,10 @@ class Ui_MainWindowReader(object):
         self.menuView.addAction(self.actionToggleAnki)
         self.menuView.addAction(self.actionToggleVocab)
         self.menuView.addAction(self.actionToggleKanji)
-        self.menuView.addSeparator()
         self.menuView.addAction(self.actionToggleWrap)
+        self.menuView.addSeparator()
+        self.menuView.addAction(self.actionToggleJapanese)
+        self.menuView.addAction(self.actionToggleKorean)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
         self.menubar.addAction(self.menuView.menuAction())
@@ -327,5 +334,9 @@ class Ui_MainWindowReader(object):
         self.actionSave.setText(_translate("MainWindowReader", "&Save...", None))
         self.actionSave.setToolTip(_translate("MainWindowReader", "Save file", None))
         self.actionSave.setShortcut(_translate("MainWindowReader", "Ctrl+S", None))
+        self.actionToggleJapanese.setText(_translate("MainWindowReader", "&Japanese", None))
+        self.actionToggleJapanese.setToolTip(_translate("MainWindowReader", "Enable Japanese dictionary", None))
+        self.actionToggleKorean.setText(_translate("MainWindowReader", "&Korean", None))
+        self.actionToggleKorean.setToolTip(_translate("MainWindowReader", "Enable Korean dictionary", None))
 
 import resources_rc

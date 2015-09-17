@@ -23,9 +23,17 @@ from yomi_base.preference_data import Preferences
 
 class Yomichan:
     def __init__(self):
-        self.languages = [japanese.initLanguage(),korean.initLanguage()]
+        self.languages = dict()
         self.preferences = Preferences()
         self.preferences.load()
+        if 'japanese' not in self.preferences.settings:
+            self.preferences.settings['japanese'] = False
+        if 'korean' not in self.preferences.settings:
+            self.preferences.settings['korean'] = False
+        if self.preferences.settings['japanese']:
+            self.languages['japanese'] = japanese.initLanguage()
+        if self.preferences.settings['korean']:
+            self.languages['korean'] = korean.initLanguage()
         
         
     def fetchAllCards(self):
