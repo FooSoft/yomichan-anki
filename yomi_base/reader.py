@@ -170,31 +170,32 @@ class MyKeyFilter(QtCore.QObject):
         obj = self.obj
         if event.type() != QtCore.QEvent.KeyPress:
             return False
-        if event.key() == QtCore.Qt.Key_Shift:
+        if event.key() == preferences.lookupKeys[obj.preferences['lookupKey']][1]:
             obj.updateSampleFromPosition()
         elif (event.key() == QtCore.Qt.Key_W and event.modifiers() & QtCore.Qt.AltModifier):
             obj.createAlias()
         elif (event.key() == QtCore.Qt.Key_R and event.modifiers() & QtCore.Qt.AltModifier):
             obj.restoreRecentIncorrect()
-        elif (ord('0') <= event.key() <= ord('9') or (QtCore.Qt.Key_F1 <= event.key() <= QtCore.Qt.Key_F10)) and obj.anki is not None:
-            if ord('0') <= event.key() <= ord('9'):
-                index = (event.key() - ord('0') - 1) % 10
-            else:
-                index = (event.key() - QtCore.Qt.Key_F1) % 10
+        elif ord('0') <= event.key() <= ord('9') and obj.anki is not None:
+            index = (event.key() - ord('0') - 1) % 10
             if event.modifiers() & QtCore.Qt.ShiftModifier:
                 if event.modifiers() & QtCore.Qt.ControlModifier:
                     obj.executeKanjiCommand('addKanji', index)
+                else:
+                    return False
             else:
                 if event.modifiers() & QtCore.Qt.ControlModifier:
                     if obj.overwritable[index]:
                         obj.executeVocabCommand('overwriteVocabExp', index)
                     else:
                         obj.executeVocabCommand('addVocabExp', index)
-                if event.modifiers() & QtCore.Qt.AltModifier:
+                elif event.modifiers() & QtCore.Qt.AltModifier:
                     if obj.overwritableReading[index]:
                         obj.executeVocabCommand('overwriteVocabReading', index)
                     else:
                         obj.executeVocabCommand('addVocabReading', index)
+                else:
+                    return False
         elif event.key() == ord('[') and obj.state.scanPosition > 0:
             obj.state.scanPosition -= 1
             obj.updateSampleFromPosition()
@@ -505,7 +506,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def onVocabDefsAnchorClicked(self, url):
         command, index = unicode(url.toString()).split(':')
         if command == "jisho":
-            url = QtCore.QUrl(u"http://dictionary.goo.ne.jp/srch/jn2/{0}/m0u/".format(index))
+            url = QtCore.QUrl(self.preferences["linkToVocab"].format(index))
             QtGui.QDesktopServices().openUrl(url)
         else:
             index = int(index)
@@ -515,7 +516,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     def onKanjiDefsAnchorClicked(self, url):
         command, index = unicode(url.toString()).split(':')
         if command == "jisho":
-            url = QtCore.QUrl(u"http://jisho.org/search/#kanji {0}".format(index))
+            url = QtCore.QUrl(self.preferences["linkToKanji"].format(index))
             QtGui.QDesktopServices().openUrl(url)
         else:
             index = int(index)

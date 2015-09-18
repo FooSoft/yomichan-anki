@@ -48,5 +48,8 @@
     "firstRun": true,
     "unlockVocab":true,
     "japanese":true,
-    "korean":false
+    "korean":false,
+    "lookupKey":1,
+    "linkToKanji":"http://jisho.org/search/#kanji {0}",
+    "linkToVocab":"http://jisho.org/search/{0}"
 }

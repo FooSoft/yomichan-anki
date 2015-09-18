@@ -24,11 +24,20 @@ exportAllowedTags = {
             'vocab': ['expression', 'hanja', 'reading', 'glossary', 'sentence','line','filename','summary'],
             'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
         }
+        
+lookupKeys = [
+            ('Insert',QtCore.Qt.Key_Insert),
+            ('Shift',QtCore.Qt.Key_Shift),
+            ('Pause',QtCore.Qt.Key_Pause),
+            ('F1',QtCore.Qt.Key_F1)
+        ]
 
 class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
     def __init__(self, parent, preferences, anki):
         QtGui.QDialog.__init__(self, parent)
         self.setupUi(self)
+        self.preferences = preferences
+        self.anki = anki
 
         self.accepted.connect(self.onAccept)
         self.buttonColorBg.clicked.connect(self.onButtonColorBgClicked)
@@ -40,9 +49,11 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.radioButtonVocab.toggled.connect(self.onProfileChanged)
         self.spinFontSize.valueChanged.connect(self.onFontSizeChanged)
         self.tableFields.itemChanged.connect(self.onFieldsChanged)       
-
-        self.preferences = preferences
-        self.anki = anki
+        self.comboBoxLookupKey.currentIndexChanged.connect(self.onLookupKeyChanged)
+        idx = 0
+        for name, key in lookupKeys:
+            self.comboBoxLookupKey.insertItem(idx,name,key)
+            idx = idx+1
 
         self.dataToDialog()
 
@@ -56,7 +67,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.spinMaxResults.setValue(self.preferences['maxResults'])
         self.spinScanLength.setValue(self.preferences['scanLength'])
         self.checkUnlockVocab.setChecked(self.preferences['unlockVocab'])
-        
+        self.comboBoxLookupKey.setCurrentIndex(self.preferences['lookupKey'])
         self.updateSampleText()
         font = self.textSample.font()
         self.comboFontFamily.setCurrentFont(font)
@@ -77,6 +88,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.preferences['scanLength'] = self.spinScanLength.value()
         self.preferences['unlockVocab'] = self.checkUnlockVocab.isChecked()
         self.preferences['stripReadings'] = self.checkStripReadings.isChecked()
+        self.preferences['lookupKey'] = self.comboBoxLookupKey.currentIndex()
         self.preferences['firstRun'] = False
 
         if self.anki is not None:
@@ -208,6 +220,8 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
     def onProfileChanged(self, data):
         self.profileToDialog()
 
+    def onLookupKeyChanged(self,idx):
+        self.preferences['lookupKey'] = idx
 
     def updateAnkiFields(self):
         modelName = self.comboBoxModel.currentText()
