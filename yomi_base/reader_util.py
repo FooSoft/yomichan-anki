@@ -45,8 +45,6 @@ def findLine(content, position):
     endLine = content.find(u'\n',position)
     if endLine==-1:
       line = content[startLine+1:]
-    elif content[endLine] == u'\n':
-      line = content[startLine+1:endLine-1]
     else:
       line = content[startLine+1:endLine]
     return line  

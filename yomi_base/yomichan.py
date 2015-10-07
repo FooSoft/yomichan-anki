@@ -20,6 +20,9 @@
 from yomi_base import japanese
 from yomi_base import korean
 from yomi_base.preference_data import Preferences
+import urllib2
+
+
 
 class Yomichan:
     def __init__(self):
@@ -31,7 +34,16 @@ class Yomichan:
             self.languages['japanese'] = japanese.initLanguage()
         if self.preferences.settings['korean']:
             self.languages['korean'] = korean.initLanguage()
-        
+            
+        for sub in self.preferences['subscriptions']:
+            try:
+                fp = urllib2.urlopen(sub['source'])
+                f = open(sub['target'], 'w')
+                f.write(fp.read())
+                f.close()
+                fp.close()
+            except:
+                donothing = True
         
     def fetchAllCards(self):
         return None

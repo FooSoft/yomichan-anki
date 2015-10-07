@@ -79,11 +79,14 @@ class EarlyScheduler(Scheduler):
                 id = self.col.decks.id(deck)
                 if filecache[deck] is None:
                     due = 0
+                    new = 0
                 elif self.hideMinimumGain:
                     due = int(filecache[deck].dueness - filecache[deck].foundvocabs * self.minimumGain)
+                    new = len(filecache[deck].wordsNotFound)
                 else:
                     due = int(filecache[deck].dueness)
-                data.append([deck, id, due, 0, 0])
+                    new = len(filecache[deck].wordsNotFound)
+                data.append([deck, id, due, 0, new])
                 self.dueCache[deck] = due
         return data
 
@@ -199,7 +202,18 @@ class Anki:
     
     def getCardsByNote(self, modelName, key, value):
         return self.collection().findCards(key + u':' + value + u' note:' + modelName)
-    
+
+    def getCardsByNoteAndNotInDeck(self, modelName, values, did):
+        model = self.models().byName(modelName)
+        modelid = int(model[u"id"])
+        query = u"select c.id from cards c "
+        query+= u"join notes n on (c.nid = n.id) " 
+        query+= u"where n.mid=%d " % (modelid)
+        query+= u"and c.did!=%d " % (did)
+        query+= u"and n.sfld in " + (u"(%s)" % u",".join([u"'%s'"%(s) for s in values]))
+        self.query = query
+        return self.collection().db.execute(query)
+        
     
     def getModelKey(self, modelName):
         model = self.collection().models.byName(modelName)
@@ -260,13 +274,13 @@ class YomichanPlugin(Yomichan):
         self.anki = Anki()
         self.fileCache = dict()
 
-        self.parent = self.anki.window()
+        self.parent = None #self.anki.window()
 
-        separator = QtGui.QAction(self.parent)
+        separator = QtGui.QAction(self.anki.window())
         separator.setSeparator(True)
         self.anki.addUiAction(separator)
 
-        action = QtGui.QAction(QtGui.QIcon(':/img/img/icon_logo_32.png'), '&Yomichan...', self.parent)
+        action = QtGui.QAction(QtGui.QIcon(':/img/img/icon_logo_32.png'), '&Yomichan...', self.anki.window())
         action.setIconVisibleInMenu(True)
         action.setShortcut('Ctrl+Y')
         action.triggered.connect(self.onShowRequest)

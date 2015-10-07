@@ -17,6 +17,7 @@
 
 
 from PyQt4 import QtGui, QtCore
+from anki.utils import ids2str, intTime
 import about
 import constants
 import gen.reader_ui
@@ -162,7 +163,8 @@ class FileState:
             else:
                 sched.earlyAnswerCard(self.wordsAll[word],3,self.timePerWord)
                 self.correct += 1
-
+                
+                
 class MyKeyFilter(QtCore.QObject):
     obj = None
     
@@ -279,6 +281,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.dockVocab.visibilityChanged.connect(self.onVisibilityChanged)
         if self.anki is not None:
             self.learnVocabulary.clicked.connect(self.onLearnVocabularyList)
+        if self.anki is not None:
+            self.moveVocabulary.clicked.connect(self.onMoveVocabulary)
         self.listDefinitions.itemDoubleClicked.connect(self.onDefinitionDoubleClicked)
         self.textKanjiDefs.anchorClicked.connect(self.onKanjiDefsAnchorClicked)
         self.textKanjiSearch.returnPressed.connect(self.onKanjiDefSearchReturn)
@@ -309,6 +313,31 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             .format(self.currentFile.correct,self.currentFile.wrong,
                 totalMinutes,totalSeconds,
                 perCardMinutes,perCardSeconds)
+        )
+        
+    def onMoveVocabulary(self):
+        profile = self.preferences['profiles'].get('vocab')
+        if profile is None:
+            return False
+        
+        key = self.anki.getModelKey(profile['model'])                                                  
+        did = self.anki.collection().decks.id(profile['deck'])
+        deck = self.anki.collection().decks.get(did)
+        cids = [int(cid[0]) for cid in self.anki.getCardsByNoteAndNotInDeck(profile['model'],self.currentFile.wordsAll,did)]
+        self.anki.window().checkpoint(_("Change Deck"))
+        if not deck['dyn']:
+            mod = intTime()
+            usn = self.anki.collection().usn()
+            scids = ids2str(cids)
+            self.anki.collection().sched.remFromDyn(cids)
+            self.anki.collection().db.execute("""
+    update cards set usn=?, mod=?, did=? where id in """ + scids,
+                                usn, mod, did)
+        self.anki.window().requireReset()
+        QtGui.QMessageBox.information(
+            self,
+            'Yomichan', 'All {0} cards moved to {1}'
+            .format(len(cids), profile['deck'])
         )
 
 
@@ -704,8 +733,12 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         note = self.anki.collection().getNote(ids[0])   
         for name, v in fields.items():
             if name in note:
-                if unicode(name[-1]) == u'+' and len(note[name])>0:
-                    note[name]+= u'<br>' + v
+                if unicode(name[-1]) == u'+':
+                    if not v in note[name].split(u'<br>'):
+                        if len(note[name])>0:
+                            note[name]+= u'<br>' + v
+                        else:
+                            note[name] = v
                 else:
                     note[name] = v 
         note.flush()
@@ -714,6 +747,19 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         cids = self.anki.getCardsByNote(profile['model'],key,value)
         if len(cids) == 0:
             return False
+        
+        did = self.anki.collection().decks.id(profile['deck'])
+        deck = self.anki.collection().decks.get(did)
+        if not deck['dyn']:
+            self.anki.window().checkpoint(_("Change Deck"))
+            mod = intTime()
+            usn = self.anki.collection().usn()
+            scids = ids2str(cids)
+            self.anki.collection().sched.remFromDyn(cids)
+            self.anki.collection().db.execute("""
+    update cards set usn=?, mod=?, did=? where id in """ + scids,
+                                usn, mod, did)
+            self.anki.window().requireReset()
         self.currentFile.overwriteVocabulary(value,self.anki.collection().getCard(cids[0]))
         self.currentFile.addMarkup(value,markup)
         self.facts.append(value)

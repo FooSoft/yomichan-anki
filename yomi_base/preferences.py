@@ -49,7 +49,6 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.radioButtonVocab.toggled.connect(self.onProfileChanged)
         self.spinFontSize.valueChanged.connect(self.onFontSizeChanged)
         self.tableFields.itemChanged.connect(self.onFieldsChanged)       
-        self.comboBoxLookupKey.currentIndexChanged.connect(self.onLookupKeyChanged)
         idx = 0
         for name, key in lookupKeys:
             self.comboBoxLookupKey.insertItem(idx,name,key)
@@ -220,8 +219,6 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
     def onProfileChanged(self, data):
         self.profileToDialog()
 
-    def onLookupKeyChanged(self,idx):
-        self.preferences['lookupKey'] = idx
 
     def updateAnkiFields(self):
         modelName = self.comboBoxModel.currentText()

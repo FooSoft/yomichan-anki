@@ -215,11 +215,22 @@
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="learnVocabulary">
-       <property name="text">
-        <string>Learn Vocabulary</string>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QPushButton" name="learnVocabulary">
+         <property name="text">
+          <string>Learn Vocabulary</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="moveVocabulary">
+         <property name="text">
+          <string>Move Vocabulary</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
