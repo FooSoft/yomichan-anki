@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Tue Mar 31 12:33:11 2015
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -26,7 +25,7 @@ except AttributeError:
 class Ui_DialogPreferences(object):
     def setupUi(self, DialogPreferences):
         DialogPreferences.setObjectName(_fromUtf8("DialogPreferences"))
-        DialogPreferences.resize(600, 300)
+        DialogPreferences.resize(600, 313)
         self.verticalLayout = QtGui.QVBoxLayout(DialogPreferences)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.tabWidget = QtGui.QTabWidget(DialogPreferences)
@@ -73,6 +72,12 @@ class Ui_DialogPreferences(object):
         self.spinScanLength.setMinimum(1)
         self.spinScanLength.setObjectName(_fromUtf8("spinScanLength"))
         self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.spinScanLength)
+        self.comboBoxLookupKey = QtGui.QComboBox(self.tabGeneral)
+        self.comboBoxLookupKey.setObjectName(_fromUtf8("comboBoxLookupKey"))
+        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.comboBoxLookupKey)
+        self.label_3 = QtGui.QLabel(self.tabGeneral)
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.label_3)
         self.verticalLayout_4.addLayout(self.formLayout)
         self.tabWidget.addTab(self.tabGeneral, _fromUtf8(""))
         self.tabAppearance = QtGui.QWidget()
@@ -171,6 +176,12 @@ class Ui_DialogPreferences(object):
         item = QtGui.QTableWidgetItem()
         self.tableFields.setHorizontalHeaderItem(1, item)
         self.verticalLayout_2.addWidget(self.tableFields)
+        self.horizontalLayout_4 = QtGui.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
+        self.checkUnlockVocab = QtGui.QCheckBox(self.tabAnki)
+        self.checkUnlockVocab.setObjectName(_fromUtf8("checkUnlockVocab"))
+        self.verticalLayout_2.addWidget(self.checkUnlockVocab)
         self.labelTags = QtGui.QLabel(self.tabAnki)
         self.labelTags.setText(_fromUtf8(""))
         self.labelTags.setObjectName(_fromUtf8("labelTags"))
@@ -197,6 +208,7 @@ class Ui_DialogPreferences(object):
         self.checkCheckForUpdates.setText(_translate("DialogPreferences", "Check for updates", None))
         self.label_2.setText(_translate("DialogPreferences", "Max search results", None))
         self.label_14.setText(_translate("DialogPreferences", "Text scan length", None))
+        self.label_3.setText(_translate("DialogPreferences", "Lookup key", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabGeneral), _translate("DialogPreferences", "General", None))
         self.buttonColorFg.setText(_translate("DialogPreferences", "Foreground...", None))
         self.buttonColorBg.setText(_translate("DialogPreferences", "Background...", None))
@@ -213,6 +225,7 @@ class Ui_DialogPreferences(object):
         item.setText(_translate("DialogPreferences", "Field", None))
         item = self.tableFields.horizontalHeaderItem(1)
         item.setText(_translate("DialogPreferences", "Value", None))
+        self.checkUnlockVocab.setText(_translate("DialogPreferences", "Put new/overwritten cards into the learning queue", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAnki), _translate("DialogPreferences", "Anki", None))
 
 import resources_rc

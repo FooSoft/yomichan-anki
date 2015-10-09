@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -64,6 +64,7 @@
     </widget>
     <addaction name="actionOpen"/>
     <addaction name="menuOpenRecent"/>
+    <addaction name="actionSave"/>
     <addaction name="separator"/>
     <addaction name="menuImport"/>
     <addaction name="separator"/>
@@ -106,8 +107,10 @@
     <addaction name="actionToggleAnki"/>
     <addaction name="actionToggleVocab"/>
     <addaction name="actionToggleKanji"/>
-    <addaction name="separator"/>
     <addaction name="actionToggleWrap"/>
+    <addaction name="separator"/>
+    <addaction name="actionToggleJapanese"/>
+    <addaction name="actionToggleKorean"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -211,6 +214,24 @@
        </item>
       </layout>
      </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QPushButton" name="learnVocabulary">
+         <property name="text">
+          <string>Learn Vocabulary</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="moveVocabulary">
+         <property name="text">
+          <string>Move Vocabulary</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -279,9 +300,6 @@
    <property name="toolTip">
     <string>Quit Yomichan</string>
    </property>
-   <property name="shortcut">
-    <string>Esc</string>
-   </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
@@ -311,9 +329,6 @@
    </property>
    <property name="toolTip">
     <string>About Yomichan</string>
-   </property>
-   <property name="shortcut">
-    <string>F1</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
@@ -469,6 +484,46 @@
   <action name="actionWordList">
    <property name="text">
     <string>&amp;Word list...</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/img/img/icon_copy_definition.png</normaloff>:/img/img/icon_copy_definition.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionToggleJapanese">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Japanese</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable Japanese dictionary</string>
+   </property>
+  </action>
+  <action name="actionToggleKorean">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Korean</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable Korean dictionary</string>
    </property>
   </action>
  </widget>

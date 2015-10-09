@@ -7,7 +7,39 @@
     "rememberTextContent": false,
     "loadRecentFile": false,
     "maxResults": 20,
-    "profiles": {},
+    "profiles": {
+        "kanji": {
+            "deck": "YomichanCards", 
+            "fields": {
+                "Kanji": "{character}", 
+                "Onyomi": "{onyomi}", 
+                "Kunyomi": "{kunyomi}", 
+                "Glossary": "{glossary}"
+            }, 
+            "model": "YomichanKanji"
+        },
+        "vocab": {
+            "deck": "YomichanCards", 
+            "fields": {
+                "Examples+": "{line} (<a href=\"file:///{filename}\">File</a>)", 
+                "Expression": "{line}", 
+                "Reading": "", 
+                "Sentence-English": "", 
+                "Video": "", 
+                "Vocabulary-English": "{glossary}", 
+                "Vocabulary-Furigana": "{summary}", 
+                "v": "{expression}"
+            }, 
+            "model": "Yomichan"
+        }
+    },    
+    "sources": [
+        {
+            "link": "http://dictionary.goo.ne.jp/freewordsearcher.html?MT={expression}&mode=1&id=top&kind=jn"
+        }
+    ],
+    "subscriptions": [
+    ],
     "recentFiles": [],
     "textContent": "",
     "scanLength": 16,
@@ -15,5 +47,11 @@
     "tags": [],
     "wordWrap": false,
     "allowEditing": true,
-    "firstRun": true
+    "firstRun": true,
+    "unlockVocab":true,
+    "japanese":true,
+    "korean":false,
+    "lookupKey":1,
+    "linkToKanji":"http://jisho.org/search/#kanji {0}",
+    "linkToVocab":"http://jisho.org/search/{0}"
 }

@@ -18,57 +18,9 @@
 
 
 from PyQt4 import QtGui, QtCore
-from yomi_base import japanese
-from yomi_base.preference_data import Preferences
 from yomi_base.reader import MainWindowReader
+from yomi_base.yomichan import Yomichan
 import sys
-
-
-class Yomichan:
-    def __init__(self):
-        self.language = japanese.initLanguage()
-        self.preferences = Preferences()
-        self.preferences.load()
-
-
-class YomichanPlugin(Yomichan):
-    def __init__(self):
-        Yomichan.__init__(self)
-
-        self.toolIconVisible = False
-        self.window = None
-        self.anki = anki_bridge.Anki()
-        self.parent = self.anki.window()
-
-        separator = QtGui.QAction(self.parent)
-        separator.setSeparator(True)
-        self.anki.addUiAction(separator)
-
-        action = QtGui.QAction(QtGui.QIcon(':/img/img/icon_logo_32.png'), '&Yomichan...', self.parent)
-        action.setIconVisibleInMenu(True)
-        action.setShortcut('Ctrl+Y')
-        action.triggered.connect(self.onShowRequest)
-        self.anki.addUiAction(action)
-
-
-    def onShowRequest(self):
-        if self.window:
-            self.window.setVisible(True)
-            self.window.activateWindow()
-        else:
-            self.window = MainWindowReader(
-                self.parent,
-                self.preferences,
-                self.language,
-                None,
-                self.anki,
-                self.onWindowClose
-            )
-            self.window.show()
-
-
-    def onWindowClose(self):
-        self.window = None
 
 
 class YomichanStandalone(Yomichan):
@@ -77,6 +29,7 @@ class YomichanStandalone(Yomichan):
 
         self.application = QtGui.QApplication(sys.argv)
         self.window = MainWindowReader(
+            self,
             None,
             self.preferences,
             self.language,
@@ -88,7 +41,6 @@ class YomichanStandalone(Yomichan):
 
 
 if __name__ == '__main__':
-    instance = YomichanStandalone()
+    yomichanInstance = YomichanStandalone()
 else:
-    from yomi_base import anki_bridge
-    instance = YomichanPlugin()
+    from yomi_base.anki_bridge import yomichanInstance

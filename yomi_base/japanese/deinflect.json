@@ -1107,6 +1107,105 @@
             ]
         }
     ], 
+    "-nu": [
+        {
+            "kanaIn": "ぬ", 
+            "kanaOut": "る", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v1", 
+                "vk"
+            ]
+        }, 
+        {
+            "kanaIn": "かぬ", 
+            "kanaOut": "く", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v5"
+            ]
+        }, 
+        {
+            "kanaIn": "がぬ", 
+            "kanaOut": "ぐ", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v5"
+            ]
+        }, 
+        {
+            "kanaIn": "こぬ", 
+            "kanaOut": "くる", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "vk"
+            ]
+        }, 
+        {
+            "kanaIn": "さぬ", 
+            "kanaOut": "す", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v5"
+            ]
+        }, 
+        {
+            "kanaIn": "せぬ", 
+            "kanaOut": "する", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "vs-"
+            ]
+        }, 
+        {
+            "kanaIn": "たぬ", 
+            "kanaOut": "つ", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v5"
+            ]
+        }, 
+        {
+            "kanaIn": "なぬ", 
+            "kanaOut": "ぬ", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v5"
+            ]
+        }, 
+        {
+            "kanaIn": "ばぬ", 
+            "kanaOut": "ぶ", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v5"
+            ]
+        }, 
+        {
+            "kanaIn": "まぬ", 
+            "kanaOut": "む", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v5"
+            ]
+        }, 
+        {
+            "kanaIn": "らぬ", 
+            "kanaOut": "る", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v5"
+            ]
+        }, 
+        {
+            "kanaIn": "わぬ", 
+            "kanaOut": "う", 
+            "tagsIn": [], 
+            "tagsOut": [
+                "v5"
+            ]
+        }
+    ], 
     "adv": [
         {
             "kanaIn": "く", 

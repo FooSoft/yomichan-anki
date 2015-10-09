@@ -31,6 +31,7 @@ class Translator:
         text = util.sanitize(text, wildcards=wildcards)
 
         groups = dict()
+                    
         for i in xrange(len(text), 0, -1):
             term = text[:i]
             deinflections = self.deinflector.deinflect(term, self.validator)
