@@ -20,20 +20,20 @@ plugin that (unless you disabled it in options) will notify you when new version
 1.  Make sure you are running the latest version of Anki.
 2.  Open your vocab deck and note the fields that are used in your deck.
 
-    ![Card layout dialog](http://foosoft.net/projects/yomichan/img/layout.png)
+    [![Card layout dialog](img/layout-thumb.png)](img/layout.png)
 
 3.  Launch Yomichan from the tools menu inside Anki.
 4.  Open the text file you want and you will see its contents in the Yomichan.  Your layout and color scheme will look
     different because the screenshot shows my personal settings.
 
-    ![Reader dialog](http://foosoft.net/projects/yomichan/img/reader.png)
+    [![Reader dialog](img/reader-thumb.png)](img/reader.png)
 
 5.  To look up words hover your mouse over them while pressing the middle mouse button (usually this is your scroll
     wheel). You can also press and hold shift instead if you like (or your mouse has no center button).
 6.  To set up your Anki deck for Yomichan select Preferences from the Edit menu and you should see a screen that looks
     like this:
 
-    ![Preferences dialog](http://foosoft.net/projects/yomichan/img/preferences.png)
+    [![Preferences dialog](img/preferences-thumb.png)](img/preferences.png)
 
 7.  Now you should add markers such as `{expression}`, `{reading}`, `{reading}` and `{sentence}` to specify how new
     cards should be created. Card fields will vary depending on your deck model.
@@ -42,7 +42,7 @@ plugin that (unless you disabled it in options) will notify you when new version
     Anki thinks you can't add a fact with those items*. This likely means that they would either be duplicates of
     existing cards in the deck or that Yomichan hasn't been properly set up for your deck model.
 
-    ![Icons](http://foosoft.net/projects/yomichan/img/icons.png)
+    [![Icons](img/icons-thumb.png)](img/icons.png)
 
     Here is what the icons mean (in order from left to right):
     *   Add term in Kana form even it can be written in Kanji (e.g. べんきょうか).
@@ -53,14 +53,14 @@ plugin that (unless you disabled it in options) will notify you when new version
 
 By request, I've added several keyboard shortcuts which make Yomichan even easier to use:
 
-| Shortcut               | Command                                             |
-|------------------------|-----------------------------------------------------|
-| `Shift`                | Search under cursor                                 |
-| `]`                    | Move search cursor forwards                         |
-| `[`                    | Move search cursor backwards                        |
-| `Shift` + `Ctrl` + `#` | Add current Kanji at index 0 - 9 to deck            |
-| `Ctrl` + `#`           | Add current term at index  0 - 9 to deck            |
-| `Alt` + `#`            | Add current term at index 0 - 9 to deck as Hiragana |
+| Shortcut                    | Command                                             |
+|-----------------------------|-----------------------------------------------------|
+| <kbd>Shift</kbd>            | Search under cursor                                 |
+| <kbd>]</kbd>                | Move search cursor forwards                         |
+| <kbd>[</kbd>                | Move search cursor backwards                        |
+| <kbd>Shift + Ctrl + #</kbd> | Add current Kanji at index 0 - 9 to deck            |
+| <kbd>Ctrl + #</kbd>         | Add current term at index  0 - 9 to deck            |
+| <kbd>Alt + #</kbd>          | Add current term at index 0 - 9 to deck as Hiragana |
 
 ## Importing Vocabulary ##
 
