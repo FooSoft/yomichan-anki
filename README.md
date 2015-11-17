@@ -4,6 +4,8 @@ A while ago I started working on an [Anki](http://ankisrs.net/) plugin in an att
 encountered when trying to read Japanese books on my computer. Yomichan is the result of my efforts and makes Japanese
 sentence/vocabulary mining trivial.
 
+## Motivation ##
+
 The software I was using for mining up to now was [Rikaichan](http://www.polarcloud.com/rikaichan/). I'm sure most
 people studying the Japanese language are familiar with this browser extension and probably have it installed in
 Firefox. Although pretty amazing, this tool is bound to Firefox.  Firefox is obviously not a book reader: it doesn't
@@ -11,11 +13,13 @@ behave well with large text files, doesn't remember where you last stopped readi
 integration with Anki. As such, adding new vocab to my Anki deck was annoying; I wanted to be able to do this with one
 mouse click. After several hours of work, Yomichan could do this and much more.
 
-Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb.net/shared/info/934748696) or the
-[Yomichan page on GitHub](https://github.com/FooSoft/yomichan/). There is an automatic update checker included in the
-plugin that (unless you disabled it in options) will notify you when new versions become available.
+## Installation ##
 
-## Basic Usage Instructions ##
+Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb.net/shared/info/934748696). There is an
+automatic update checker included in the plugin that (unless you disabled it in options) will notify you when new
+versions become available.
+
+## Usage ##
 
 1.  Make sure you are running the latest version of Anki.
 2.  Open your vocab deck and note the fields that are used in your deck.
@@ -49,7 +53,7 @@ plugin that (unless you disabled it in options) will notify you when new version
     *   Add term as it appears in the dictionary including Kanji (e.g. 勉強家).
     *   Copy the expression, reading and definition for the term to the clipboard.
 
-## Keyboard Shortcuts ##
+### Shortcuts ###
 
 By request, I've added several keyboard shortcuts which make Yomichan even easier to use:
 
@@ -62,10 +66,14 @@ By request, I've added several keyboard shortcuts which make Yomichan even easie
 | <kbd>Ctrl + #</kbd>         | Add current term at index  0 - 9 to deck            |
 | <kbd>Alt + #</kbd>          | Add current term at index 0 - 9 to deck as Hiragana |
 
-## Importing Vocabulary ##
+### Importing Vocabulary ###
 
 Yomichan is capable of importing vocabulary lists from plain text files and the vocabulary deck database the [Amazon
 Kindle](http://en.wikipedia.org/wiki/Kindle) automatically generates when you look up words in the built-in dictionary
 (this file can be found as `/system/vocabulary/vocab.db`). Note that importing does not create flash cards
 automatically, but rather outputs the contents of the file to the Vocabulary and Kanji panes so that you can add facts
 the same way as when reading within Yomichan.
+
+## License ##
+
+GPL
