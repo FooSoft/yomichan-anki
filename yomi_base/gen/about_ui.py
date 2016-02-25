@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/about.ui'
 #
-# Created: Tue Mar 31 12:33:10 2015
+# Created: Thu Feb 25 11:43:19 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -93,7 +93,7 @@ class Ui_DialogAbout(object):
         DialogAbout.setWindowTitle(_translate("DialogAbout", "About", None))
         self.labelVersion.setText(_translate("DialogAbout", "<b>Yomichan {0}</b>", None))
         self.label_3.setText(_translate("DialogAbout", "(c) 2013 by Alex Yatskov", None))
-        self.label_4.setText(_translate("DialogAbout", "<a href = \"http://foosoft.net/projects/yomichan\">http://foosoft.net/projects/yomichan</a>", None))
+        self.label_4.setText(_translate("DialogAbout", "<a href = \"https://foosoft.net/projects/yomichan\">https://foosoft.net/projects/yomichan</a>", None))
         self.label_6.setText(_translate("DialogAbout", "This software uses the <a href = \"http://www.famfamfam.com/lab/icons/silk/\">Silk web icon set</a> created by Mark James.", None))
         self.label_7.setText(_translate("DialogAbout", "Portions of this application\'s code and data are based on the <a href=\"http://www.polarcloud.com/rikaichan/\">Rikaichan</a> extension developed by Jonathan Zarate.", None))
         self.label_5.setText(_translate("DialogAbout", "This package uses the <a href=\"http://www.csse.monash.edu.au/~jwb/edict.html\">EDICT</a> and <a href=\"http://www.csse.monash.edu.au/~jwb/kanjidic.html\">KANJIDIC</a> dictionary files. These files are the property of the <a href=\"http://www.edrdg.org/\"> Electronic Dictionary Research and Development Group</a>, and are used in conformance with the Group\'s <a href=\"http://www.edrdg.org/edrdg/licence.html\">licence</a>.", None))

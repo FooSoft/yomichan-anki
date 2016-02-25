@@ -70,7 +70,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                 self.openFile(filenames[0])
 
         self.actionAbout.triggered.connect(self.onActionAbout)
-        self.actionFeedback.triggered.connect(self.onActionFeedback)
         self.actionFind.triggered.connect(self.onActionFind)
         self.actionFindNext.triggered.connect(self.onActionFindNext)
         self.actionHomepage.triggered.connect(self.onActionHomepage)
@@ -277,12 +276,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def onActionHomepage(self):
-        url = QtCore.QUrl('http://foosoft.net/projects/yomichan')
-        QtGui.QDesktopServices().openUrl(url)
-
-
-    def onActionFeedback(self):
-        url = QtCore.QUrl('http://foosoft.net/about')
+        url = QtCore.QUrl('https://foosoft.net/projects/yomichan')
         QtGui.QDesktopServices().openUrl(url)
 
 

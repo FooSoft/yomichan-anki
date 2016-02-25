@@ -45,7 +45,7 @@
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
-             <string>&lt;a href = &quot;http://foosoft.net/projects/yomichan&quot;&gt;http://foosoft.net/projects/yomichan&lt;/a&gt;</string>
+             <string>&lt;a href = &quot;https://foosoft.net/projects/yomichan&quot;&gt;https://foosoft.net/projects/yomichan&lt;/a&gt;</string>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>

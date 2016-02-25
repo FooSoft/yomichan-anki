@@ -19,7 +19,7 @@
      <property name="text">
       <string>&lt;p&gt;A new version of Yomichan is available for download!&lt;/p&gt;
 
-&lt;p&gt;You can download this update (version {0} to version {1}) from the add-ons section on &lt;a href=&quot;https://ankiweb.net/shared/info/934748696&quot;&gt;Anki Online&lt;/a&gt; or directly from the &lt;a href=&quot;http://foosoft.net/projects/yomichan&quot;&gt;Yomichan homepage&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You can download this update (version {0} to version {1}) from the add-ons section on &lt;a href=&quot;https://ankiweb.net/shared/info/934748696&quot;&gt;Anki Online&lt;/a&gt; or directly from the &lt;a href=&quot;https://foosoft.net/projects/yomichan&quot;&gt;Yomichan homepage&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Changes from your version are listed below:&lt;/p&gt;</string>
      </property>

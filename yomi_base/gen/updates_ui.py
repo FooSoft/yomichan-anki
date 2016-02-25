@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/updates.ui'
 #
-# Created: Tue Mar 31 12:33:11 2015
+# Created: Thu Feb 25 11:43:19 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -52,7 +52,7 @@ class Ui_DialogUpdates(object):
         DialogUpdates.setWindowTitle(_translate("DialogUpdates", "Update Checker", None))
         self.labelUpdates.setText(_translate("DialogUpdates", "<p>A new version of Yomichan is available for download!</p>\n"
 "\n"
-"<p>You can download this update (version {0} to version {1}) from the add-ons section on <a href=\"https://ankiweb.net/shared/info/934748696\">Anki Online</a> or directly from the <a href=\"http://foosoft.net/projects/yomichan\">Yomichan homepage</a>.</p>\n"
+"<p>You can download this update (version {0} to version {1}) from the add-ons section on <a href=\"https://ankiweb.net/shared/info/934748696\">Anki Online</a> or directly from the <a href=\"https://foosoft.net/projects/yomichan\">Yomichan homepage</a>.</p>\n"
 "\n"
 "<p>Changes from your version are listed below:</p>", None))
 
