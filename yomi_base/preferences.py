@@ -19,9 +19,13 @@
 from PyQt4 import QtGui, QtCore
 import copy
 import gen.preferences_ui
+import locale
+
+locale.setlocale(locale.LC_ALL, ("jpn,utf-8,eng,deu"))
 
 exportAllowedTags = {
-            'vocab': ['expression', 'hanja', 'reading', 'glossary', 'sentence','line','filename','summary'],
+            'vocab': ['expression', 'kanji', 'hanja', 'reading', 'glossary', 'sentence','line','filename','summary','traditional','language'],
+            'sentence': ['line','filename', 'summary'],
             'kanji': ['character', 'onyomi', 'kunyomi', 'glossary'],
         }
         
@@ -47,6 +51,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.comboFontFamily.currentFontChanged.connect(self.onFontFamilyChanged)
         self.radioButtonKanji.toggled.connect(self.onProfileChanged)
         self.radioButtonVocab.toggled.connect(self.onProfileChanged)
+        self.radioButtonSentence.toggled.connect(self.onProfileChanged)
         self.spinFontSize.valueChanged.connect(self.onFontSizeChanged)
         self.tableFields.itemChanged.connect(self.onFieldsChanged)       
         idx = 0
@@ -111,13 +116,17 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
         self.comboBoxDeck.blockSignals(True)
         self.comboBoxDeck.clear()
-        self.comboBoxDeck.addItems(self.anki.deckNames())
+        deckNames = self.anki.deckNames()
+        deckNames.sort(cmp=locale.strcoll)
+        self.comboBoxDeck.addItems(deckNames)
         self.comboBoxDeck.setCurrentIndex(self.comboBoxDeck.findText(deck))
         self.comboBoxDeck.blockSignals(False)
 
         self.comboBoxModel.blockSignals(True)
         self.comboBoxModel.clear()
-        self.comboBoxModel.addItems(self.anki.modelNames())
+        modelNames = self.anki.modelNames()
+        modelNames.sort(cmp=locale.strcoll)
+        self.comboBoxModel.addItems(modelNames)
         self.comboBoxModel.setCurrentIndex(self.comboBoxModel.findText(model))
         self.comboBoxModel.blockSignals(False)
 
@@ -231,10 +240,10 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
 
     def activeProfile(self):
-        name = 'vocab' if self.radioButtonVocab.isChecked() else 'kanji'
+        name = 'vocab' if self.radioButtonVocab.isChecked() else ('sentence' if self.radioButtonSentence.isChecked() else 'kanji')
         return self.profiles.get(name), name
 
 
     def setActiveProfile(self, profile):
-        name = 'vocab' if self.radioButtonVocab.isChecked() else 'kanji'
+        name = 'vocab' if self.radioButtonVocab.isChecked() else ('sentence' if self.radioButtonSentence.isChecked() else 'kanji')
         self.profiles[name] = profile

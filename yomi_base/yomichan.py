@@ -19,6 +19,7 @@
 
 from yomi_base import japanese
 from yomi_base import korean
+from yomi_base import chinese
 from yomi_base.preference_data import Preferences
 import urllib2
 
@@ -34,7 +35,11 @@ class Yomichan:
             self.languages['japanese'] = japanese.initLanguage()
         if self.preferences.settings['korean']:
             self.languages['korean'] = korean.initLanguage()
-            
+        if self.preferences.settings['chinese']:
+            self.languages['chinese'] = chinese.initLanguage()
+        self.loadSubscriptions()
+    
+    def loadSubscriptions(self):
         for sub in self.preferences['subscriptions']:
             try:
                 fp = urllib2.urlopen(sub['source'])

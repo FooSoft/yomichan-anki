@@ -84,7 +84,8 @@ class Translator:
             'glossary': glossary,
             'rules': rules,
             'source': source,
-            'tags': tags
+            'tags': tags,
+            'language': u'Japanese'
         }
 
 

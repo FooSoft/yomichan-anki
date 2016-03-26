@@ -18,82 +18,45 @@
 import sys
 import os
 import time
-import math
+import random
 from PyQt4 import QtGui, QtCore
 import anki
 import aqt
 from anki.hooks import addHook
 import anki.collection
-from anki.sched import Scheduler
 from yomichan import Yomichan
-from yomi_base.reader import MainWindowReader, FileState
+from yomi_base.reader import MainWindowReader
+from yomi_base.file_state import FileState
+from yomi_base.scheduler import Scheduler
 from anki.models import defaultModel,defaultField,defaultTemplate
-
-
-
-class EarlyScheduler(Scheduler):
-    def __init__(self,col,filecache,minimumGain = 0.05,hideMinimumGain = False):
-        Scheduler.__init__(self,col)
-        self.filecache = filecache
-        # Any occuring vocabulary's ivl will increase by at least 5%
-        self.minimumGain = minimumGain
-        self.hideMinimumGain = hideMinimumGain
-        self.dueCache = dict()
-        self.reset()
-        
-    def earlyAnswerCard(self,card,ease,timeUsed=None):
-        if card.queue < 0:
-            card.queue = 0
-        if timeUsed is None:
-            card.startTimer()
-        else:
-            card.timerStarted = time.time() - timeUsed
-        self.answerCard(card,ease)
-        
-    
-    def _updateRevIvl(self, card, ease):
-        idealIvl = self._nextRevIvl(card, ease)
-        adjIv1 = self._adjRevIvl(card, idealIvl)
-        if card.queue == 2:
-            card.ivl = card.ivl + math.ceil(self._smoothedIvl(card)*(adjIv1 - card.ivl))
-        else:
-            card.ivl = adjIvl
-            
-    def _smoothedIvl(self,card):
-        if card.ivl > 0 and card.queue == 2:
-            return max(self.minimumGain,float(card.ivl - self._daysEarly(card))/card.ivl)
-        else:
-            return 1
-        
-    def _daysEarly(self, card):
-        "Number of days earlier than scheduled."
-        due = card.odue if card.odid else card.due
-        return max(0, due - self.today)
-        
-    def deckDueList(self):
-        filecache = self.filecache()
-        yomichanDeck = self.col.decks.byName(u'Yomichan')
-        data = Scheduler.deckDueList(self)
-        if yomichanDeck is not None:
-            for deck in filecache:
-                id = self.col.decks.id(deck)
-                if filecache[deck] is None:
-                    due = 0
-                    new = 0
-                elif self.hideMinimumGain:
-                    due = int(filecache[deck].dueness - filecache[deck].foundvocabs * self.minimumGain)
-                    new = len(filecache[deck].wordsNotFound)
-                else:
-                    due = int(filecache[deck].dueness)
-                    new = len(filecache[deck].wordsNotFound)
-                data.append([deck, id, due, 0, new])
-                self.dueCache[deck] = due
-        return data
+from anki.utils import ids2str, intTime
 
 
 class Anki:
     def createYomichanModel(self):
         models = self.collection().models
+        if u'YomichanSentence' not in models.allNames():
+            model = models.new(u'YomichanSentence')
+            model['css'] = """\
+.card {
+ font-family: arial;
+ font-size: 22px;
+ text-align: center;
+ color: black;
+ background-color: white;
+}
+
+.card1 { background-color: #ffff7f; }
+.card2 { background-color: #efff7f; }
+            """
+            for field in [u'Expression',u'Translation',u'Reading']:
+                models.addField(model,models.newField(field))
+            template = models.newTemplate(u'Production')
+            template['qfmt'] = u'{{Translation}}'
+            template['afmt'] = u'{{FrontSide}}<hr>{{Expression}}'
+            models.addTemplate(model,template)
+            models.add(model)
+            models.flush()
         if u'YomichanKanji' not in models.allNames():
             model = models.new(u'YomichanKanji')
             model['css'] = """\
@@ -201,7 +164,7 @@ class Anki:
         
     
     def getCardsByNote(self, modelName, key, value):
-        return self.collection().findCards(key + u':' + value + u' note:' + modelName)
+        return self.collection().findCards(key + u':"' + value + u'" note:' + modelName)
 
     def getCardsByNoteAndNotInDeck(self, modelName, values, did):
         model = self.models().byName(modelName)
@@ -264,6 +227,24 @@ class Anki:
 
     def deckNames(self):
         return self.decks().allNames()
+    
+    def moveCards(self,cardKeys,model,deck):
+        key = self.getModelKey(model)                                                  
+        did = self.collection().decks.id(deck)
+        cids = [int(cid[0]) for cid in self.getCardsByNoteAndNotInDeck(profile['model'],cardKeys,did)]
+        updateCards(cids,did)
+        
+    def updateCards(self,cids,did):
+        deck = self.collection().decks.get(did)
+        self.window().checkpoint(_("Update cards"))
+        if not deck['dyn']:
+            mod = intTime()
+            usn = self.collection().usn()
+            scids = ids2str(cids)
+            self.collection().sched.remFromDyn(cids)
+            self.collection().db.execute("""update cards set usn=?, mod=?, did=? where id in """ + scids, usn, mod, did)
+        self.window().requireReset()
+
 
 class YomichanPlugin(Yomichan):
     def __init__(self):
@@ -319,30 +300,38 @@ class YomichanPlugin(Yomichan):
         return allCards
 
 
-    def loadAllTexts(self):
+    def loadAllTexts(self,rootDir=None):
+        if rootDir is None:
+            rootDir = u"Yomichan"
+        
         oldCache = self.fileCache
         self.fileCache = dict()
         allCards = self.fetchAllCards()
         if allCards is not None:
             mediadir = self.anki.collection().media.dir()
-            yomimedia = os.path.join(mediadir,'Yomichan')
-            for root,dirs,files in os.walk(yomimedia):
-                relDir = os.path.relpath(root,mediadir)
-                for file in files:
-                    if file[-4:] == '.txt':
-                        path = os.path.join(relDir,file)
-                        fullPath = u'::'.join(unicode(path).split(os.sep))
-                        if fullPath in oldCache:
-                            fileState = oldCache[fullPath]
-                            fileState.load()
-                        else:
-                            fileState = FileState(path,self.preferences['stripReadings'])
-                        self.fileCache[fullPath] = fileState
-                        fileState.findVocabulary(self.anki.collection().sched,allCards,needContent=False)
-                for dir in dirs:
-                    path = os.path.join(relDir,dir)
-                    self.fileCache[u'::'.join(unicode(path).split(os.sep))] = None
-    
+            yomimedia = os.path.join(mediadir,rootDir)
+            def processFile(file,relDir):
+                if file[-4:] == '.txt':
+                    path = os.path.join(relDir,file)
+                    fullPath = u'::'.join(unicode(path).split(os.sep))
+                    if fullPath in oldCache:
+                        fileState = oldCache[fullPath]
+                        fileState.load()
+                    else:
+                        fileState = FileState(path,self.preferences['stripReadings'])
+                    self.fileCache[fullPath] = fileState
+                    fileState.findVocabulary(self.anki.collection().sched,allCards,needContent=False)
+            if os.path.isdir(yomimedia):
+                for root,dirs,files in os.walk(yomimedia):
+                    relDir = os.path.relpath(root,mediadir)
+                    for file in files:
+                        processFile(file,relDir)
+                    for dir in dirs:
+                        path = os.path.join(relDir,dir)
+                        self.fileCache[u'::'.join(unicode(path).split(os.sep))] = None
+            elif os.path.isfile(yomimedia):
+                processFile(os.path.basename(yomimedia),os.path.dirname(yomimedia))
+            
 
 
     def onWindowClose(self):
@@ -391,7 +380,7 @@ def onBeforeStateChange(state, oldState, *args):
                         if not file.endswith(".txt") and fileName == os.path.basename(os.path.splitext(file)[0]):
                             openFile = os.path.join(dirName,file)
                             if sys.platform == 'linux2':
-                                subprocess.call(["xdg-open", openFile])
+                                subprocess.call(["xdg*-open", openFile])
                             else:
                                 os.startfile(openFile)
                 except:
@@ -399,11 +388,32 @@ def onBeforeStateChange(state, oldState, *args):
                 yomichanInstance.window.showMaximized()
     elif state == 'deckBrowser':
         if not getattr(aqt.mw.col.sched,"earlyAnswerCard",None):
-            aqt.mw.col.sched = EarlyScheduler(aqt.mw.col,yomichanInstance.getFileCache)
+            aqt.mw.col.sched = Scheduler(aqt.mw.col,yomichanInstance.getFileCache,scheduleVariationPercent = yomichanInstance.preferences['scheduleVariationPercent'],weekDays = yomichanInstance.preferences['weekDays'])
         yomichanInstance.loadAllTexts()
         yomichanDeck = aqt.mw.col.decks.byName(u'Yomichan')
         for name,id in aqt.mw.col.decks.children(yomichanDeck['id']):
             if name not in yomichanInstance.fileCache and aqt.mw.col.decks.get(id)['id']!=1:
                 aqt.mw.col.decks.rem(id)
-    
 addHook('beforeStateChange',onBeforeStateChange)
+    
+
+
+def onSearch(cmds):
+    def findByYomichanFile(oldfn):
+        def inner((val,args)):
+            if(val.startswith(u"Yomichan")):
+                yomichanInstance.searchPath = val.replace(u"::",os.sep)
+                yomichanInstance.loadAllTexts(val.replace(u"::",os.sep))
+                words = set()
+                for text,state in yomichanInstance.fileCache.items():
+                    if state is not None:
+                        words |= set(state.wordsAll.keys())
+                arg = "(" + ",".join(["\""+val+"\"" for val in words]) + ")"
+                where = "(n.sfld in " + arg + ")"
+                yomichanInstance.where = where
+                return where
+            else:
+                return oldfn((val,args))
+        return inner    
+    cmds['deck'] = findByYomichanFile(cmds['deck'])    
+addHook('search',onSearch)

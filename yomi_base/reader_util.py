@@ -41,7 +41,7 @@ def stripReadings(content):
 
     
 def findLine(content, position):
-    startLine = content[0:position-1].rfind(u'\n')
+    startLine = content[0:position].rfind(u'\n')
     endLine = content.find(u'\n',position)
     if endLine==-1:
       line = content[startLine+1:]
@@ -114,7 +114,17 @@ def formatFields(fields, markup):
 def splitTags(tags):
     return filter(lambda tag: tag.strip(), re.split('[;,\s]', tags))
 
-
+def markupSentenceExp(definition):
+    if definition.get('reading'):
+        summary = u'{expression}[{reading}]'.format(**definition)
+    else:
+        summary = u'{expression}'.format(**definition)
+    return {
+        'summary': summary,
+        'line': definition.get('line'),
+        'filename': definition.get('filename')
+    }
+    
 def markupVocabExp(definition):
     if definition.get('reading'):
         summary = u'{expression}[{reading}]'.format(**definition)
@@ -126,7 +136,9 @@ def markupVocabExp(definition):
         'reading': definition.get('reading') or unicode(),
         'hanja': definition.get('hanja') or unicode(),
         'glossary': definition['glossary'],
+        'language': definition.get('language') or unicode(),
         'sentence': definition.get('sentence'),
+        'traditional': definition.get('traditional') or unicode(),
         'line': definition.get('line'),
         'filename': definition.get('filename'),
         'summary': summary
@@ -140,7 +152,9 @@ def markupVocabReading(definition):
             'reading': unicode(),
             'hanja': unicode(),
             'glossary': definition['glossary'],
+            'language': definition.get('language'),
             'sentence': definition.get('sentence'),
+            'traditional': definition.get('traditional') or unicode(),
             'line': definition.get('line'),
             'definition': definition.get('filename'),
             'summary': definition['reading']
@@ -195,7 +209,10 @@ def buildEmpty():
 def buildVocabDef(definition, index, query, allowOverwrite):
     reading = unicode()
     if definition.get('reading'):
-        reading = u'<span class="reading">[{0}]<br></span>'.format(definition['reading'])
+        reading = u'<span class="reading">[{0}]<br>'.format(definition['reading'])
+        if definition.get('tags') == u'traditional':
+            reading += u' (trad.)'
+        reading += '</span>'
 
     rules = unicode()
     if definition.get('rules'):
@@ -208,8 +225,9 @@ def buildVocabDef(definition, index, query, allowOverwrite):
         markupReading = markupVocabReading(definition)
         if query('vocab', markupExp, index):
             links += '<a href="addVocabExp:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
-        elif allowOverwrite:
-            links += '<a href="overwriteVocabExp:{0}"><img src="://img/img/icon_overwrite_expression.png" align="right"></a>'.format(index)
+        else:
+            if allowOverwrite:
+                links += '<a href="overwriteVocabExp:{0}"><img src="://img/img/icon_overwrite_expression.png" align="right"></a>'.format(index)
         if markupReading is not None:
             if query('vocabReading', markupReading, index):
                 links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)

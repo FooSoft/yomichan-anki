@@ -31,7 +31,17 @@
                 "v": "{expression}"
             }, 
             "model": "Yomichan"
+        },
+        "sentence": {
+            "deck": "YomichanCards", 
+            "fields": {
+                "Expression": "{t0}", 
+                "Translation": "{t1}", 
+                "Reading": ""
+            }, 
+            "model": "YomichanTranslation"
         }
+
     },    
     "sources": [
         {
@@ -40,6 +50,7 @@
     ],
     "subscriptions": [
     ],
+    "scheduleVariationPercent": 0,
     "recentFiles": [],
     "textContent": "",
     "scanLength": 16,
@@ -51,7 +62,9 @@
     "unlockVocab":true,
     "japanese":true,
     "korean":false,
+    "chinese":false,
     "lookupKey":1,
     "linkToKanji":"http://jisho.org/search/#kanji {0}",
-    "linkToVocab":"http://jisho.org/search/{0}"
+    "linkToVocab":"http://jisho.org/search/{0}",
+    "weekDays": [true,true,true,true,true,true,true]
 }

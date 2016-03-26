@@ -111,6 +111,7 @@
     <addaction name="separator"/>
     <addaction name="actionToggleJapanese"/>
     <addaction name="actionToggleKorean"/>
+    <addaction name="actionToggleChinese"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -216,6 +217,13 @@
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QPushButton" name="removeVocabulary">
+         <property name="text">
+          <string>Remove Vocabulary</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QPushButton" name="learnVocabulary">
          <property name="text">
@@ -524,6 +532,17 @@
    </property>
    <property name="toolTip">
     <string>Enable Korean dictionary</string>
+   </property>
+  </action>
+  <action name="actionToggleChinese">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Chinese</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable Chinese dictionary</string>
    </property>
   </action>
  </widget>
