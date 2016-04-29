@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/preferences.ui'
 #
-# Created: Thu Feb 25 11:43:19 2016
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -175,6 +174,20 @@ class Ui_DialogPreferences(object):
         self.labelTags.setText(_fromUtf8(""))
         self.labelTags.setObjectName(_fromUtf8("labelTags"))
         self.verticalLayout_2.addWidget(self.labelTags)
+        self.horizontalLayout_4 = QtGui.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
+        self.checkEnableRemoteApi = QtGui.QCheckBox(self.tabAnki)
+        self.checkEnableRemoteApi.setObjectName(_fromUtf8("checkEnableRemoteApi"))
+        self.horizontalLayout_4.addWidget(self.checkEnableRemoteApi)
+        self.label_3 = QtGui.QLabel(self.tabAnki)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy)
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.horizontalLayout_4.addWidget(self.label_3)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
         self.tabWidget.addTab(self.tabAnki, _fromUtf8(""))
         self.verticalLayout.addWidget(self.tabWidget)
         self.buttonBox = QtGui.QDialogButtonBox(DialogPreferences)
@@ -213,6 +226,8 @@ class Ui_DialogPreferences(object):
         item.setText(_translate("DialogPreferences", "Field", None))
         item = self.tableFields.horizontalHeaderItem(1)
         item.setText(_translate("DialogPreferences", "Value", None))
+        self.checkEnableRemoteApi.setText(_translate("DialogPreferences", "Enable remote API", None))
+        self.label_3.setText(_translate("DialogPreferences", "(see the <a href=\"https://foosoft.net/projects/yomichan-ext\">extension page</a> for details)", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAnki), _translate("DialogPreferences", "Anki", None))
 
 import resources_rc

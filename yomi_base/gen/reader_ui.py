@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/reader.ui'
 #
-# Created: Thu Feb 25 11:43:19 2016
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -228,8 +227,6 @@ class Ui_MainWindowReader(object):
         self.menuEdit.addSeparator()
         self.menuEdit.addAction(self.actionPreferences)
         self.menuHelp.addAction(self.actionHomepage)
-        self.menuHelp.addAction(self.actionFeedback)
-        self.menuHelp.addSeparator()
         self.menuHelp.addAction(self.actionAbout)
         self.menuTextSize.addAction(self.actionZoomIn)
         self.menuTextSize.addAction(self.actionZoomOut)
