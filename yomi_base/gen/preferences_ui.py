@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_DialogPreferences(object):
     def setupUi(self, DialogPreferences):
         DialogPreferences.setObjectName(_fromUtf8("DialogPreferences"))
-        DialogPreferences.resize(600, 300)
+        DialogPreferences.resize(600, 323)
         self.verticalLayout = QtGui.QVBoxLayout(DialogPreferences)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.tabWidget = QtGui.QTabWidget(DialogPreferences)
@@ -227,7 +227,7 @@ class Ui_DialogPreferences(object):
         item = self.tableFields.horizontalHeaderItem(1)
         item.setText(_translate("DialogPreferences", "Value", None))
         self.checkEnableRemoteApi.setText(_translate("DialogPreferences", "Enable remote API", None))
-        self.label_3.setText(_translate("DialogPreferences", "(see the <a href=\"https://foosoft.net/projects/yomichan-ext\">extension page</a> for details)", None))
+        self.label_3.setText(_translate("DialogPreferences", "(see the <a href=\"https://foosoft.net/projects/yomichan-chrome\">extension page</a> for details)", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAnki), _translate("DialogPreferences", "Anki", None))
 
 import resources_rc

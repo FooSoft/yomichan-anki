@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>300</height>
+    <height>323</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -299,7 +299,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>(see the &lt;a href=&quot;https://foosoft.net/projects/yomichan-ext&quot;&gt;extension page&lt;/a&gt; for details)</string>
+            <string>(see the &lt;a href=&quot;https://foosoft.net/projects/yomichan-chrome&quot;&gt;extension page&lt;/a&gt; for details)</string>
            </property>
           </widget>
          </item>

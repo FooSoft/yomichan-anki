@@ -15,5 +15,6 @@
     "tags": [],
     "wordWrap": false,
     "allowEditing": true,
+    "enableRemoteApi": false,
     "firstRun": true
 }

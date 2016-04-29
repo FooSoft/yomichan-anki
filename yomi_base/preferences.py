@@ -51,6 +51,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.checkStripReadings.setChecked(self.preferences['stripReadings'])
         self.spinMaxResults.setValue(self.preferences['maxResults'])
         self.spinScanLength.setValue(self.preferences['scanLength'])
+        self.checkEnableRemoteApi.setChecked(self.preferences['enableRemoteApi'])
 
         self.updateSampleText()
         font = self.textSample.font()
@@ -71,6 +72,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.preferences['maxResults'] = self.spinMaxResults.value()
         self.preferences['scanLength'] = self.spinScanLength.value()
         self.preferences['stripReadings'] = self.checkStripReadings.isChecked()
+        self.preferences['enableRemoteApi'] = self.checkEnableRemoteApi.isChecked()
         self.preferences['firstRun'] = False
 
         if self.anki is not None:
