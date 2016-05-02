@@ -65,15 +65,15 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
 
     def dialogToData(self):
-        self.preferences['checkForUpdates'] = self.checkCheckForUpdates.isChecked()
+        self.preferences['checkForUpdates']     = self.checkCheckForUpdates.isChecked()
         self.preferences['rememberTextContent'] = self.checkRememberTextContent.isChecked()
-        self.preferences['allowEditing'] = self.checkAllowEditing.isChecked()
-        self.preferences['loadRecentFile'] = self.checkLoadRecentFile.isChecked()
-        self.preferences['maxResults'] = self.spinMaxResults.value()
-        self.preferences['scanLength'] = self.spinScanLength.value()
-        self.preferences['stripReadings'] = self.checkStripReadings.isChecked()
-        self.preferences['enableRemoteApi'] = self.checkEnableRemoteApi.isChecked()
-        self.preferences['firstRun'] = False
+        self.preferences['allowEditing']        = self.checkAllowEditing.isChecked()
+        self.preferences['loadRecentFile']      = self.checkLoadRecentFile.isChecked()
+        self.preferences['maxResults']          = self.spinMaxResults.value()
+        self.preferences['scanLength']          = self.spinScanLength.value()
+        self.preferences['stripReadings']       = self.checkStripReadings.isChecked()
+        self.preferences['enableRemoteApi']     = self.checkEnableRemoteApi.isChecked()
+        self.preferences['firstRun']            = False
 
         if self.anki is not None:
             self.dialogToProfile()

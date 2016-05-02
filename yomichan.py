@@ -17,10 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 from yomi_base import japanese
 from yomi_base.preference_data import Preferences
 from yomi_base.reader import MainWindowReader
+from yomi_base.remote_api import RemoteApi
 import sys
 
 
@@ -39,6 +40,7 @@ class YomichanPlugin(Yomichan):
         self.window = None
         self.anki = anki_bridge.Anki()
         self.parent = self.anki.window()
+        self.remoteApi = RemoteApi(self.anki, self.preferences['enableRemoteApi'])
 
         separator = QtGui.QAction(self.parent)
         separator.setSeparator(True)
@@ -62,6 +64,7 @@ class YomichanPlugin(Yomichan):
                 self.language,
                 None,
                 self.anki,
+                self.remoteApi,
                 self.onWindowClose
             )
             self.window.show()

@@ -21,7 +21,7 @@ import aqt
 
 
 class Anki:
-    def addNote(self, deckName, modelName, fields, tags=list()):
+    def addNote(self, deckName, modelName, fields, tags=[]):
         note = self.createNote(deckName, modelName, fields, tags)
         if note is not None:
             collection = self.collection()
@@ -35,7 +35,7 @@ class Anki:
         return bool(self.createNote(deckName, modelName, fields))
 
 
-    def createNote(self, deckName, modelName, fields, tags=list()):
+    def createNote(self, deckName, modelName, fields, tags=[]):
         model = self.models().byName(modelName)
         if model is None:
             return None

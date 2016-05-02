@@ -30,30 +30,31 @@ import updates
 class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     class State:
         def __init__(self):
-            self.filename = unicode()
-            self.kanjiDefs = list()
-            self.scanPosition = 0
+            self.filename       = unicode()
+            self.kanjiDefs      = []
+            self.scanPosition   = 0
             self.searchPosition = 0
-            self.searchText = unicode()
-            self.vocabDefs = list()
+            self.searchText     = unicode()
+            self.vocabDefs      = []
 
 
-    def __init__(self, parent, preferences, language, filename=None, anki=None, closed=None):
+    def __init__(self, parent, preferences, language, filename=None, anki=None, remoteApi=None, closed=None):
         QtGui.QMainWindow.__init__(self, parent)
         self.setupUi(self)
 
-        self.textContent.mouseMoveEvent = self.onContentMouseMove
+        self.textContent.mouseMoveEvent  = self.onContentMouseMove
         self.textContent.mousePressEvent = self.onContentMousePress
         self.dockAnki.setEnabled(anki is not None)
 
-        self.facts = list()
-        self.anki = anki
-        self.closed = closed
-        self.language = language
+        self.facts       = []
+        self.anki        = anki
+        self.remoteApi   = remoteApi
+        self.closed      = closed
+        self.language    = language
         self.preferences = preferences
-        self.state = self.State()
-        self.updates = updates.UpdateFinder()
-        self.zoom = 0
+        self.state       = self.State()
+        self.updates     = updates.UpdateFinder()
+        self.zoom        = 0
 
         self.applyPreferences()
         self.updateRecentFiles()
@@ -102,6 +103,9 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.move(QtCore.QPoint(*self.preferences['windowPosition']))
         if self.preferences['windowSize'] is not None:
             self.resize(QtCore.QSize(*self.preferences['windowSize']))
+
+        if self.remoteApi is not None:
+            self.remoteApi.enable(self.preferences['enableRemoteApi'])
 
         self.comboTags.addItems(self.preferences['tags'])
         self.applyPreferencesContent()
@@ -587,8 +591,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def importWordList(self, words):
-        self.state.vocabDefs = list()
-        self.state.kanjiDefs = list()
+        self.state.vocabDefs = []
+        self.state.kanjiDefs = []
 
         for word in words:
             if self.dockVocab.isVisible():

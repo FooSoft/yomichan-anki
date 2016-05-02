@@ -29,14 +29,14 @@ class AjaxRequest:
 
 
 class AjaxClient:
-    def __init__(self, sock, callback):
+    def __init__(self, sock, handler):
         self.sock = sock
-        self.callback = callback
+        self.handler = handler
         self.readBuff = ''
-        self.readBuff = ''
+        self.writeBuff = ''
 
 
-    def advance(self, recvSize=1):
+    def advance(self, recvSize=1024):
         if self.sock is None:
             return False
 
@@ -53,12 +53,12 @@ class AjaxClient:
             req, length = self.parseRequest(self.readBuff)
             if req is not None:
                 self.readBuff = self.readBuff[length:]
-                self.readBuff += self.callback(req)
+                self.writeBuff += self.handler(req)
 
-        if wlist and self.readBuff:
-            length = self.sock.send(self.readBuff)
-            self.readBuff = self.readBuff[length:]
-            if not self.readBuff:
+        if wlist and self.writeBuff:
+            length = self.sock.send(self.writeBuff)
+            self.writeBuff = self.writeBuff[length:]
+            if not self.writeBuff:
                 self.close()
                 return False
 
@@ -71,7 +71,7 @@ class AjaxClient:
             self.sock = None
 
         self.readBuff = ''
-        self.readBuff = ''
+        self.writeBuff = ''
 
 
     def parseRequest(self, data):
@@ -96,8 +96,8 @@ class AjaxClient:
 
 
 class AjaxServer:
-    def __init__(self, callback):
-        self.callback = callback
+    def __init__(self, handler):
+        self.handler = handler
         self.clients = []
         self.sock = None
 
@@ -116,7 +116,7 @@ class AjaxServer:
         clientSock = self.sock.accept()[0]
         if clientSock is not None:
             clientSock.setblocking(False)
-            self.clients.append(AjaxClient(clientSock, self.callbackWrapper))
+            self.clients.append(AjaxClient(clientSock, self.handlerWrapper))
 
 
     def advanceClients(self):
@@ -133,8 +133,8 @@ class AjaxServer:
         self.sock.listen(backlog)
 
 
-    def callbackWrapper(self, req):
-        body = json.dumps(self.callback(json.loads(req.body)))
+    def handlerWrapper(self, req):
+        body = json.dumps(self.handler(json.loads(req.body)))
         resp = ''
 
         headers = {
