@@ -87,7 +87,10 @@ class RemoteApi:
 
 
     def handler(self, request):
-        self.handlers.get(request.get('action'), self.apiInvalidRequest)(request.get('data'))
+        action = request.get('action')
+        data   = request.get('data')
+
+        self.handlers.get(action, self.apiInvalidRequest)(data)
 
 
     def apiAddNote(self, data):
@@ -107,4 +110,4 @@ class RemoteApi:
 
 
     def apiInvalidRequest(self, data):
-        return {}
+        return None

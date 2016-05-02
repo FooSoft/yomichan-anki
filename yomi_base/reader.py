@@ -273,7 +273,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
     def onActionToggleWrap(self, wrap):
         self.preferences['wordWrap'] = wrap
-        self.textContent.setLineWrapMode(QtGui.QPlainTextEdit.WidgetWidth if self.preferences['wordWrap'] else QtGui.QPlainTextEdit.NoWrap)
+        mode = QtGui.QPlainTextEdit.WidgetWidth if self.preferences['wordWrap'] else QtGui.QPlainTextEdit.NoWrap
+        self.textContent.setLineWrapMode(mode)
 
 
     def onActionHomepage(self):
@@ -559,10 +560,10 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if options.get('trim', True):
             defs = defs[:self.preferences['maxResults']]
 
-        html = builder(defs, self.ankiIsFactValid)
-
         scrollbar = control.verticalScrollBar()
         position  = scrollbar.sliderPosition()
+
+        html = builder(defs, self.ankiIsFactValid)
         control.setHtml(html)
 
         if options.get('scroll', False):
