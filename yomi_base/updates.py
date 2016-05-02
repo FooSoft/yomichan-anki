@@ -69,4 +69,4 @@ class UpdateFinder(QtCore.QThread):
         except:
             pass
         finally:
-            self.updateResult.emit({ 'latest': latest, 'updates': updates })
+            self.updateResult.emit({'latest': latest, 'updates': updates})

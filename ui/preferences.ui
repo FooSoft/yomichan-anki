@@ -284,9 +284,9 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QCheckBox" name="checkEnableRemoteApi">
+          <widget class="QCheckBox" name="checkEnableAnkiConnect">
            <property name="text">
-            <string>Enable remote API</string>
+            <string>Enable AnkiConnect</string>
            </property>
           </widget>
          </item>

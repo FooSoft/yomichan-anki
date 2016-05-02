@@ -23,7 +23,7 @@ import constants
 import reader_util
 
 
-class RemoteApi:
+class AnkiConnect:
     def __init__(self, anki, preferences, interval=50):
         self.preferences = preferences
         self.server      = None

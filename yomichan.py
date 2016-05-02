@@ -19,9 +19,9 @@
 
 from PyQt4 import QtGui
 from yomi_base import japanese
+from yomi_base.anki_connect import AnkiConnect
 from yomi_base.preference_data import Preferences
 from yomi_base.reader import MainWindowReader
-from yomi_base.remote_api import RemoteApi
 import sys
 
 
@@ -41,7 +41,7 @@ class YomichanPlugin(Yomichan):
         self.window          = None
         self.anki            = anki_bridge.Anki()
         self.parent          = self.anki.window()
-        self.remoteApi       = RemoteApi(self.anki, self.preferences)
+        self.ankiConnect     = AnkiConnect(self.anki, self.preferences)
 
         separator = QtGui.QAction(self.parent)
         separator.setSeparator(True)

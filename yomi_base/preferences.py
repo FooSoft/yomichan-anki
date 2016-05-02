@@ -51,7 +51,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.checkStripReadings.setChecked(self.preferences['stripReadings'])
         self.spinMaxResults.setValue(self.preferences['maxResults'])
         self.spinScanLength.setValue(self.preferences['scanLength'])
-        self.checkEnableRemoteApi.setChecked(self.preferences['enableRemoteApi'])
+        self.checkEnableAnkiConnect.setChecked(self.preferences['enableAnkiConnect'])
 
         self.updateSampleText()
         font = self.textSample.font()
@@ -72,7 +72,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.preferences['maxResults']          = self.spinMaxResults.value()
         self.preferences['scanLength']          = self.spinScanLength.value()
         self.preferences['stripReadings']       = self.checkStripReadings.isChecked()
-        self.preferences['enableRemoteApi']     = self.checkEnableRemoteApi.isChecked()
+        self.preferences['enableAnkiConnect']   = self.checkEnableAnkiConnect.isChecked()
         self.preferences['firstRun']            = False
 
         if self.anki is not None:
@@ -82,8 +82,8 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
     def dialogToProfile(self):
         self.setActiveProfile({
-            'deck': unicode(self.comboBoxDeck.currentText()),
-            'model': unicode(self.comboBoxModel.currentText()),
+            'deck':   unicode(self.comboBoxDeck.currentText()),
+            'model':  unicode(self.comboBoxModel.currentText()),
             'fields': self.ankiFields()
         })
 
@@ -91,8 +91,8 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
     def profileToDialog(self):
         profile, name = self.activeProfile()
 
-        deck = str() if profile is None else profile['deck']
-        model = str() if profile is None else profile['model']
+        deck  = unicode() if profile is None else profile['deck']
+        model = unicode() if profile is None else profile['model']
 
         self.comboBoxDeck.blockSignals(True)
         self.comboBoxDeck.clear()
@@ -131,13 +131,13 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
     def setAnkiFields(self, fields, fieldsPrefs):
         if fields is None:
-            fields = list()
+            fields = []
 
         self.tableFields.blockSignals(True)
         self.tableFields.setRowCount(len(fields))
 
         for i, name in enumerate(fields):
-            columns = list()
+            columns = []
 
             itemName = QtGui.QTableWidgetItem(name)
             itemName.setFlags(QtCore.Qt.ItemIsSelectable)
@@ -153,10 +153,10 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
 
     def ankiFields(self):
-        result = dict()
+        result = {}
 
         for i in range(0, self.tableFields.rowCount()):
-            itemName = unicode(self.tableFields.item(i, 0).text())
+            itemName  = unicode(self.tableFields.item(i, 0).text())
             itemValue = unicode(self.tableFields.item(i, 1).text())
             result[itemName] = itemValue
 
@@ -210,10 +210,10 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
 
     def updateAnkiFields(self):
         modelName = self.comboBoxModel.currentText()
-        fieldNames = self.anki.modelFieldNames(modelName) or list()
+        fieldNames = self.anki.modelFieldNames(modelName) or []
 
         profile, name = self.activeProfile()
-        fields = dict() if profile is None else profile['fields']
+        fields = {} if profile is None else profile['fields']
 
         self.setAnkiFields(fieldNames, fields)
 
