@@ -65,7 +65,6 @@ class YomichanPlugin(Yomichan):
                 self.language,
                 None,
                 self.anki,
-                self.remoteApi,
                 self.onWindowClose
             )
             self.window.show()

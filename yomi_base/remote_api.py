@@ -38,10 +38,10 @@ class RemoteApi:
             'getVersion':    self.apiGetVersion,
         }
 
-        self.enable(self.preferences['enableRemoteApi'])
 
+    def advance(self):
+        enabled = self.preferences['enableRemoteApi']
 
-    def enable(self, enabled=True):
         if self.server is None and enabled:
             self.server = AjaxServer(self.handler)
             self.server.listen()
@@ -49,8 +49,6 @@ class RemoteApi:
             self.server.close()
             self.server = None
 
-
-    def advance(self):
         if self.server is not None:
             self.server.advance()
 

@@ -38,7 +38,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.vocabDefs      = []
 
 
-    def __init__(self, parent, preferences, language, filename=None, anki=None, remoteApi=None, closed=None):
+    def __init__(self, parent, preferences, language, filename=None, anki=None, closed=None):
         QtGui.QMainWindow.__init__(self, parent)
         self.setupUi(self)
 
@@ -48,7 +48,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         self.facts       = []
         self.anki        = anki
-        self.remoteApi   = remoteApi
         self.closed      = closed
         self.language    = language
         self.preferences = preferences
@@ -103,9 +102,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.move(QtCore.QPoint(*self.preferences['windowPosition']))
         if self.preferences['windowSize'] is not None:
             self.resize(QtCore.QSize(*self.preferences['windowSize']))
-
-        if self.remoteApi is not None:
-            self.remoteApi.enable(self.preferences['enableRemoteApi'])
 
         self.comboTags.addItems(self.preferences['tags'])
         self.applyPreferencesContent()
@@ -385,7 +381,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
     def findText(self, text):
         content = unicode(self.textContent.toPlainText())
-        index = content.find(unicode(text), self.state.searchPosition)
+        index   = content.find(unicode(text), self.state.searchPosition)
 
         if index == -1:
             wrap = self.state.searchPosition != 0
@@ -415,8 +411,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         if profile is None:
             return False
 
-        fields = reader_util.formatFields(profile['fields'], markup)
-        tagsSplit = reader_util.splitTags(unicode(self.comboTags.currentText()))
+        fields     = reader_util.formatFields(profile['fields'], markup)
+        tagsSplit  = reader_util.splitTags(unicode(self.comboTags.currentText()))
         tagsJoined = ' '.join(tagsSplit)
 
         tagIndex = self.comboTags.findText(tagsJoined)
@@ -491,12 +487,13 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
     def updateSampleFromPosition(self):
         samplePosStart = self.state.scanPosition
-        samplePosEnd = self.state.scanPosition + self.preferences['scanLength']
+        samplePosEnd   = self.state.scanPosition + self.preferences['scanLength']
+
+        content           = unicode(self.textContent.toPlainText())
+        contentSample     = content[samplePosStart:samplePosEnd]
+        contentSampleFlat = contentSample.replace(u'\n', unicode())
 
         cursor = self.textContent.textCursor()
-        content = unicode(self.textContent.toPlainText())
-        contentSample = content[samplePosStart:samplePosEnd]
-        contentSampleFlat = contentSample.replace(u'\n', unicode())
 
         if len(contentSampleFlat) == 0 or not japanese.util.isJapanese(contentSampleFlat[0]):
             cursor.clearSelection()
@@ -565,7 +562,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         html = builder(defs, self.ankiIsFactValid)
 
         scrollbar = control.verticalScrollBar()
-        position = scrollbar.sliderPosition()
+        position  = scrollbar.sliderPosition()
         control.setHtml(html)
 
         if options.get('scroll', False):

@@ -105,10 +105,10 @@ def markupVocabExp(definition):
 
     return {
         'expression': definition['expression'],
-        'reading': definition['reading'] or unicode(),
-        'glossary': definition['glossary'],
-        'sentence': definition.get('sentence'),
-        'summary': summary
+        'reading':    definition['reading'] or unicode(),
+        'glossary':   definition['glossary'],
+        'sentence':   definition.get('sentence'),
+        'summary':    summary
     }
 
 
@@ -116,10 +116,10 @@ def markupVocabReading(definition):
     if definition['reading']:
         return {
             'expression': definition['reading'],
-            'reading': unicode(),
-            'glossary': definition['glossary'],
-            'sentence': definition.get('sentence'),
-            'summary': definition['reading']
+            'reading':    unicode(),
+            'glossary':   definition['glossary'],
+            'sentence':   definition.get('sentence'),
+            'summary':    definition['reading']
         }
 
 
@@ -135,10 +135,10 @@ def copyVocabDef(definition):
 def markupKanji(definition):
     return {
         'character': definition['character'],
-        'onyomi': definition['onyomi'],
-        'kunyomi': definition['kunyomi'],
-        'glossary': definition['glossary'],
-        'summary': definition['character']
+        'onyomi':    definition['onyomi'],
+        'kunyomi':   definition['kunyomi'],
+        'glossary':  definition['glossary'],
+        'summary':   definition['character']
     }
 
 
@@ -147,7 +147,7 @@ def copyKanjiDef(definition):
 
 
 def buildDefHeader():
-    palette = QtGui.QApplication.palette()
+    palette   = QtGui.QApplication.palette()
     toolTipBg = palette.color(QtGui.QPalette.Window).name()
     toolTipFg = palette.color(QtGui.QPalette.WindowText).name()
 
