@@ -20,12 +20,14 @@
 from PyQt4 import QtCore
 from ajax import AjaxServer
 import constants
+import reader_util
 
 
 class RemoteApi:
-    def __init__(self, anki, enabled, interval=50):
-        self.server = None
-        self.enable(enabled)
+    def __init__(self, anki, preferences, interval=50):
+        self.preferences = preferences
+        self.server      = None
+
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.advance)
         self.timer.start(interval)
@@ -35,6 +37,8 @@ class RemoteApi:
             'apiCanAddNote': self.apiCanAddNote,
             'getVersion':    self.apiGetVersion,
         }
+
+        self.enable(self.preferences['enableRemoteApi'])
 
 
     def enable(self, enabled=True):
@@ -51,25 +55,53 @@ class RemoteApi:
             self.server.advance()
 
 
+    def prepareNoteParams(self, definition, mode):
+        if definition is None:
+            return None
+
+        if mode == 'vocabExp':
+            profile = 'vocab'
+            markupFunc = reader_util.markupVocabExp
+        elif mode == 'vocabReading':
+            profile = 'vocab'
+            markupFunc = reader_util.markupVocabReading
+        elif mode == 'kanji':
+            profile = 'kanji'
+            markupFunc = reader_util.markupKanji
+        else:
+            return None
+
+        profile = self.preferences['profiles'].get(profile)
+        if profile is None:
+            return None
+
+        fields = reader_util.formatFields(
+            profile['fields'],
+            markupFunc(definition)
+        )
+
+        return {
+            'deck':   profile['deck'],
+            'model':  profile['model'],
+            'fields': fields,
+            'tags':   self.preferences['tags']
+        }
+
+
     def handler(self, request):
         self.handlers.get(request.get('action'), self.apiInvalidRequest)(request.get('data'))
 
 
     def apiAddNote(self, data):
-        deckName  = data.get('deckName', unicode())
-        modelName = data.get('modelName', unicode())
-        fields    = data.get('fields', {})
-        tags      = data.get('tags', [])
-
-        return self.anki.addNote(deckName, modelName, fields, tags)
+        params = self.prepareNoteParams(data.get('definition'), data.get('mode'))
+        if params is not None:
+            return self.anki.addNote(params['deck'], params['model'], params['fields'], params['tags'])
 
 
     def apiCanAddNote(self, data):
-        deckName  = data.get('deckName', unicode())
-        modelName = data.get('modelName', unicode())
-        fields    = data.get('fields', {})
-
-        return self.anki.canAddNote(deckName, modelName, fields)
+        params = self.prepareNoteParams(data.get('definition'), data.get('mode'))
+        if params is not None:
+            return self.anki.canAddNote(params['deck'], params['model'], params['fields'])
 
 
     def apiGetVersion(self, data):

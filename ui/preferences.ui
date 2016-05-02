@@ -301,6 +301,9 @@
            <property name="text">
             <string>(see the &lt;a href=&quot;https://foosoft.net/projects/yomichan-chrome&quot;&gt;extension page&lt;/a&gt; for details)</string>
            </property>
+           <property name="openExternalLinks">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
         </layout>

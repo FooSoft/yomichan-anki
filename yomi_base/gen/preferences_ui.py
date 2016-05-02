@@ -185,6 +185,7 @@ class Ui_DialogPreferences(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
         self.label_3.setSizePolicy(sizePolicy)
+        self.label_3.setOpenExternalLinks(True)
         self.label_3.setObjectName(_fromUtf8("label_3"))
         self.horizontalLayout_4.addWidget(self.label_3)
         self.verticalLayout_2.addLayout(self.horizontalLayout_4)

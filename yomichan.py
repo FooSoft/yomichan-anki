@@ -28,6 +28,7 @@ import sys
 class Yomichan:
     def __init__(self):
         self.language = japanese.initLanguage()
+
         self.preferences = Preferences()
         self.preferences.load()
 
@@ -37,10 +38,10 @@ class YomichanPlugin(Yomichan):
         Yomichan.__init__(self)
 
         self.toolIconVisible = False
-        self.window = None
-        self.anki = anki_bridge.Anki()
-        self.parent = self.anki.window()
-        self.remoteApi = RemoteApi(self.anki, self.preferences['enableRemoteApi'])
+        self.window          = None
+        self.anki            = anki_bridge.Anki()
+        self.parent          = self.anki.window()
+        self.remoteApi       = RemoteApi(self.anki, self.preferences)
 
         separator = QtGui.QAction(self.parent)
         separator.setSeparator(True)
