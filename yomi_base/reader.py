@@ -115,6 +115,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
             self.onActionPreferences()
 
+
     def applyPreferencesContent(self):
         palette = self.textContent.palette()
         palette.setColor(QtGui.QPalette.Base, QtGui.QColor(self.preferences['bgColor']))
