@@ -25,6 +25,7 @@ import reader_util
 
 class AnkiConnect:
     def __init__(self, anki, preferences, interval=50):
+        self.anki        = anki
         self.preferences = preferences
         self.server      = None
 
@@ -74,15 +75,14 @@ class AnkiConnect:
         if profile is None:
             return None
 
-        fields = reader_util.formatFields(
-            profile['fields'],
-            markupFunc(definition)
-        )
+        markup = markupFunc(definition)
+        if markup is None:
+            return None
 
         return {
             'deck':   profile['deck'],
             'model':  profile['model'],
-            'fields': fields,
+            'fields': reader_util.formatFields(profile['fields'], markup),
             'tags':   self.preferences['tags']
         }
 
@@ -91,7 +91,7 @@ class AnkiConnect:
         action = request.get('action')
         data   = request.get('data')
 
-        self.handlers.get(action, self.apiInvalidRequest)(data)
+        return self.handlers.get(action, self.apiInvalidRequest)(data)
 
 
     def apiAddNote(self, data):
@@ -107,10 +107,8 @@ class AnkiConnect:
 
 
     def apiCanAddNotes(self, data):
-        definitions = data.get('definitions', [])
-
-        for definition in definitions:
-            definitions['anki'] = results = {}
+        for definition in data:
+            definition['addable'] = results = {}
             for mode in ['vocabExp', 'vocabReading', 'kanji']:
                 params = self.prepareNoteParams(definition, mode)
                 results[mode] = params is not None and self.anki.canAddNote(
@@ -119,7 +117,7 @@ class AnkiConnect:
                     params['fields']
                 )
 
-        return definitions
+        return data
 
 
     def apiGetVersion(self, data):
