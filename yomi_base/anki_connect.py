@@ -33,15 +33,15 @@ class AnkiConnect:
         self.timer.start(interval)
 
         self.handlers = {
-            'addNote':        self.apiAddNote,
-            'apiCanAddNote':  self.apiCanAddNote,
-            'apiCanAddNotes': self.apiCanAddNotes,
-            'getVersion':     self.apiGetVersion,
+            'addNote':     self.apiAddNote,
+            'canAddNote':  self.apiCanAddNote,
+            'canAddNotes': self.apiCanAddNotes,
+            'getVersion':  self.apiGetVersion,
         }
 
 
     def advance(self):
-        enabled = self.preferences['enableRemoteApi']
+        enabled = self.preferences['enableAnkiConnect']
 
         if self.server is None and enabled:
             self.server = AjaxServer(self.handler)
