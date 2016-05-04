@@ -24,7 +24,7 @@ import reader_util
 
 
 class AnkiConnect:
-    def __init__(self, anki, preferences, interval=50):
+    def __init__(self, anki, preferences, interval=25):
         self.anki        = anki
         self.preferences = preferences
         self.server      = None
