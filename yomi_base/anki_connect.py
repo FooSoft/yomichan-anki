@@ -107,17 +107,19 @@ class AnkiConnect:
 
 
     def apiCanAddNotes(self, params):
+        results = []
         for definition in params:
-            results = definition['addable'] = definition.get('addable', {})
+            state = {}
+            results.append(state)
             for mode in ['vocabExp', 'vocabReading', 'kanji']:
                 args = self.prepareNoteArgs(definition, mode)
-                results[mode] = args is not None and self.anki.canAddNote(
+                state[mode] = args is not None and self.anki.canAddNote(
                     args['deck'],
                     args['model'],
                     args['fields']
                 )
 
-        return params
+        return results
 
 
     def apiGetVersion(self, params):
