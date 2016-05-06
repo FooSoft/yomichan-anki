@@ -55,7 +55,7 @@ class AnkiConnect:
             self.server.advance()
 
 
-    def prepareNoteParams(self, definition, mode):
+    def prepareNoteArgs(self, definition, mode):
         if definition is None:
             return None
 
@@ -89,40 +89,40 @@ class AnkiConnect:
 
     def handler(self, request):
         action = request.get('action')
-        data   = request.get('data')
+        params = request.get('params')
 
-        return self.handlers.get(action, self.apiInvalidRequest)(data)
-
-
-    def apiAddNote(self, data):
-        params = self.prepareNoteParams(data.get('definition'), data.get('mode'))
-        if params is not None:
-            return self.anki.addNote(params['deck'], params['model'], params['fields'], params['tags'])
+        return self.handlers.get(action, self.apiInvalidRequest)(params)
 
 
-    def apiCanAddNote(self, data):
-        params = self.prepareNoteParams(data.get('definition'), data.get('mode'))
-        if params is not None:
-            return self.anki.canAddNote(params['deck'], params['model'], params['fields'])
+    def apiAddNote(self, params):
+        args = self.prepareNoteArgs(params.get('definition'), params.get('mode'))
+        if args is not None:
+            return self.anki.addNote(args['deck'], args['model'], args['fields'], args['tags'])
 
 
-    def apiCanAddNotes(self, data):
-        for definition in data:
-            definition['addable'] = results = {}
+    def apiCanAddNote(self, params):
+        args = self.prepareNoteArgs(params.get('definition'), params.get('mode'))
+        if args is not None:
+            return self.anki.canAddNote(args['deck'], args['model'], args['fields'])
+
+
+    def apiCanAddNotes(self, params):
+        for definition in params:
+            results = definition['addable'] = definition.get('addable', {})
             for mode in ['vocabExp', 'vocabReading', 'kanji']:
-                params = self.prepareNoteParams(definition, mode)
-                results[mode] = params is not None and self.anki.canAddNote(
-                    params['deck'],
-                    params['model'],
-                    params['fields']
+                args = self.prepareNoteArgs(definition, mode)
+                results[mode] = args is not None and self.anki.canAddNote(
+                    args['deck'],
+                    args['model'],
+                    args['fields']
                 )
 
-        return data
+        return params
 
 
-    def apiGetVersion(self, data):
+    def apiGetVersion(self, params):
         return {'version': constants.c['appVersion']}
 
 
-    def apiInvalidRequest(self, data):
+    def apiInvalidRequest(self, params):
         return None
