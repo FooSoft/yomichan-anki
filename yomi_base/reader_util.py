@@ -45,7 +45,7 @@ def findSentence(content, position):
     quotesBwd = {u'」': u'「', u'』': u'『', u"'": u"'", u'"': u'"'}
     terminators = u'。．.？?！!'
 
-    quoteStack = list()
+    quoteStack = []
 
     start = 0
     for i in xrange(position, start, -1):
@@ -60,7 +60,7 @@ def findSentence(content, position):
         elif c in quotesBwd:
             quoteStack.insert(0, quotesBwd[c])
 
-    quoteStack = list()
+    quoteStack = []
 
     end = len(content)
     for i in xrange(position, end):
@@ -83,7 +83,7 @@ def findSentence(content, position):
 
 
 def formatFields(fields, markup):
-    result = dict()
+    result = {}
     for field, value in fields.items():
         try:
             result[field] = value.format(**markup)
