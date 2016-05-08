@@ -35,7 +35,6 @@ class AnkiConnect:
 
         self.handlers = {
             'addNote':     self.apiAddNote,
-            'canAddNote':  self.apiCanAddNote,
             'canAddNotes': self.apiCanAddNotes,
             'getVersion':  self.apiGetVersion,
         }
@@ -100,26 +99,18 @@ class AnkiConnect:
             return self.anki.addNote(args['deck'], args['model'], args['fields'], args['tags'])
 
 
-    def apiCanAddNote(self, params):
-        args = self.prepareNoteArgs(params.get('definition'), params.get('mode'))
-        if args is not None:
-            return self.anki.canAddNote(args['deck'], args['model'], args['fields'])
-
-
     def apiCanAddNotes(self, params):
-        results = []
-        for definition in params:
-            state = {}
-            results.append(state)
-            for mode in ['vocabExp', 'vocabReading', 'kanji']:
-                args = self.prepareNoteArgs(definition, mode)
-                state[mode] = args is not None and self.anki.canAddNote(
-                    args['deck'],
-                    args['model'],
-                    args['fields']
-                )
+        states = []
 
-        return results
+        for definition in params.get('definitions', []):
+            state = {}
+            for mode in params.get('modes', []):
+                args = self.prepareNoteArgs(definition, mode)
+                state[mode] = args is not None and self.anki.canAddNote(args['deck'], args['model'], args['fields'])
+
+            states.append(state)
+
+        return states
 
 
     def apiGetVersion(self, params):
