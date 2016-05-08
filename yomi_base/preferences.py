@@ -49,7 +49,6 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.checkAllowEditing.setChecked(self.preferences['allowEditing'])
         self.checkLoadRecentFile.setChecked(self.preferences['loadRecentFile'])
         self.checkStripReadings.setChecked(self.preferences['stripReadings'])
-        self.spinMaxResults.setValue(self.preferences['maxResults'])
         self.spinScanLength.setValue(self.preferences['scanLength'])
         self.checkEnableAnkiConnect.setChecked(self.preferences['enableAnkiConnect'])
 
@@ -69,7 +68,6 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
         self.preferences['rememberTextContent'] = self.checkRememberTextContent.isChecked()
         self.preferences['allowEditing']        = self.checkAllowEditing.isChecked()
         self.preferences['loadRecentFile']      = self.checkLoadRecentFile.isChecked()
-        self.preferences['maxResults']          = self.spinMaxResults.value()
         self.preferences['scanLength']          = self.spinScanLength.value()
         self.preferences['stripReadings']       = self.checkStripReadings.isChecked()
         self.preferences['enableAnkiConnect']   = self.checkEnableAnkiConnect.isChecked()

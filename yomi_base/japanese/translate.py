@@ -24,13 +24,13 @@ import util
 class Translator:
     def __init__(self, deinflector, dictionary):
         self.deinflector = deinflector
-        self.dictionary = dictionary
+        self.dictionary  = dictionary
 
 
     def findTerm(self, text, wildcards=False):
-        text = util.sanitize(text, wildcards=wildcards)
+        text   = util.sanitize(text, wildcards=wildcards)
+        groups = {}
 
-        groups = dict()
         for i in xrange(len(text), 0, -1):
             term = text[:i]
             deinflections = self.deinflector.deinflect(term, self.validator)
@@ -52,10 +52,10 @@ class Translator:
 
 
     def findCharacters(self, text):
-        text = util.sanitize(text, kana=False)
-        results = list()
+        text      = util.sanitize(text, kana=False)
+        processed = {}
+        results   = []
 
-        processed = dict()
         for c in text:
             if c not in processed:
                 match = self.dictionary.findCharacter(c)
@@ -79,11 +79,11 @@ class Translator:
         (expression, reading, glossary), (tags, source, rules) = group
         return {
             'expression': expression,
-            'reading': reading,
-            'glossary': glossary,
-            'rules': rules,
-            'source': source,
-            'tags': tags
+            'glossary':   glossary,
+            'reading':    reading,
+            'rules':      rules,
+            'source':     source,
+            'tags':       tags
         }
 
 

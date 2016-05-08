@@ -31,11 +31,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     class State:
         def __init__(self):
             self.filename       = unicode()
+            self.searchText     = unicode()
             self.kanjiDefs      = []
+            self.vocabDefs      = []
             self.scanPosition   = 0
             self.searchPosition = 0
-            self.searchText     = unicode()
-            self.vocabDefs      = []
 
 
     def __init__(self, parent, preferences, language, filename=None, anki=None, closed=None):
@@ -110,7 +110,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             QtGui.QMessageBox.information(
                 self,
                 'Yomichan',
-                'This may be the first time you are running Yomichan.\nPlease take some time to configure this extension.'
+                'This may be the first time you are running Yomichan.\n' \
+                'Please take some time to configure this extension.'
             )
 
             self.onActionPreferences()
@@ -557,9 +558,6 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
 
     def updateDefs(self, defs, builder, control, **options):
-        if options.get('trim', True):
-            defs = defs[:self.preferences['maxResults']]
-
         scrollbar = control.verticalScrollBar()
         position  = scrollbar.sliderPosition()
 
@@ -599,8 +597,8 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             if self.dockKanji.isVisible():
                 self.state.kanjiDefs += self.language.findCharacters(word)
 
-        self.updateVocabDefs(trim=False, scroll=True)
-        self.updateKanjiDefs(trim=False, scroll=True)
+        self.updateVocabDefs(scroll=True)
+        self.updateKanjiDefs(scroll=True)
 
 
     def setStatus(self, status):

@@ -1,20 +1,19 @@
 {
+    "allowEditing":        false,
     "bgColor":             4294967295,
     "checkForUpdates":     true,
+    "enableAnkiConnect":   false,
     "fgColor":             4278190080,
+    "firstRun":            true,
     "fontFamily":          "Arial",
     "fontSize":            12,
-    "rememberTextContent": false,
     "loadRecentFile":      false,
-    "maxResults":          20,
     "profiles":            {},
     "recentFiles":         [],
-    "textContent":         "",
+    "rememberTextContent": false,
     "scanLength":          16,
     "stripReadings":       false,
     "tags":                [],
-    "wordWrap":            false,
-    "allowEditing":        true,
-    "enableAnkiConnect":   false,
-    "firstRun":            true
+    "textContent":         "",
+    "wordWrap":            false
 }

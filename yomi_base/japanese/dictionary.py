@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import operator
 import sqlite3
 
 
@@ -31,15 +30,15 @@ class Dictionary:
         self.requireIndex('Terms', 'reading')
 
         cursor = self.db.cursor()
-        cursor.execute('SELECT * FROM Terms WHERE expression {0} ? OR reading=? LIMIT 100'.format('LIKE' if wildcards else '='), (word, word))
+        cursor.execute('SELECT * FROM Terms WHERE expression {0} ? OR reading=?'.format('LIKE' if wildcards else '='), (word, word))
 
-        results = list()
+        results = []
         for expression, reading, glossary, tags in cursor.fetchall():
             results.append({
                 'expression': expression,
-                'reading': reading,
-                'glossary': glossary,
-                'tags': tags.split()
+                'glossary':   glossary,
+                'reading':    reading,
+                'tags':       tags.split()
             })
 
         return results
@@ -57,9 +56,9 @@ class Dictionary:
             character, kunyomi, onyomi, glossary = query
             return {
                 'character': character,
-                'kunyomi': kunyomi,
-                'onyomi': onyomi,
-                'glossary': glossary
+                'glossary':  glossary,
+                'kunyomi':   kunyomi,
+                'onyomi':    onyomi
             }
 
 

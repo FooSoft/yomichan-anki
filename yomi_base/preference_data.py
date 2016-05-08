@@ -26,7 +26,7 @@ class Preferences(object):
     def __init__(self):
         self.filename = os.path.expanduser('~/.yomichan.json')
         self.defaults = os.path.join(os.path.dirname(__file__), 'defaults.json')
-        self.settings = dict()
+        self.settings = {}
 
 
     def __getitem__(self, name):
@@ -75,4 +75,4 @@ class Preferences(object):
 
 
     def clearRecentFiles(self):
-        self['recentFiles'] = list()
+        self['recentFiles'] = []
