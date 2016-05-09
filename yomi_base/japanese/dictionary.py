@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import operator
 import sqlite3
 
 
@@ -26,40 +27,51 @@ class Dictionary:
 
 
     def findTerm(self, word, wildcards=False):
-        self.requireIndex('Terms', 'expression')
-        self.requireIndex('Terms', 'reading')
+        self.requireIndex('Vocab', 'expression')
+        self.requireIndex('Vocab', 'reading')
+        self.requireIndex('VocabGloss', 'vocabId')
 
         cursor = self.db.cursor()
-        cursor.execute('SELECT * FROM Terms WHERE expression {0} ? OR reading=?'.format('LIKE' if wildcards else '='), (word, word))
 
-        results = []
-        for expression, reading, glossary, tags in cursor.fetchall():
-            results.append({
+        definitions = []
+        cursor.execute('SELECT * FROM Vocab WHERE expression {0} ? OR reading=?'.format('LIKE' if wildcards else '='), (word, word))
+        for vocabId, expression, reading, tags in cursor:
+            cursor.execute('SELECT glossary From VocabGloss WHERE vocabId=?', (vocabId,))
+            glossary = map(operator.itemgetter(0), cursor)
+
+            definitions.append({
                 'expression': expression,
-                'glossary':   glossary,
                 'reading':    reading,
-                'tags':       tags.split()
+                'tags':       tags.split(),
+                'glossary':   '; '.join(glossary)
             })
 
-        return results
+        return definitions
 
 
     def findCharacter(self, character):
         assert len(character) == 1
+
         self.requireIndex('Kanji', 'character')
+        self.requireIndex('KanjiGloss', 'kanjiId')
 
         cursor = self.db.cursor()
-        cursor.execute('SELECT * FROM Kanji WHERE character=? LIMIT 1', character)
 
+        cursor.execute('SELECT * FROM Kanji WHERE character=? LIMIT 1', character)
         query = cursor.fetchone()
-        if query is not None:
-            character, kunyomi, onyomi, glossary = query
-            return {
-                'character': character,
-                'glossary':  glossary,
-                'kunyomi':   kunyomi,
-                'onyomi':    onyomi
-            }
+        if query is None:
+            return
+
+        kanjiId, character, kunyomi, onyomi = query
+        cursor.execute('SELECT glossary From KanjiGloss WHERE kanjiId=?', (kanjiId,))
+        glossary = map(operator.itemgetter(0), cursor)
+
+        return {
+            'character': character,
+            'kunyomi':   kunyomi,
+            'onyomi':    onyomi,
+            'glossary':  '; '.join(glossary),
+        }
 
 
     def requireIndex(self, table, column):
