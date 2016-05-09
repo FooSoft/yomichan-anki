@@ -26,7 +26,7 @@ class Dictionary:
         self.indices = set()
 
 
-    def findTerm(self, word, wildcards=False):
+    def findTerm(self, text, wildcards=False):
         self.requireIndex('Vocab', 'expression')
         self.requireIndex('Vocab', 'reading')
         self.requireIndex('VocabGloss', 'vocabId')
@@ -34,30 +34,45 @@ class Dictionary:
         cursor = self.db.cursor()
 
         definitions = []
-        cursor.execute('SELECT * FROM Vocab WHERE expression {0} ? OR reading=?'.format('LIKE' if wildcards else '='), (word, word))
-        for vocabId, expression, reading, tags in cursor:
+        cursor.execute('SELECT * FROM Vocab WHERE expression {0} ? OR reading=?'.format('LIKE' if wildcards else '='), (text, text))
+        for vocabId, expression, reading, tags in cursor.fetchall():
+            tags = tags.split()
+
             cursor.execute('SELECT glossary From VocabGloss WHERE vocabId=?', (vocabId,))
             glossary = map(operator.itemgetter(0), cursor)
 
+            #
+            # TODO: Handle addons through data.
+            #
+
+            addons = []
+            for tag in tags:
+                if tag.startswith('v5') and tag != 'v5':
+                    addons.append('v5')
+                elif tag.startswith('vs-'):
+                    addons.append('vs')
+
             definitions.append({
+                'id':         vocabId,
                 'expression': expression,
                 'reading':    reading,
-                'tags':       tags.split(),
-                'glossary':   '; '.join(glossary)
+                'glossary':   '; '.join(glossary),
+                'tags':       tags + addons,
+                'addons':     addons
             })
 
         return definitions
 
 
-    def findCharacter(self, character):
-        assert len(character) == 1
+    def findKanji(self, text):
+        assert len(text) == 1
 
         self.requireIndex('Kanji', 'character')
         self.requireIndex('KanjiGloss', 'kanjiId')
 
         cursor = self.db.cursor()
 
-        cursor.execute('SELECT * FROM Kanji WHERE character=? LIMIT 1', character)
+        cursor.execute('SELECT * FROM Kanji WHERE character=? LIMIT 1', text)
         query = cursor.fetchone()
         if query is None:
             return
@@ -67,6 +82,7 @@ class Dictionary:
         glossary = map(operator.itemgetter(0), cursor)
 
         return {
+            'id':        kanjiId,
             'character': character,
             'kunyomi':   kunyomi,
             'onyomi':    onyomi,

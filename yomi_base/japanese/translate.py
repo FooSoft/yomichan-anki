@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import operator
 import util
 
 
@@ -28,37 +27,37 @@ class Translator:
 
 
     def findTerm(self, text, wildcards=False):
-        text   = util.sanitize(text, wildcards=wildcards)
-        groups = {}
+        text = util.sanitize(text, wildcards=wildcards)
 
+        groups = {}
         for i in xrange(len(text), 0, -1):
             term = text[:i]
-            deinflections = self.deinflector.deinflect(term, self.validator)
-            if deinflections is None:
-                self.processTerm(groups, term, wildcards=wildcards)
-            else:
-                for deinflection in deinflections:
-                    self.processTerm(groups, **deinflection)
 
-        results = map(self.formatResult, groups.items())
-        results = filter(operator.truth, results)
-        results = sorted(results, key=lambda d: (len(d['source']), 'P' in d['tags'], -len(d['rules'])), reverse=True)
+            dfs = self.deinflector.deinflect(term, lambda term: [d['tags'] for d in self.dictionary.findTerm(term)])
+            if dfs is None:
+                continue
+
+            for df in dfs:
+                self.processTerm(groups, **df)
+
+        definitions = groups.values()
+        definitions = sorted(definitions, key=lambda d: (len(d['source']), 'P' in d['tags'], -len(d['rules'])), reverse=True)
 
         length = 0
-        for result in results:
+        for result in definitions:
             length = max(length, len(result['source']))
 
-        return results, length
+        return definitions, length
 
 
     def findCharacters(self, text):
-        text      = util.sanitize(text, kana=False)
+        text = util.sanitize(text, kana=False)
+
         processed = {}
         results   = []
-
         for c in text:
             if c not in processed:
-                match = self.dictionary.findCharacter(c)
+                match = self.dictionary.findKanji(c)
                 if match is not None:
                     results.append(match)
                 processed[c] = match
@@ -66,26 +65,23 @@ class Translator:
         return results
 
 
-    def processTerm(self, groups, source, rules=list(), root=str(), wildcards=False):
-        root = root or source
-
+    def processTerm(self, groups, source, tags, rules=[], root='', wildcards=False):
         for entry in self.dictionary.findTerm(root, wildcards):
-            key = entry['expression'], entry['reading'], entry['glossary']
-            if key not in groups:
-                groups[key] = entry['tags'], source, rules
+            if entry['id'] in groups:
+                continue
 
+            matched = len(tags) == 0
+            for tag in tags:
+                if tag in entry['tags']:
+                    matched = True
+                    break
 
-    def formatResult(self, group):
-        (expression, reading, glossary), (tags, source, rules) = group
-        return {
-            'expression': expression,
-            'glossary':   glossary,
-            'reading':    reading,
-            'rules':      rules,
-            'source':     source,
-            'tags':       tags
-        }
-
-
-    def validator(self, term):
-        return [d['tags'] for d in self.dictionary.findTerm(term)]
+            if matched:
+                groups[entry['id']] = {
+                    'expression': entry['expression'],
+                    'reading':    entry['reading'],
+                    'glossary':   entry['glossary'],
+                    'tags':       entry['tags'],
+                    'source':     source,
+                    'rules':      rules
+                }
