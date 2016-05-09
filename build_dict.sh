@@ -1,9 +1,8 @@
 #!/bin/sh
 
-KANJIDIC=util/kanjidic
-EDICT=util/edict
-ENAMDICT=util/enamdict
-DICT=yomi_base/japanese/dictionary.db
+KANJIDIC=common/data/kanjidic
+EDICT=common/data/edict
+ENAMDICT=common/data/enamdict
+DB=yomi_base/japanese/dictionary.db
 
-[ -f $DICT ] && rm $DICT
-util/compile.py --kanjidic $KANJIDIC --edict $EDICT $DICT --enamdict $ENAMDICT
+common/compile.py --kanjidic $KANJIDIC --edict $EDICT $DICT --enamdict $ENAMDICT --db $DB
