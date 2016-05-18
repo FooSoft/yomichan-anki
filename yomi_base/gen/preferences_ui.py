@@ -216,7 +216,7 @@ class Ui_DialogPreferences(object):
         item = self.tableFields.horizontalHeaderItem(1)
         item.setText(_translate("DialogPreferences", "Value", None))
         self.checkEnableAnkiConnect.setText(_translate("DialogPreferences", "Enable AnkiConnect", None))
-        self.label_3.setText(_translate("DialogPreferences", "(see the <a href=\"https://foosoft.net/projects/yomichan-chrome\">extension page</a> for details)", None))
+        self.label_3.setText(_translate("DialogPreferences", "(see the <a href=\"https://foosoft.net/projects/yomichan-chrome-ext\">extension page</a> for details)", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAnki), _translate("DialogPreferences", "Anki", None))
 
 import resources_rc
