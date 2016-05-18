@@ -108,7 +108,7 @@ def markupVocabExp(definition):
     return {
         'expression': definition['expression'],
         'reading':    definition['reading'] or u'',
-        'glossary':   definition['glossary'],
+        'glossary':   '; '.join(definition['glossary']),
         'sentence':   definition.get('sentence'),
         'summary':    summary
     }
@@ -119,7 +119,7 @@ def markupVocabReading(definition):
         return {
             'expression': definition['reading'],
             'reading':    u'',
-            'glossary':   definition['glossary'],
+            'glossary':   '; '.join(definition['glossary']),
             'sentence':   definition.get('sentence'),
             'summary':    definition['reading']
         }
@@ -138,9 +138,9 @@ def copyVocabDef(definition):
 def markupKanji(definition):
     return {
         'character': definition['character'],
-        'onyomi':    definition['onyomi'],
-        'kunyomi':   definition['kunyomi'],
-        'glossary':  definition['glossary'],
+        'onyomi':    ', '.join(definition['onyomi']),
+        'kunyomi':   ', '.join(definition['kunyomi']),
+        'glossary':  ', '.join(definition['glossary']),
         'summary':   definition['character']
     }
 
