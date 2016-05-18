@@ -1,6 +1,4 @@
 #!/bin/sh
-
 ZIP=yomichan.zip
-
-[ -f $ZIPFILE ] rm $ZIP
+rm -f $ZIP
 7z a yomichan.zip -xr\!\*.pyc yomichan.py yomi_base
