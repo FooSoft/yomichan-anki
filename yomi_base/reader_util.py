@@ -151,11 +151,11 @@ def buildDefHeader():
     toolTipBg = palette.color(QtGui.QPalette.Window).name()
     toolTipFg = palette.color(QtGui.QPalette.WindowText).name()
 
-    return u"""
+    return u'''
         <html><head><style>
         body {{ background-color: {0}; color: {1}; font-size: 11pt; }}
         span.expression {{ font-size: 15pt; }}
-        </style></head><body>""".format(toolTipBg, toolTipFg)
+        </style></head><body>'''.format(toolTipBg, toolTipFg)
 
 
 def buildDefFooter():
@@ -163,10 +163,10 @@ def buildDefFooter():
 
 
 def buildEmpty():
-    return u"""
+    return u'''
         <p>No definitions to display.</p>
         <p>Mouse over text with the <em>middle mouse button</em> or <em>shift key</em> pressed to search.</p>
-        <p>You can also also input terms in the search box below."""
+        <p>You can also also input terms in the search box below.'''
 
 
 def buildVocabDef(definition, index, query):
@@ -186,13 +186,13 @@ def buildVocabDef(definition, index, query):
         if query('vocab', markupVocabReading(definition)):
             links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
 
-    html = u"""
+    html = u'''
         <span class="links">{0}</span>
         <span class="expression">{1}<br></span>
         {2}
         <span class="glossary">{3}<br></span>
         {4}
-        <br clear="all">""".format(links, definition['expression'], reading, definition['glossary'], rules)
+        <br clear="all">'''.format(links, definition['expression'], reading, enumListItems(definition['glossary']), rules)
 
     return html
 
@@ -214,14 +214,22 @@ def buildKanjiDef(definition, index, query):
         links += '<a href="addKanji:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
 
     readings = ', '.join([definition['kunyomi'], definition['onyomi']])
-    html = u"""
+    html = u'''
         <span class="links">{0}</span>
         <span class="expression">{1}<br></span>
         <span class="reading">[{2}]<br></span>
         <span class="glossary">{3}<br></span>
-        <br clear="all">""".format(links, definition['character'], readings, definition['glossary'])
+        <br clear="all">'''.format(links, definition['character'], readings, enumListItems(definition['glossary']))
 
     return html
+
+
+def enumListItems(items):
+    result = u'<ol>'
+    for item in items:
+        result += u'<li>{0}</li>'.format(item)
+    result += u'</ol>'
+    return result
 
 
 def buildKanjiDefs(definitions, query):

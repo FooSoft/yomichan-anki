@@ -56,7 +56,7 @@ class Dictionary:
                 'id':         vocabId,
                 'expression': expression,
                 'reading':    reading,
-                'glossary':   '; '.join(glossary),
+                'glossary':   glossary,
                 'tags':       tags + addons,
                 'addons':     addons
             })
@@ -86,7 +86,7 @@ class Dictionary:
             'character': character,
             'kunyomi':   kunyomi,
             'onyomi':    onyomi,
-            'glossary':  '; '.join(glossary),
+            'glossary':  glossary
         }
 
 
