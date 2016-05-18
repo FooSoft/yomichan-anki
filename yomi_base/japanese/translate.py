@@ -41,7 +41,16 @@ class Translator:
                 self.processTerm(groups, **df)
 
         definitions = groups.values()
-        definitions = sorted(definitions, key=lambda d: (len(d['source']), 'P' in d['tags'], -len(d['rules'])), reverse=True)
+        definitions = sorted(
+            definitions,
+            reverse=True,
+            key=lambda d: (
+                len(d['source']),
+                'P' in d['tags'],
+                -len(d['rules']),
+                d['expression']
+            )
+        )
 
         length = 0
         for result in definitions:
