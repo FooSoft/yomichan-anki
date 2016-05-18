@@ -202,12 +202,18 @@ def buildVocabDef(definition, index, query):
     glossary += u'</ol>'
 
     html = u'''
-        <span class="links">{0}</span>
-        <span class="expression">{1}<br></span>
-        {2}
-        <span class="glossary">{3}<br></span>
-        {4}
-        <br clear="all">'''.format(links, definition['expression'], reading, glossary, rules)
+        <span class="links">{links}</span>
+        <span class="expression">{expression}</span>
+        <span class="reading">{reading}</span>
+        <span class="rules">{rules}</span>
+        <span class="glossary">{glossary}<br></span>
+        <br clear="all">'''.format(
+            links      = links,
+            expression = definition['expression'],
+            reading    = reading,
+            glossary   = glossary,
+            rules      = rules
+        )
 
     return html
 
@@ -232,11 +238,16 @@ def buildKanjiDef(definition, index, query):
     glossary = ', '.join(definition['glossary'])
 
     html = u'''
-        <span class="links">{0}</span>
-        <span class="expression">{1}<br></span>
-        <span class="reading">[{2}]<br></span>
-        <span class="glossary">{3}<br></span>
-        <br clear="all">'''.format(links, definition['character'], readings, glossary)
+        <span class="links">{links}</span>
+        <span class="expression">{expression}<br></span>
+        <span class="reading">[{reading}]<br></span>
+        <span class="glossary">{glossary}<br></span>
+        <br clear="all">'''.format(
+            links      = links,
+            expression = definition['character'],
+            reading    = readings,
+            glossary   = glossary
+        )
 
     return html
 
