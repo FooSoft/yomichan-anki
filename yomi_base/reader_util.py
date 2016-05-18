@@ -24,7 +24,7 @@ import sqlite3
 
 def decodeContent(content):
     encodings = ['utf-8', 'shift_jis', 'euc-jp', 'utf-16']
-    errors = dict()
+    errors    = {}
 
     for encoding in encodings:
         try:
@@ -41,8 +41,8 @@ def stripReadings(content):
 
 
 def findSentence(content, position):
-    quotesFwd = {u'「': u'」', u'『': u'』', u"'": u"'", u'"': u'"'}
-    quotesBwd = {u'」': u'「', u'』': u'『', u"'": u"'", u'"': u'"'}
+    quotesFwd   = {u'「': u'」', u'『': u'』', u"'": u"'", u'"': u'"'}
+    quotesBwd   = {u'」': u'「', u'』': u'『', u"'": u"'", u'"': u'"'}
     terminators = u'。．.？?！!'
 
     quoteStack = []
@@ -89,6 +89,8 @@ def formatFields(fields, markup):
             result[field] = value.format(**markup)
         except KeyError:
             pass
+        except ValueError:
+            pass
 
     return result
 
@@ -126,16 +128,9 @@ def markupVocabReading(definition):
 def copyVocabDef(definition):
     glossary = '; '.join(definition['glossary'])
     if definition['reading']:
-        result = u'{0}\t{1}\t{2}\n'.format(
-            definition['expression'],
-            definition['reading'],
-            glossary
-        )
+        result = u'{0}\t{1}\t{2}\n'.format(definition['expression'], definition['reading'], glossary)
     else:
-        result = u'{0}\t{1}\n'.format(
-            definition['expression'],
-            glossary
-        )
+        result = u'{0}\t{1}\n'.format(definition['expression'], glossary)
 
     QtGui.QApplication.clipboard().setText(result)
 

@@ -51,7 +51,7 @@ def sanitize(text, kana=True, wildcards=False):
         text = re.sub(u'[\?？]', u'_', text)
         overrides = [u'%', u'_']
     else:
-        overrides = list()
+        overrides = []
 
     result = u''
     for c in text:

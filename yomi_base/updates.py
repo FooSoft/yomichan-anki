@@ -57,7 +57,7 @@ class UpdateFinder(QtCore.QThread):
 
     def run(self):
         latest = constants.c['appVersion']
-        updates = list()
+        updates = []
 
         try:
             fp = urllib2.urlopen('https://foosoft.net/projects/yomichan/dl/updates.json')
