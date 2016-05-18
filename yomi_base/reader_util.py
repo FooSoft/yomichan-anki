@@ -124,10 +124,18 @@ def markupVocabReading(definition):
 
 
 def copyVocabDef(definition):
+    glossary = '; '.join(definition['glossary'])
     if definition['reading']:
-        result = u'{expression}\t{reading}\t{glossary}\n'.format(**definition)
+        result = u'{0}\t{1}\t{2}\n'.format(
+            definition['expression'],
+            definition['reading'],
+            glossary
+        )
     else:
-        result = u'{expression}\t{glossary}\n'.format(**definition)
+        result = u'{0}\t{1}\n'.format(
+            definition['expression'],
+            glossary
+        )
 
     QtGui.QApplication.clipboard().setText(result)
 
@@ -143,7 +151,14 @@ def markupKanji(definition):
 
 
 def copyKanjiDef(definition):
-    return QtGui.QApplication.clipboard().setText(u'{character}\t{kunyomi}\t{onyomi}\t{glossary}'.format(**definition))
+    result = u'{0}\t{1}\t{2}\t{3}'.format(
+        definition['character'],
+        ', '.join(definition['kunyomi']),
+        ', '.join(definition['onyomi']),
+        ', '.join(definition['glossary'])
+    )
+
+    QtGui.QApplication.clipboard().setText(result)
 
 
 def buildDefHeader():
@@ -186,13 +201,18 @@ def buildVocabDef(definition, index, query):
         if query('vocab', markupVocabReading(definition)):
             links += '<a href="addVocabReading:{0}"><img src="://img/img/icon_add_reading.png" align="right"></a>'.format(index)
 
+    glossary = u'<ol>'
+    for g in definition['glossary']:
+        glossary += u'<li>{0}</li>'.format(g)
+    glossary += u'</ol>'
+
     html = u'''
         <span class="links">{0}</span>
         <span class="expression">{1}<br></span>
         {2}
         <span class="glossary">{3}<br></span>
         {4}
-        <br clear="all">'''.format(links, definition['expression'], reading, enumListItems(definition['glossary']), rules)
+        <br clear="all">'''.format(links, definition['expression'], reading, glossary, rules)
 
     return html
 
@@ -213,23 +233,17 @@ def buildKanjiDef(definition, index, query):
     if query is not None and query('kanji', markupKanji(definition)):
         links += '<a href="addKanji:{0}"><img src="://img/img/icon_add_expression.png" align="right"></a>'.format(index)
 
-    readings = ', '.join([definition['kunyomi'], definition['onyomi']])
+    readings = ', '.join(definition['kunyomi'] + definition['onyomi'])
+    glossary = ', '.join(definition['glossary'])
+
     html = u'''
         <span class="links">{0}</span>
         <span class="expression">{1}<br></span>
         <span class="reading">[{2}]<br></span>
         <span class="glossary">{3}<br></span>
-        <br clear="all">'''.format(links, definition['character'], readings, enumListItems(definition['glossary']))
+        <br clear="all">'''.format(links, definition['character'], readings, glossary)
 
     return html
-
-
-def enumListItems(items):
-    result = u'<ol>'
-    for item in items:
-        result += u'<li>{0}</li>'.format(item)
-    result += u'</ol>'
-    return result
 
 
 def buildKanjiDefs(definitions, query):
@@ -245,7 +259,7 @@ def buildKanjiDefs(definitions, query):
 
 
 def extractKindleDeck(filename):
-    words = list()
+    words = []
 
     try:
         with sqlite3.connect(unicode(filename)) as db:
@@ -258,7 +272,7 @@ def extractKindleDeck(filename):
 
 
 def extractWordList(filename):
-    words = list()
+    words = []
 
     with codecs.open(unicode(filename), 'rb', 'utf-8') as fp:
         words = re.split('[;,\s]', fp.read())

@@ -84,8 +84,8 @@ class Dictionary:
         return {
             'id':        kanjiId,
             'character': character,
-            'kunyomi':   kunyomi,
-            'onyomi':    onyomi,
+            'kunyomi':   kunyomi.split(),
+            'onyomi':    onyomi.split(),
             'glossary':  glossary
         }
 
