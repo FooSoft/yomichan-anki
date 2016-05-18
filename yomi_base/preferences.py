@@ -89,8 +89,8 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
     def profileToDialog(self):
         profile, name = self.activeProfile()
 
-        deck  = unicode() if profile is None else profile['deck']
-        model = unicode() if profile is None else profile['model']
+        deck  = u'' if profile is None else profile['deck']
+        model = u'' if profile is None else profile['model']
 
         self.comboBoxDeck.blockSignals(True)
         self.comboBoxDeck.clear()
@@ -141,7 +141,7 @@ class DialogPreferences(QtGui.QDialog, gen.preferences_ui.Ui_DialogPreferences):
             itemName.setFlags(QtCore.Qt.ItemIsSelectable)
             columns.append(itemName)
 
-            itemValue = QtGui.QTableWidgetItem(fieldsPrefs.get(name, unicode()))
+            itemValue = QtGui.QTableWidgetItem(fieldsPrefs.get(name, u''))
             columns.append(itemValue)
 
             for j, column in enumerate(columns):

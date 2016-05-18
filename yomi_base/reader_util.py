@@ -37,7 +37,7 @@ def decodeContent(content):
 
 
 def stripReadings(content):
-    return re.sub(u'《[^》]+》', unicode(), content)
+    return re.sub(u'《[^》]+》', u'', content)
 
 
 def findSentence(content, position):
@@ -105,7 +105,7 @@ def markupVocabExp(definition):
 
     return {
         'expression': definition['expression'],
-        'reading':    definition['reading'] or unicode(),
+        'reading':    definition['reading'] or u'',
         'glossary':   definition['glossary'],
         'sentence':   definition.get('sentence'),
         'summary':    summary
@@ -116,7 +116,7 @@ def markupVocabReading(definition):
     if definition['reading']:
         return {
             'expression': definition['reading'],
-            'reading':    unicode(),
+            'reading':    u'',
             'glossary':   definition['glossary'],
             'sentence':   definition.get('sentence'),
             'summary':    definition['reading']
@@ -170,11 +170,11 @@ def buildEmpty():
 
 
 def buildVocabDef(definition, index, query):
-    reading = unicode()
+    reading = u''
     if definition['reading']:
         reading = u'<span class="reading">[{0}]<br></span>'.format(definition['reading'])
 
-    rules = unicode()
+    rules = u''
     if definition.get('rules'):
         rules = ' &lt; '.join(definition['rules'])
         rules = '<span class="rules">({0})<br></span>'.format(rules)

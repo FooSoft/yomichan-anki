@@ -53,7 +53,7 @@ def sanitize(text, kana=True, wildcards=False):
     else:
         overrides = list()
 
-    result = unicode()
+    result = u''
     for c in text:
         if checker(c) or c in overrides:
             result += c

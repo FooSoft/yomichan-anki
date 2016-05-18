@@ -59,7 +59,7 @@ class Translator:
         return definitions, length
 
 
-    def findCharacters(self, text):
+    def findKanji(self, text):
         text = util.sanitize(text, kana=False)
 
         processed = {}

@@ -30,8 +30,8 @@ import updates
 class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
     class State:
         def __init__(self):
-            self.filename       = unicode()
-            self.searchText     = unicode()
+            self.filename       = u''
+            self.searchText     = u''
             self.kanjiDefs      = []
             self.vocabDefs      = []
             self.scanPosition   = 0
@@ -298,13 +298,13 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
         self.state.vocabDefs, length = self.language.findTerm(text, True)
         self.updateVocabDefs()
         if self.dockKanji.isVisible():
-            self.state.kanjiDefs = self.language.findCharacters(text)
+            self.state.kanjiDefs = self.language.findKanji(text)
             self.updateKanjiDefs()
 
 
     def onKanjiDefSearchReturn(self):
         text = unicode(self.textKanjiSearch.text())
-        self.state.kanjiDefs = self.language.findCharacters(text)
+        self.state.kanjiDefs = self.language.findKanji(text)
         self.updateKanjiDefs()
 
 
@@ -376,7 +376,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.preferences['textContent'] = unicode(self.textContent.toPlainText())
 
         self.setWindowTitle('Yomichan')
-        self.textContent.setPlainText(unicode())
+        self.textContent.setPlainText(u'')
         self.updateRecentFile(False)
         self.state = self.State()
 
@@ -493,7 +493,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         content           = unicode(self.textContent.toPlainText())
         contentSample     = content[samplePosStart:samplePosEnd]
-        contentSampleFlat = contentSample.replace(u'\n', unicode())
+        contentSampleFlat = contentSample.replace(u'\n', u'')
 
         cursor = self.textContent.textCursor()
 
@@ -512,11 +512,11 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         if self.dockKanji.isVisible():
             if lengthMatched == 0:
-                self.state.kanjiDefs = self.language.findCharacters(contentSampleFlat[0])
+                self.state.kanjiDefs = self.language.findKanji(contentSampleFlat[0])
                 if len(self.state.kanjiDefs) > 0:
                     lengthMatched = 1
             else:
-                self.state.kanjiDefs = self.language.findCharacters(contentSampleFlat[:lengthMatched])
+                self.state.kanjiDefs = self.language.findKanji(contentSampleFlat[:lengthMatched])
             self.updateKanjiDefs()
 
         lengthSelect = 0
@@ -595,7 +595,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
                 self.state.vocabDefs += self.language.dictionary.findTerm(word)
 
             if self.dockKanji.isVisible():
-                self.state.kanjiDefs += self.language.findCharacters(word)
+                self.state.kanjiDefs += self.language.findKanji(word)
 
         self.updateVocabDefs(scroll=True)
         self.updateKanjiDefs(scroll=True)
