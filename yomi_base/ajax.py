@@ -123,7 +123,7 @@ class AjaxServer:
         self.clients = filter(lambda c: c.advance(), self.clients)
 
 
-    def listen(self, address='127.0.0.1', port=8888, backlog=5):
+    def listen(self, address='127.0.0.1', port=8765, backlog=5):
         self.close()
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
