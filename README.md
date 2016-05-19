@@ -2,13 +2,15 @@
 
 A while ago I started working on an [Anki](http://ankisrs.net/) plugin in an attempt to solve various annoyances I
 encountered when trying to read Japanese books on my computer. Yomichan is the result of my efforts and makes Japanese
-sentence/vocabulary mining trivial.
+sentence/vocabulary mining trivial. It can be used in conjunction with the [Yomichan extension for
+Chrome](/projects/yomichan-chrome-ext) to further enhance your learning experience by enabling flash card creation
+directly from the Chrome web browser.
 
 ## Motivation ##
 
 The software I was using for mining up to now was [Rikaichan](http://www.polarcloud.com/rikaichan/). I'm sure most
 people studying the Japanese language are familiar with this browser extension and probably have it installed in
-Firefox. Although pretty amazing, this tool is bound to Firefox.  Firefox is obviously not a book reader: it doesn't
+Firefox. Although pretty amazing, this tool is bound to Firefox. Firefox is obviously not a book reader: it doesn't
 behave well with large text files, doesn't remember where you last stopped reading, and most importantly there was no
 integration with Anki. As such, adding new vocab to my Anki deck was annoying; I wanted to be able to do this with one
 mouse click. After several hours of work, Yomichan could do this and much more.
@@ -17,7 +19,9 @@ mouse click. After several hours of work, Yomichan could do this and much more.
 
 Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb.net/shared/info/934748696). There is an
 automatic update checker included in the plugin that (unless you disabled it in options) will notify you when new
-versions become available.
+versions become available. Developers can also clone the [repository on
+GitHub](https://github.com/FooSoft/yomichan-chrome-ext), assuming that they have [Git LFS](https://git-lfs.github.com/)
+installed and have initialized the included submodules after pulling down the main project.
 
 ## Usage ##
 
@@ -40,7 +44,10 @@ versions become available.
     [![Preferences dialog](img/preferences-thumb.png)](img/preferences.png)
 
 7.  Now you should add markers such as `{expression}`, `{reading}`, `{reading}` and `{sentence}` to specify how new
-    cards should be created. Card fields will vary depending on your deck model.
+    cards should be created. Card fields will vary depending on your deck model. If you want to be able to use
+    *AnkiConnect* via the [Yomichan extension for Chrome](/projects/yomichan-chrome-ext), tick the checkbox labeled
+    *Enable AnkiConnect* as shown above.
+
 8.  When you look up definitions you will have the option to create Anki cards for them with one click. You will see the
     icons for performing these actions next to each item. *Icons for actions which update your decks won't show up if
     Anki thinks you can't add a fact with those items*. This likely means that they would either be duplicates of
@@ -65,6 +72,15 @@ By request, I've added several keyboard shortcuts which make Yomichan even easie
 | <kbd>Shift + Ctrl + #</kbd> | Add current Kanji at index 0 - 9 to deck            |
 | <kbd>Ctrl + #</kbd>         | Add current term at index  0 - 9 to deck            |
 | <kbd>Alt + #</kbd>          | Add current term at index 0 - 9 to deck as Hiragana |
+
+### AnkiConnect ###
+
+AnkiConnect is a new and revolutionary feature which allows external applications to communicate with Yomichan, making
+it possible to query decks and create new flash cards directly. When enabled, Yomichan will initialize a simple
+[AJAX](https://en.wikipedia.org/wiki/Ajax_(programming)) server running on port `8765` (only connections from
+`localhost` are accepted for security reasons) and begin accepting requests for Anki-related tasks. This functionality
+was developed primarily to support interfacing with the [Yomichan extension for Chrome](/projects/yomichan-chrome-ext),
+thus making it possible to create new cards directly from your web browser.
 
 ### Importing Vocabulary ###
 
