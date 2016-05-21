@@ -84,8 +84,8 @@ class Dictionary:
         return {
             'id':        kanjiId,
             'character': character,
-            'kunyomi':   kunyomi.split(),
-            'onyomi':    onyomi.split(),
+            'kunyomi':   [] if kunyomi is None else kunyomi.split(),
+            'onyomi':    [] if onyomi is None else onyomi.split(),
             'glossary':  glossary
         }
 
