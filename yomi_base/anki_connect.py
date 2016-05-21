@@ -19,7 +19,6 @@
 
 from PyQt4 import QtCore
 from ajax import AjaxServer
-import constants
 import reader_util
 
 
@@ -32,12 +31,6 @@ class AnkiConnect:
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.advance)
         self.timer.start(interval)
-
-        self.handlers = {
-            'addNote':     self.apiAddNote,
-            'canAddNotes': self.apiCanAddNotes,
-            'getVersion':  self.apiGetVersion,
-        }
 
 
     def advance(self):
@@ -87,35 +80,26 @@ class AnkiConnect:
 
 
     def handler(self, request):
-        action = request.get('action')
-        params = request.get('params')
+        action = 'api_' + request.get('action', '')
+        if hasattr(self, action):
+            return getattr(self, action)(**request.get('params', {}))
 
-        return self.handlers.get(action, self.apiInvalidRequest)(params)
 
-
-    def apiAddNote(self, params):
-        args = self.prepareNoteArgs(params.get('definition'), params.get('mode'))
+    def api_addNote(self, definition, mode):
+        args = self.prepareNoteArgs(definition, mode)
         if args is not None:
             return self.anki.addNote(args['deck'], args['model'], args['fields'], args['tags'])
 
 
-    def apiCanAddNotes(self, params):
+    def api_canAddNotes(self, definitions, modes):
         states = []
 
-        for definition in params.get('definitions', []):
+        for definition in definitions:
             state = {}
-            for mode in params.get('modes', []):
+            for mode in modes:
                 args = self.prepareNoteArgs(definition, mode)
                 state[mode] = args is not None and self.anki.canAddNote(args['deck'], args['model'], args['fields'])
 
             states.append(state)
 
         return states
-
-
-    def apiGetVersion(self, params):
-        return {'version': constants.c['appVersion']}
-
-
-    def apiInvalidRequest(self, params):
-        return None
