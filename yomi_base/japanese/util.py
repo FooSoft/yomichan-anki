@@ -37,7 +37,7 @@ def isKanji(c):
 
 
 def isJapanese(c):
-    return isKana(c) or isKanji(c)
+    return isKana(c) or isKanji(c) or c == u'々'
 
 
 def sanitize(text, kana=True, wildcards=False):
