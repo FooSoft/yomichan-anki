@@ -18,4 +18,5 @@
 
 c = {
     'appVersion': '0.21b',
+    'apiVersion': 1
 }

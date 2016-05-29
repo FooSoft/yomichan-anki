@@ -19,7 +19,7 @@
 
 from PyQt4 import QtCore
 from ajax import AjaxServer
-import reader_util
+from constants import c
 
 
 class AnkiConnect:
@@ -47,59 +47,54 @@ class AnkiConnect:
             self.server.advance()
 
 
-    def prepareNoteArgs(self, definition, mode):
-        if definition is None:
-            return None
-
-        if mode == 'vocabExp':
-            profile = 'vocab'
-            markupFunc = reader_util.markupVocabExp
-        elif mode == 'vocabReading':
-            profile = 'vocab'
-            markupFunc = reader_util.markupVocabReading
-        elif mode == 'kanji':
-            profile = 'kanji'
-            markupFunc = reader_util.markupKanji
-        else:
-            return None
-
-        profile = self.preferences['profiles'].get(profile)
-        if profile is None:
-            return None
-
-        markup = markupFunc(definition)
-        if markup is None:
-            return None
-
-        return {
-            'deck':   profile['deck'],
-            'model':  profile['model'],
-            'fields': reader_util.formatFields(profile['fields'], markup),
-            'tags':   self.preferences['tags']
-        }
-
-
     def handler(self, request):
-        action = 'api_' + request.get('action', '')
+        action = 'api_' + (request.get('action') or '')
         if hasattr(self, action):
-            return getattr(self, action)(**request.get('params', {}))
+            return getattr(self, action)(**(request.get('params') or {}))
 
 
-    def api_addNote(self, definition, mode):
-        args = self.prepareNoteArgs(definition, mode)
-        if args is not None:
-            return self.anki.addNote(args['deck'], args['model'], args['fields'], args['tags'])
+    def api_deckNames(self):
+        return self.anki.deckNames()
 
 
-    def api_canAddNotes(self, definitions, modes):
-        states = []
+    def api_modelNames(self):
+        return self.anki.modelNames()
 
-        for definition in definitions:
-            state = {}
-            for mode in modes:
-                args = self.prepareNoteArgs(definition, mode)
-                state[mode] = args is not None and self.anki.canAddNote(args['deck'], args['model'], args['fields'])
 
-            states.append(state)
+    def api_modelFieldNames(self, modelName):
+        return self.anki.modelFieldNames(modelName)
 
-        return states
+
+    def api_addNote(self, note):
+        return self.anki.addNote(
+            note['deckName'],
+            note['modelName'],
+            note['fields'],
+            note['tags']
+        )
+
+
+    def api_canAddNotes(self, notes):
+        results = []
+        for note in notes:
+            results.append(self.anki.canAddNote(
+                note['deckName'],
+                note['modelName'],
+                note['fields']
+            ))
+
+        return results
+
+
+    def api_features(self):
+        features = {}
+        for name in dir(self):
+            method = getattr(self, name)
+            if name.startswith('api_') and callable(method):
+                features[name[4:]] = list(method.func_code.co_varnames[1:])
+
+        return features
+
+
+    def api_version(self):
+        return c['apiVersion']
