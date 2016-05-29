@@ -201,15 +201,22 @@ def buildVocabDef(definition, index, query):
         glossary += u'<li>{0}</li>'.format(g)
     glossary += u'</ol>'
 
+    expression = u'<span class="expression">'
+    if 'P' in definition['tags']:
+        expression += u'<strong>{}</strong>'.format(definition['expression'])
+    else:
+        expression += definition['expression']
+    expression += u'</span>'
+
     html = u'''
         <span class="links">{links}</span>
-        <span class="expression">{expression}</span>
+        {expression}
         <span class="reading">{reading}</span>
         <span class="rules">{rules}</span>
         <span class="glossary">{glossary}<br></span>
         <br clear="all">'''.format(
             links      = links,
-            expression = definition['expression'],
+            expression = expression,
             reading    = reading,
             glossary   = glossary,
             rules      = rules
