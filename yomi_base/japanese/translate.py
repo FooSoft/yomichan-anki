@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import util
+import re
 
 
 class Translator:
@@ -27,7 +27,9 @@ class Translator:
 
 
     def findTerm(self, text, wildcards=False):
-        text = util.sanitize(text, wildcards=wildcards)
+        if wildcards:
+            text = re.sub(u'[\*＊]', u'%', text)
+            text = re.sub(u'[\?？]', u'_', text)
 
         groups = {}
         for i in xrange(len(text), 0, -1):
@@ -60,8 +62,6 @@ class Translator:
 
 
     def findKanji(self, text):
-        text = util.sanitize(text, kana=False)
-
         processed = {}
         results   = []
         for c in text:

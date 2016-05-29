@@ -497,7 +497,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
 
         cursor = self.textContent.textCursor()
 
-        if len(contentSampleFlat) == 0 or not japanese.util.isJapanese(contentSampleFlat[0]):
+        if len(contentSampleFlat) == 0:
             cursor.clearSelection()
             self.textContent.setTextCursor(cursor)
             return
