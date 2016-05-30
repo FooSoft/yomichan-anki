@@ -1,10 +1,9 @@
 # Yomichan #
 
-A while ago I started working on an [Anki](http://ankisrs.net/) plugin in an attempt to solve various annoyances I
-encountered when trying to read Japanese books on my computer. Yomichan is the result of my efforts and makes Japanese
-sentence/vocabulary mining trivial. It can be used in conjunction with the [Yomichan extension for
-Chrome](/projects/yomichan-chrome-ext) to further enhance your learning experience by enabling flash card creation
-directly from the Chrome web browser.
+Yomichan is an [Anki](http://ankisrs.net/) plugin built to solve the various annoyances I encountered when trying to
+read Japanese books on my computer. This tool makes vocabulary mining trivial by allowing you to focus on your reading.
+Yomichan can be used in conjunction with [Yomichan for Chrome](https://foosoft.net/projects/yomichan-chrome-ext) to
+further enhance your learning experience by enabling flash card creation from your web browser.
 
 ## Motivation ##
 
@@ -20,8 +19,8 @@ mouse click. After several hours of work, Yomichan could do this and much more.
 Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb.net/shared/info/934748696). There is an
 automatic update checker included in the plugin that (unless you disabled it in options) will notify you when new
 versions become available. Developers can also clone the [repository on
-GitHub](https://github.com/FooSoft/yomichan-chrome-ext), assuming that they have [Git LFS](https://git-lfs.github.com/)
-installed and have initialized the included submodules after pulling down the main project.
+GitHub](https://github.com/FooSoft/yomichan-chrome-ext); be aware that [Git LFS](https://git-lfs.github.com/) is
+required for downloading the included Japanese data files.
 
 ## Usage ##
 
@@ -75,12 +74,10 @@ By request, I've added several keyboard shortcuts which make Yomichan even easie
 
 ### AnkiConnect ###
 
-AnkiConnect is a new and revolutionary feature which allows external applications to communicate with Yomichan, making
-it possible to query decks and create new flash cards directly. When enabled, Yomichan will initialize a simple
-[AJAX](https://en.wikipedia.org/wiki/Ajax_(programming)) server running on port `8765` (only connections from
-`localhost` are accepted for security reasons) and begin accepting requests for Anki-related tasks. This functionality
-was developed primarily to support interfacing with the [Yomichan extension for Chrome](/projects/yomichan-chrome-ext),
-thus making it possible to create new cards directly from your web browser.
+AnkiConnect is a revolutionary feature which allows external applications to communicate with Anki, making it possible
+to query decks and create new flash cards directly. This feature must be enabled through the preference dialog prior to
+use. AnkiConnect is also available as a [separate plugin](https://foosoft.net/projects/anki-connect) for those who want
+to get this feature in a smaller package.
 
 ### Importing Vocabulary ###
 
