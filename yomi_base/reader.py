@@ -20,7 +20,6 @@ from PyQt4 import QtGui, QtCore
 import about
 import constants
 import gen.reader_ui
-import japanese.util
 import os
 import preferences
 import reader_util
