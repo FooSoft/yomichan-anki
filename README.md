@@ -2,8 +2,8 @@
 
 Yomichan is an [Anki](http://ankisrs.net/) plugin built to solve the various annoyances I encountered when trying to
 read Japanese books on my computer. This tool makes vocabulary mining trivial by allowing you to focus on your reading.
-Yomichan can be used in conjunction with [Yomichan for Chrome](https://foosoft.net/projects/yomichan-chrome-ext) to
-further enhance your learning experience by enabling flash card creation from your web browser.
+Yomichan can be used in conjunction with [Yomichan for Chrome](https://foosoft.net/projects/yomichan-chrome) to further enhance your
+learning experience by enabling flash card creation from your web browser.
 
 ## Motivation ##
 
@@ -19,40 +19,39 @@ mouse click. After several hours of work, Yomichan could do this and much more.
 Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb.net/shared/info/934748696). There is an
 automatic update checker included in the plugin that (unless you disabled it in options) will notify you when new
 versions become available. Developers can also clone the [repository on
-GitHub](https://github.com/FooSoft/yomichan-chrome-ext); be aware that [Git LFS](https://git-lfs.github.com/) is
-required for downloading the included Japanese data files.
+GitHub](https://github.com/FooSoft/yomichan-chrome); be aware that [Git LFS](https://git-lfs.github.com/) is required
+for downloading the included Japanese data files.
 
 ## Usage ##
 
 1.  Make sure you are running the latest version of Anki.
 2.  Open your vocab deck and note the fields that are used in your deck.
 
-    [![Card layout dialog](img/layout-thumb.png)](img/layout.png)
+    [![Card layout dialog](https://foosoft.net/projects/yomichan/img/layout-thumb.png)](https://foosoft.net/projects/yomichan/img/layout.png)
 
 3.  Launch Yomichan from the tools menu inside Anki.
 4.  Open the text file you want and you will see its contents in the Yomichan.  Your layout and color scheme will look
     different because the screenshot shows my personal settings.
 
-    [![Reader dialog](img/reader-thumb.png)](img/reader.png)
+    [![Reader dialog](https://foosoft.net/projects/yomichan/img/reader-thumb.png)](https://foosoft.net/projects/yomichan/img/reader.png)
 
 5.  To look up words hover your mouse over them while pressing the middle mouse button (usually this is your scroll
     wheel). You can also press and hold shift instead if you like (or your mouse has no center button).
 6.  To set up your Anki deck for Yomichan select Preferences from the Edit menu and you should see a screen that looks
     like this:
 
-    [![Preferences dialog](img/preferences-thumb.png)](img/preferences.png)
+    [![Preferences dialog](https://foosoft.net/projects/yomichan/img/preferences-thumb.png)](https://foosoft.net/projects/yomichan/img/preferences.png)
 
 7.  Now you should add markers such as `{expression}`, `{reading}`, `{reading}` and `{sentence}` to specify how new
     cards should be created. Card fields will vary depending on your deck model. If you want to be able to use
-    *AnkiConnect* via the [Yomichan extension for Chrome](/projects/yomichan-chrome-ext), tick the checkbox labeled
-    *Enable AnkiConnect* as shown above.
+    *AnkiConnect* tick the checkbox labeled *Enable AnkiConnect* as shown above.
 
 8.  When you look up definitions you will have the option to create Anki cards for them with one click. You will see the
     icons for performing these actions next to each item. *Icons for actions which update your decks won't show up if
     Anki thinks you can't add a fact with those items*. This likely means that they would either be duplicates of
     existing cards in the deck or that Yomichan hasn't been properly set up for your deck model.
 
-    [![Icons](img/icons-thumb.png)](img/icons.png)
+    [![Icons](https://foosoft.net/projects/yomichan/img/icons-thumb.png)](https://foosoft.net/projects/yomichan/img/icons.png)
 
     Here is what the icons mean (in order from left to right):
     *   Add term in Kana form even it can be written in Kanji (e.g. べんきょうか).
@@ -63,21 +62,21 @@ required for downloading the included Japanese data files.
 
 By request, I've added several keyboard shortcuts which make Yomichan even easier to use:
 
-| Shortcut                    | Command                                             |
-|-----------------------------|-----------------------------------------------------|
-| <kbd>Shift</kbd>            | Search under cursor                                 |
-| <kbd>]</kbd>                | Move search cursor forwards                         |
-| <kbd>[</kbd>                | Move search cursor backwards                        |
-| <kbd>Shift + Ctrl + #</kbd> | Add current Kanji at index 0 - 9 to deck            |
-| <kbd>Ctrl + #</kbd>         | Add current term at index  0 - 9 to deck            |
-| <kbd>Alt + #</kbd>          | Add current term at index 0 - 9 to deck as Hiragana |
+| Shortcut                                          | Command                                             |
+|---------------------------------------------------|-----------------------------------------------------|
+| <kbd>Shift</kbd>                                  | Search under cursor                                 |
+| <kbd>]</kbd>                                      | Move search cursor forwards                         |
+| <kbd>[</kbd>                                      | Move search cursor backwards                        |
+| <kbd>Shift</kbd> + <kbd>Ctrl</kbd> + <kbd>#</kbd> | Add current Kanji at index 0 - 9 to deck            |
+| <kbd>Ctrl</kbd> + <kbd>#</kbd>                    | Add current term at index  0 - 9 to deck            |
+| <kbd>Alt</kbd> + <kbd>#</kbd>                     | Add current term at index 0 - 9 to deck as Hiragana |
 
 ### AnkiConnect ###
 
 AnkiConnect is a revolutionary feature which allows external applications to communicate with Anki, making it possible
 to query decks and create new flash cards directly. This feature must be enabled through the preference dialog prior to
-use. AnkiConnect is also available as a [separate plugin](https://foosoft.net/projects/anki-connect) for those who want
-to get this feature in a smaller package.
+use. AnkiConnect is also available as a [separate plugin](https://foosoft.net/projects/anki-connect) for those who want to get this feature
+in a smaller package.
 
 ### Importing Vocabulary ###
 
