@@ -15,16 +15,15 @@ For running:
 For building:
 
 *   [7-Zip](http://www.7-zip.org/)
+*   [Git LFS](https://git-lfs.github.com/)
 *   [Python 2.7](http://www.python.org/download/releases/2.7/)
 *   [Qt Designer](https://www.qt.io/ide/)
 
 
 ## Installation ##
 
-Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb.net/shared/info/934748696). There is an
-automatic update checker included in the plugin that (unless you disabled it in options) will notify you when new
-versions become available. Developers can also clone the [repository on GitHub](https://github.com/FooSoft/yomichan); be
-aware that [Git LFS](https://git-lfs.github.com/) is required for downloading the included Japanese data files.
+Yomichan can be downloaded from the its [Anki shared addon page](https://ankiweb.net/shared/info/934748696). After it is
+installed, this plugin will automatically notify you when new versions are available.
 
 ## Usage ##
 
@@ -62,9 +61,9 @@ aware that [Git LFS](https://git-lfs.github.com/) is required for downloading th
     *   Add term as it appears in the dictionary including Kanji (e.g. 勉強家).
     *   Copy the expression, reading and definition for the term to the clipboard.
 
-### Shortcuts ###
+### Keyboard Shortcuts ###
 
-By request, I've added several keyboard shortcuts which make Yomichan even easier to use:
+Yomichan features several keyboard shortcuts for ease of use:
 
 | Shortcut                                          | Command                                             |
 |---------------------------------------------------|-----------------------------------------------------|
@@ -77,10 +76,10 @@ By request, I've added several keyboard shortcuts which make Yomichan even easie
 
 ### AnkiConnect ###
 
-AnkiConnect is a revolutionary feature which allows external applications to communicate with Anki, making it possible
-to query decks and create new flash cards directly. This feature must be enabled through the preference dialog prior to
-use. AnkiConnect is also available as a [separate plugin](https://foosoft.net/projects/anki-connect/) for those who want to get this
-feature in a smaller package.
+AnkiConnect is a convenient feature, which enables external applications to communicate directly with Anki, thus
+allowing them to query decks and create new flash cards without user involvement. This feature must be enabled through
+the preference dialog prior to use. AnkiConnect is also available as a [separate plugin](https://foosoft.net/projects/anki-connect/) for
+those who want to get this feature in a smaller package.
 
 ### Importing Vocabulary ###
 
