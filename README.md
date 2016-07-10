@@ -83,11 +83,11 @@ those who want to get this feature in a smaller package.
 
 ### Importing Vocabulary ###
 
-Yomichan is capable of importing vocabulary lists from plain text files and the vocabulary deck database the [Amazon
-Kindle](http://en.wikipedia.org/wiki/Kindle) automatically generates when you look up words in the built-in dictionary
-(this file can be found as `/system/vocabulary/vocab.db`). Note that importing does not create flash cards
-automatically, but rather outputs the contents of the file to the Vocabulary and Kanji panes so that you can add facts
-the same way as when reading within Yomichan.
+Yomichan is capable of importing vocabulary lists from plain text files and the vocabulary deck database the Amazon
+Kindle automatically generates when you look up words in the built-in dictionary (this file can be found as
+`/system/vocabulary/vocab.db`). Note that importing does not create flash cards automatically, but rather outputs the
+contents of the file to the Vocabulary and Kanji panes so that you can add facts the same way as when reading within
+Yomichan.
 
 ## License ##
 
