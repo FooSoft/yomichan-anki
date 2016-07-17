@@ -18,10 +18,56 @@
 
 import anki
 import aqt
+import hashlib
+import urllib2
 
+
+#
+# Audio helpers
+#
+
+def audioBuildFilename(kana, kanji):
+    filename = u'yomichan_{}'.format(kana)
+    if kanji:
+        filename += u'_{}'.format(kanji)
+    filename += u'.mp3'
+    return filename
+
+
+def audioDownload(kana, kanji):
+    url = 'http://assets.languagepod101.com/dictionary/japanese/audiomp3.php?kanji={}'.format(urllib2.quote(kanji.encode('utf-8')))
+    if kana:
+        url += '&kana={}'.format(urllib2.quote(kana.encode('utf-8')))
+
+    try:
+        resp = urllib2.urlopen(url)
+    except urllib2.URLError:
+        return None
+
+    if resp.code != 200:
+        return None
+
+    return resp.read()
+
+
+def audioIsPlaceholder(data):
+    m = hashlib.md5()
+    m.update(data)
+    return m.hexdigest() == '7e2c2f954ef6051373ba916f000168dc'
+
+
+def audioInject(note, fields, filename):
+    for field in fields:
+        if field in note:
+            note[field] += u'[sound:{}]'.format(filename)
+
+
+#
+# Anki
+#
 
 class Anki:
-    def addNote(self, deckName, modelName, fields, tags=[]):
+    def addNote(self, deckName, modelName, fields, tags, audio):
         collection = self.collection()
         if collection is None:
             return
@@ -30,8 +76,14 @@ class Anki:
         if note is None:
             return
 
-        self.startEditing()
+        if audio is not None and len(audio['fields']) > 0:
+            data = audioDownload(audio['kana'], audio['kanji'])
+            if data is not None and not audioIsPlaceholder(data):
+                filename = audioBuildFilename(audio['kana'], audio['kanji'])
+                audioInject(note, audio['fields'], filename)
+                self.media().writeData(filename, data)
 
+        self.startEditing()
         collection.addNote(note)
         collection.autosave()
 
@@ -92,6 +144,12 @@ class Anki:
 
     def collection(self):
         return self.window().col
+
+
+    def media(self):
+        collection = self.collection()
+        if collection is not None:
+            return collection.media
 
 
     def modelNames(self):

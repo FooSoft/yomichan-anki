@@ -70,7 +70,8 @@ class AnkiConnect:
             note['deckName'],
             note['modelName'],
             note['fields'],
-            note['tags']
+            note['tags'],
+            note.get('audio')
         )
 
 
