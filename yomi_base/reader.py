@@ -423,7 +423,7 @@ class MainWindowReader(QtGui.QMainWindow, gen.reader_ui.Ui_MainWindowReader):
             self.comboTags.insertItem(0, tagsJoined)
         self.preferences.updateFactTags(tagsJoined)
 
-        factId = self.anki.addNote(profile['deck'], profile['model'], fields, tagsSplit)
+        factId = self.anki.addNote(profile['deck'], profile['model'], fields, tagsSplit, None)
         if factId is None:
             return False
 
