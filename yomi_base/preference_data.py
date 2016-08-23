@@ -24,8 +24,8 @@ import os
 
 class Preferences(object):
     def __init__(self):
-        self.filename = os.path.expanduser('~/.yomichan.json')
-        self.defaults = os.path.join(os.path.dirname(__file__), 'defaults.json')
+        self.filename = os.path.expanduser(u'~/.yomichan.json')
+        self.defaults = os.path.join(os.path.dirname(__file__), u'defaults.json')
         self.settings = {}
 
 

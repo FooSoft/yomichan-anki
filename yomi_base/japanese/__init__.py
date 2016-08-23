@@ -25,6 +25,6 @@ import translate
 def initLanguage():
     directory = os.path.dirname(__file__)
     return translate.Translator(
-        deinflect.Deinflector(os.path.join(directory, 'deinflect.json')),
-        dictionary.Dictionary(os.path.join(directory, 'dictionary.db'))
+        deinflect.Deinflector(os.path.join(directory, u'deinflect.json')),
+        dictionary.Dictionary(os.path.join(directory, u'dictionary.db'))
     )
