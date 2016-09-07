@@ -1,4 +1,3 @@
-# Yomichan #
 
 Yomichan is an Anki plugin built to help students of Japanese learn the language by reading native media on their
 computer. This application's one-click flash card creation feature makes vocabulary mining trivial, allowing you to
