@@ -81,18 +81,3 @@ Kindle automatically generates when you look up words in the built-in dictionary
 `/system/vocabulary/vocab.db`). Note that importing does not create flash cards automatically, but rather outputs the
 contents of the file to the Vocabulary and Kanji panes so that you can add facts the same way as when reading within
 Yomichan.
-
-## License ##
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
