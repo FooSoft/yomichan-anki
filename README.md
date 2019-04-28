@@ -6,20 +6,6 @@ focus on enjoying your reading.
 
 *Note: This project is no longer maintained and has been superseded by the [Yomichan](https://foosoft.net/projects/yomichan/) browser extension*.
 
-## Requirements ##
-
-For running:
-
-*   [Anki](http://ankisrs.net/) (versions 2.0.x)
-
-For building:
-
-*   [7-Zip](http://www.7-zip.org/)
-*   [Git LFS](https://git-lfs.github.com/)
-*   [Python 2.7](http://www.python.org/download/releases/2.7/)
-*   [Qt Designer](https://www.qt.io/ide/)
-
-
 ## Installation ##
 
 Yomichan can be downloaded from the [Anki shared addon page](https://ankiweb.net/shared/info/934748696). This plugin
