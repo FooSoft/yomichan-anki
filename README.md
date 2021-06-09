@@ -1,17 +1,18 @@
-# Yomichan Anki #
+# Yomichan Anki
 
 Yomichan is an Anki plugin built to help students of Japanese learn the language by reading native media on their
 computer. This application's one-click flash card creation feature makes vocabulary mining trivial, allowing you to
 focus on enjoying your reading.
 
-*Note: This project is no longer maintained and has been superseded by the [Yomichan](https://foosoft.net/projects/yomichan/) browser extension*.
+*Note: This project is no longer maintained and has been superseded by the
+[Yomichan](https://foosoft.net/projects/yomichan/) browser extension*.
 
-## Installation ##
+## Installation
 
 Yomichan can be downloaded from the [Anki shared addon page](https://ankiweb.net/shared/info/934748696). This plugin
 will automatically notify you when updates are available.
 
-## Usage ##
+## Usage
 
 1.  Make sure you are running the latest version of Anki.
 2.  Open your vocab deck and note the fields that are used in your deck.
@@ -47,7 +48,7 @@ will automatically notify you when updates are available.
     *   Add term as it appears in the dictionary including Kanji (e.g. 勉強家).
     *   Copy the expression, reading and definition for the term to the clipboard.
 
-### Keyboard Shortcuts ###
+### Keyboard Shortcuts
 
 Yomichan features several keyboard shortcuts for ease of use:
 
@@ -60,7 +61,7 @@ Yomichan features several keyboard shortcuts for ease of use:
 | <kbd>Ctrl</kbd> + <kbd>#</kbd>                    | Add current term at index  0 - 9 to deck            |
 | <kbd>Alt</kbd> + <kbd>#</kbd>                     | Add current term at index 0 - 9 to deck as Hiragana |
 
-### Importing Vocabulary ###
+### Importing Vocabulary
 
 Yomichan is capable of importing vocabulary lists from plain text files and the vocabulary deck database the Amazon
 Kindle automatically generates when you look up words in the built-in dictionary (this file can be found as
