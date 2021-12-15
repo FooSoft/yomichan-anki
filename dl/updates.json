@@ -1,0 +1,32 @@
+[
+    {
+        "version": "0.22b",
+        "features": [
+            "Fix definitions for certain search strings not being found",
+            "Popular terms are now displayed in bold",
+            "Improvements to the AnkiConnect interface"
+        ]
+    },
+    {
+        "version": "0.21b",
+        "features": [
+            "Fixing crash that would happen when a Kanji character doesn't have both on-yomi and kun-yomi defined"
+        ]
+    },
+    {
+        "version": "0.20b",
+        "features": [
+            "Support for Chrome integration via AnkiConnect; see foosoft.net/projects/yomichan",
+            "Fixing deinflection problems and various crashes; other tweaks and improvements",
+            "Better presentation, enhanced dictionary format"
+        ]
+    },
+    {
+        "version": "0.17b",
+        "features": [
+            "New interface to check for updates",
+            "New option to save text contents between sessions"
+        ]
+    }
+]
+

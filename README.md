@@ -1,3 +1,12 @@
+<!-- +++
+Area = "projects"
+GitHub = "yomichan-anki"
+Layout = "page"
+Tags = ["anki", "japanese", "pyqt", "python", "sql", "yomichan", "gpl license", "anki-connect"]
+Description = "Plugin for sentence/vocab mining Japanese books in Anki."
+Collection = "ProjectsComplete"
++++ -->
+
 # Yomichan Anki
 
 Yomichan is an Anki plugin built to help students of Japanese learn the language by reading native media on their
@@ -5,7 +14,7 @@ computer. This application's one-click flash card creation feature makes vocabul
 focus on enjoying your reading.
 
 *Note: This project is no longer maintained and has been superseded by the
-[Yomichan](https://foosoft.net/projects/yomichan/) browser extension*.
+[Yomichan](https://foosoft.net/projects/yomichan/) browser extension.*
 
 ## Installation
 
@@ -17,20 +26,20 @@ will automatically notify you when updates are available.
 1.  Make sure you are running the latest version of Anki.
 2.  Open your vocab deck and note the fields that are used in your deck.
 
-    [![Card layout dialog](https://foosoft.net/projects/yomichan-anki/img/layout-thumb.png)](https://foosoft.net/projects/yomichan-anki/img/layout.png)
+    [![Card layout dialog](img/layout-thumb.png)](img/layout.png)
 
 3.  Launch Yomichan from the tools menu inside Anki.
 4.  Open the text file you want and you will see its contents in the Yomichan.  Your layout and color scheme will look
     different because the screenshot shows my personal settings.
 
-    [![Reader dialog](https://foosoft.net/projects/yomichan-anki/img/reader-thumb.png)](https://foosoft.net/projects/yomichan-anki/img/reader.png)
+    [![Reader dialog](img/reader-thumb.png)](img/reader.png)
 
 5.  To look up words hover your mouse over them while pressing the middle mouse button (usually this is your scroll
     wheel). You can also press and hold shift instead if you like (or your mouse has no center button).
 6.  To set up your Anki deck for Yomichan select Preferences from the Edit menu and you should see a screen that looks
     like this:
 
-    [![Preferences dialog](https://foosoft.net/projects/yomichan-anki/img/preferences-thumb.png)](https://foosoft.net/projects/yomichan-anki/img/preferences.png)
+    [![Preferences dialog](img/preferences-thumb.png)](img/preferences.png)
 
 7.  Now you should add markers such as `{expression}`, `{reading}`, `{reading}` and `{sentence}` to specify how new
     cards should be created. Card fields will vary depending on your deck model. If you want to be able to use
@@ -41,7 +50,7 @@ will automatically notify you when updates are available.
     Anki thinks you can't add a fact with those items*. This likely means that they would either be duplicates of
     existing cards in the deck or that Yomichan hasn't been properly set up for your deck model.
 
-    [![Icons](https://foosoft.net/projects/yomichan-anki/img/icons-thumb.png)](https://foosoft.net/projects/yomichan-anki/img/icons.png)
+    [![Icons](img/icons-thumb.png)](img/icons.png)
 
     Here is what the icons mean (in order from left to right):
     *   Add term in Kana form even it can be written in Kanji (e.g. べんきょうか).
