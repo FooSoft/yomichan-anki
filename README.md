@@ -1,12 +1,3 @@
-<!-- +++
-Area = "projects"
-GitHub = "yomichan-anki"
-Layout = "page"
-Tags = ["anki", "japanese", "pyqt", "python", "sql", "yomichan", "gpl license", "anki-connect"]
-Description = "Plugin for sentence/vocab mining Japanese books in Anki."
-Collection = "ProjectsComplete"
-+++ -->
-
 # Yomichan for Anki
 
 Yomichan for Anki is Anki plugin built to help students of Japanese learn the language by reading native media on their
